@@ -27,6 +27,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       --navy-2: #0b1730;
       --blue: #1f63ff;
       --blue-2: #123bff;
+      --emerald: #00ffb2;
+      --chrome: #c0c0c0;
       --white: #ffffff;
       --surface: #f7f8fb;
       --text: #101722;
@@ -187,8 +189,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       position: relative;
       z-index: 1;
       display: grid;
-      grid-template-columns: minmax(0, 720px);
-      gap: 18px;
+      grid-template-columns: minmax(0, 620px) minmax(320px, 1fr);
+      gap: clamp(32px, 7vw, 96px);
+      align-items: center;
     }
 
     .hero-copy {
@@ -288,6 +291,120 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       border-radius: 50%;
       background: var(--blue);
       box-shadow: 0 0 14px rgba(18,59,255,0.65);
+    }
+
+    .featured-offer {
+      align-self: center;
+      justify-self: stretch;
+      padding: clamp(24px, 3vw, 34px);
+      border: 1px solid rgba(0, 255, 178, 0.52);
+      border-radius: 18px;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.075), rgba(255,255,255,0.025)),
+        rgba(5, 12, 24, 0.58);
+      box-shadow:
+        0 24px 60px rgba(0, 0, 0, 0.28),
+        inset 0 0 0 1px rgba(255,255,255,0.045);
+      backdrop-filter: blur(8px);
+    }
+
+    .featured-offer-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 16px;
+      color: var(--emerald);
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .featured-offer-kicker::before {
+      content: "";
+      width: 32px;
+      height: 2px;
+      background: var(--emerald);
+      box-shadow: 0 0 18px rgba(0,255,178,0.62);
+    }
+
+    .featured-offer h2 {
+      margin: 0;
+      font-size: clamp(2rem, 3vw, 3.1rem);
+      line-height: 0.98;
+      letter-spacing: -0.045em;
+      font-weight: 900;
+      text-wrap: balance;
+    }
+
+    .featured-offer h2 span {
+      color: var(--blue-2);
+    }
+
+    .featured-offer p {
+      margin: 18px 0 0;
+      max-width: 36ch;
+      color: rgba(255,255,255,0.84);
+      font-size: 1.05rem;
+      line-height: 1.4;
+    }
+
+    .featured-principles {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 22px 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .featured-principles li {
+      padding: 8px 10px;
+      border: 1px solid rgba(0,255,178,0.28);
+      border-radius: 999px;
+      color: var(--chrome);
+      background: rgba(0,255,178,0.045);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .featured-offer-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 20px 0 24px;
+    }
+
+    .featured-offer-meta span {
+      display: block;
+      padding: 14px;
+      border-left: 3px solid var(--emerald);
+      background: rgba(255,255,255,0.045);
+      color: rgba(255,255,255,0.88);
+      font-weight: 800;
+    }
+
+    .featured-offer-meta small {
+      display: block;
+      margin-top: 3px;
+      color: var(--emerald);
+      font-size: 0.86rem;
+      font-weight: 800;
+    }
+
+    .featured-offer-cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 50px;
+      padding: 0 22px;
+      border-radius: 4px;
+      background: linear-gradient(135deg, var(--blue), var(--blue-2));
+      color: var(--white);
+      font-weight: 900;
+      box-shadow: 0 14px 34px rgba(18,59,255,0.32);
     }
 
     .section-light {
@@ -492,6 +609,116 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       min-height: 168px;
     }
 
+
+    .section-dark .section-head-center p,
+    .section-dark .section-copy p {
+      color: rgba(255,255,255,0.78);
+    }
+
+    .section-dark .section-kicker.light {
+      color: #8fb2ff;
+    }
+
+    .section-dark .brand-card {
+      background: rgba(255,255,255,0.045);
+      border-color: rgba(255,255,255,0.12);
+      box-shadow: none;
+    }
+
+    .section-dark .brand-card p {
+      color: rgba(255,255,255,0.74);
+    }
+
+
+    .promo-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(320px, 1.05fr);
+      gap: clamp(32px, 5vw, 72px);
+      align-items: center;
+    }
+
+    .promo-card {
+      padding: clamp(24px, 3vw, 34px);
+      background: #ffffff;
+      border: 1px solid var(--line);
+      box-shadow: 0 14px 34px rgba(16, 23, 34, 0.06);
+    }
+
+    .promo-card.accent {
+      border-top: 4px solid var(--blue-2);
+    }
+
+    .promo-price {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 10px;
+      margin-top: 20px;
+      color: var(--blue-2);
+      font-size: clamp(2rem, 3.2vw, 3rem);
+      font-weight: 900;
+      letter-spacing: -0.045em;
+    }
+
+    .promo-price small {
+      color: var(--muted);
+      font-size: 0.95rem;
+      font-weight: 800;
+      letter-spacing: normal;
+    }
+
+    .promo-pill-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 22px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .promo-pill-list li {
+      padding: 8px 10px;
+      border: 1px solid rgba(18,59,255,0.16);
+      background: rgba(18,59,255,0.055);
+      color: var(--blue-2);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .promo-detail-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 22px;
+    }
+
+    .promo-detail {
+      padding: 18px;
+      border-left: 3px solid var(--emerald);
+      background: #f7f8fb;
+    }
+
+    .promo-detail strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .promo-detail p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .promo-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 26px;
+    }
+
     .founder-band {
       position: relative;
       z-index: 1;
@@ -579,6 +806,37 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       flex: 0 0 auto;
     }
 
+
+    /* Light-band contact overrides */
+    .section-light .founder-copy p,
+    .section-light .contact-copy p {
+      color: var(--muted);
+    }
+
+    .section-light .founder-copy .role,
+    .section-light .contact-card p {
+      color: var(--muted);
+    }
+
+    .section-light .founder-principles span {
+      border: 1px solid var(--line);
+      background: #ffffff;
+      color: var(--text);
+      box-shadow: 0 14px 34px rgba(16, 23, 34, 0.06);
+    }
+
+    .section-light .contact-card {
+      border-left: 1px solid var(--line);
+    }
+
+    .section-light .contact-link {
+      color: var(--text);
+    }
+
+    .section-light .contact-icon {
+      color: var(--blue);
+    }
+
     .site-footer {
       background: #f5f6f9;
       border-top: 1px solid var(--line);
@@ -606,8 +864,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     @media (max-width: 1120px) {
       .about-layout,
       .services-band,
-      .founder-band {
+      .founder-band,
+      .hero .container {
         grid-template-columns: 1fr;
+      }
+
+      .featured-offer {
+        max-width: 720px;
       }
 
       .hero-copy,
@@ -627,6 +890,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
     @media (max-width: 920px) {
       .service-steps,
+      .promo-detail-grid,
       .founder-principles {
         grid-template-columns: 1fr;
       }
@@ -708,6 +972,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         gap: 12px;
       }
 
+      .featured-offer-meta {
+        grid-template-columns: 1fr;
+      }
+
       .hero-cta,
       .hero-cta.secondary {
         width: 100%;
@@ -741,6 +1009,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <a href="#home">Home</a>
           <a href="#brands">Brands</a>
           <a href="#services">Services</a>
+          <a href="#ai-sdlc-optimization">Featured Offer</a>
           <a href="#about">About</a>
           <a href="#contact">Contact</a>
         </nav>
@@ -754,7 +1023,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <p class="hero-kicker">Et al Solutions LLC</p>
             <h1>Technology Solutions for Modern Small Businesses</h1>
             <p class="hero-sub">
-              Practical AI, software, and digital strategies to help your business grow in the era of smart technology.
+              Practical A.I., software, and digital strategies to help your business grow in the era of smart technology.
             </p>
 
             <div class="hero-actions">
@@ -763,11 +1032,31 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             </div>
 
             <ul class="hero-trust">
-              <li>Practical AI</li>
+              <li>Practical A.I.</li>
               <li>Custom software</li>
               <li>Clear, business-friendly guidance</li>
             </ul>
           </div>
+
+          <aside class="featured-offer" aria-label="Featured offer">
+            <span class="featured-offer-kicker">Featured Offer</span>
+            <h2>A.I.-Optimized<br><span>SDLC Assessment</span></h2>
+            <p>Turn scattered A.I. usage into a governed software delivery process.</p>
+
+            <ul class="featured-principles">
+              <li>Human-led</li>
+              <li>Test-driven</li>
+              <li>Governed</li>
+              <li>Verified</li>
+            </ul>
+
+            <div class="featured-offer-meta" aria-label="Offer details">
+              <span>12-Hour Sprint<small>Assessment &amp; design</small></span>
+              <span>Fixed Price<small>$1,200</small></span>
+            </div>
+
+            <a class="featured-offer-cta" href="#ai-sdlc-optimization">View the Sprint</a>
+          </aside>
         </div>
       </section>
 
@@ -790,7 +1079,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
               <p>Decades of technology experience across software, systems, and business operations, focused on solutions that are useful in the real world.</p>
             </article>
             <article class="about-card">
-              <strong>Cutting-edge AI with a proven-tech mindset</strong>
+              <strong>Cutting-edge A.I. with a proven-tech mindset</strong>
               <p>Modern tools are paired with dependable implementation so businesses can move forward without taking on unnecessary risk.</p>
             </article>
             <article class="about-card">
@@ -807,7 +1096,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <span class="section-kicker">Services</span>
             <div class="service-line">
               <span class="service-icon">✦</span>
-              <span>AI &amp;<br>Automation</span>
+              <span>A.I. &amp;<br>Automation</span>
             </div>
             <div class="service-line">
               <span class="service-icon">◈</span>
@@ -830,8 +1119,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <div class="step">
               <div class="step-num">2</div>
               <div>
-                <strong>AI that supports the work</strong>
-                <p>Automation, prompt systems, internal tools, and workflows that help teams move faster without losing judgment or control.</p>
+                <strong>A.I. that supports the work</strong>
+                <p>A.I.-assisted automation, prompt systems, internal tools, and workflows that help teams move faster without losing judgment or control.</p>
               </div>
             </div>
             <div class="step">
@@ -852,12 +1141,67 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
       </section>
 
-      <section class="section-light panel" id="brands">
+      <section class="section-light panel" id="ai-sdlc-optimization">
+        <div class="container promo-layout">
+          <div class="section-copy">
+            <span class="section-kicker light">Featured Offer</span>
+            <h2>A.I.-Optimized SDLC Assessment</h2>
+            <p>
+              A focused assessment and design sprint for software teams that want to use A.I. across the SDLC without losing control of quality, security, or accountability.
+            </p>
+            <p>
+              I evaluate the current delivery process, identify safe A.I. opportunities, define practical guardrails, and provide a short roadmap the team can actually use.
+            </p>
+
+            <ul class="promo-pill-list" aria-label="Assessment principles">
+              <li>Human-led</li>
+              <li>Test-driven</li>
+              <li>Governed</li>
+              <li>Verified</li>
+            </ul>
+          </div>
+
+          <article class="promo-card accent" aria-label="A.I.-Optimized SDLC Assessment details">
+            <h3>A.I.-Optimized SDLC Assessment</h3>
+            <p>Turn scattered A.I. usage into a governed software delivery process.</p>
+
+            <div class="promo-price">
+              $1,200 <small>fixed price</small>
+            </div>
+
+            <div class="promo-detail-grid">
+              <div class="promo-detail">
+                <strong>12-hour sprint</strong>
+                <p>Current-state review, opportunity map, guardrails, and roadmap.</p>
+              </div>
+              <div class="promo-detail">
+                <strong>Practical outputs</strong>
+                <p>Use-case map, verification gates, and accountability model.</p>
+              </div>
+              <div class="promo-detail">
+                <strong>Best fit</strong>
+                <p>Small to mid-sized software teams using or evaluating A.I. tools.</p>
+              </div>
+              <div class="promo-detail">
+                <strong>Goal</strong>
+                <p>Faster delivery with stronger process, review, and confidence.</p>
+              </div>
+            </div>
+
+            <div class="promo-actions">
+              <a class="hero-cta" href="mailto:info@etalsolutions.tech?subject=A.I.%20SDLC%20Assessment%20Inquiry">Book the Sprint</a>
+              <a class="hero-cta secondary" href="#contact">Ask a Question</a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section-dark panel" id="brands">
         <div class="container">
           <div class="section-head-center">
             <h2>Focused Brands. One Strong Foundation.</h2>
             <p>
-              Et al Solutions LLC brings together a portfolio of brands designed to support consulting, AI education, and business transformation.
+              Et al Solutions LLC brings together a portfolio of brands designed to support consulting, A.I. education, and business transformation.
             </p>
           </div>
 
@@ -869,7 +1213,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
             <article class="brand-card">
               <h3>SIMPLIF<span style="color:#123bff">AI</span></h3>
-              <p>AI training and accessible enablement designed to help people and businesses use AI with confidence.</p>
+              <p>A.I. training and accessible enablement designed to help people and businesses use A.I. with confidence.</p>
             </article>
 
             <article class="brand-card">
@@ -879,21 +1223,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
             <article class="brand-card">
               <h3>The Transformation Thread</h3>
-              <p>Thought leadership exploring business transformation, AI, and the decisions that shape meaningful change.</p>
+              <p>Thought leadership exploring business transformation, A.I., and the decisions that shape meaningful change.</p>
             </article>
 
             <article class="brand-card">
               <h3>25th Hour</h3>
-              <p>Ideas, tools, and guidance focused on helping people make the most of the free time created through the thoughtful adoption of AI.</p>
+              <p>Ideas, tools, and guidance focused on helping people make the most of the free time created through the thoughtful adoption of A.I.</p>
             </article>
           </div>
         </div>
       </section>
 
-      <section class="section-dark panel" id="contact">
+      <section class="section-light panel" id="contact">
         <div class="container founder-band">
           <div class="founder-copy">
-            <span class="section-kicker">From the Founder</span>
+            <span class="section-kicker light">From the Founder</span>
             <h2>Built for Clear Thinking, Practical Delivery, and Real-World Use</h2>
             <span class="role">Founder, Et al Solutions LLC</span>
             <p>
@@ -935,6 +1279,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <a href="#home">Home</a>
           <a href="#brands">Brands</a>
           <a href="#services">Services</a>
+          <a href="#ai-sdlc-optimization">Featured Offer</a>
           <a href="#about">About</a>
           <a href="#contact">Contact</a>
         </nav>
