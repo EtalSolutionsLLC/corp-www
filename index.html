@@ -17,22 +17,54 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','GTM-59XLJP3Q');</script>
 <!-- End Google Tag Manager -->
 
-<script>
-  async function loadSiteConfig() {
-    const response = await fetch("/config/site-config.json", { cache: "no-store" });
-    const allConfig = await response.json();
+  <script>
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
 
-    const hostname = window.location.hostname.toLowerCase();
-    const config = allConfig[hostname] || allConfig["etal.solutions"];
+    async function loadBrandCards() {
+      const grid = document.getElementById("brands-grid");
+      if (!grid) return;
 
-    document.title = config.brandName;
-    document.querySelector("[data-brand-name]").textContent = config.brandName;
-    document.querySelector("[data-contact-email]").textContent = config.contactEmail;
-    document.querySelector("[data-contact-email]").href = `mailto:${config.contactEmail}`;
-  }
+      const source = grid.getAttribute("data-source") || "content/brands.json";
 
-  loadSiteConfig();
-</script>
+      try {
+        const response = await fetch(source, { cache: "no-store" });
+        if (!response.ok) throw new Error(`Unable to load ${source}`);
+
+        const brands = await response.json();
+        if (!Array.isArray(brands) || brands.length === 0) return;
+
+        grid.innerHTML = brands.map((brand) => {
+          const classes = brand.full ? "brand-card full" : "brand-card";
+          const logo = brand.logo ? `
+              <img
+                class="brand-logo"
+                src="${escapeHtml(brand.logo)}"
+                alt="${escapeHtml(brand.name)} logo"
+              />` : "";
+
+          return `
+            <article class="${classes}">
+              ${logo}
+              <h3>${escapeHtml(brand.name)}</h3>
+              <p>${escapeHtml(brand.description)}</p>
+            </article>
+          `;
+        }).join("");
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    loadBrandCards();
+  </script>
+
 
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -249,7 +281,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           </div>
 
           <div class="brands-grid" id="brands-grid" data-source="content/brands.json">
-            <article class="brand-card full">
+<!--            <article class="brand-card full">
               <h3>Et al Solutions LLC</h3>
               <p>The umbrella company delivering strategy, implementation, and technical leadership across the portfolio.</p>
             </article>
@@ -273,7 +305,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
               <h3>25th Hour</h3>
               <p>Ideas, tools, and guidance focused on helping people make the most of the free time created through the thoughtful adoption of A.I.</p>
             </article>
-          </div>
+          </div>-->
         </div>
       </section>
 
@@ -330,55 +362,5 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </div>
     </footer>
   </div>
-
-
-  <script>
-    function escapeHtml(value) {
-      return String(value ?? "")
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
-    }
-
-    async function loadBrandCards() {
-      const grid = document.getElementById("brands-grid");
-      if (!grid) return;
-
-      const source = grid.getAttribute("data-source") || "content/brands.json";
-
-      try {
-        const response = await fetch(source, { cache: "no-store" });
-        if (!response.ok) throw new Error(`Unable to load ${source}`);
-
-        const brands = await response.json();
-        if (!Array.isArray(brands) || brands.length === 0) return;
-
-        grid.innerHTML = brands.map((brand) => {
-          const classes = brand.full ? "brand-card full" : "brand-card";
-          const logo = brand.logo ? `
-              <img
-                class="brand-logo"
-                src="${escapeHtml(brand.logo)}"
-                alt="${escapeHtml(brand.name)} logo"
-              />` : "";
-
-          return `
-            <article class="${classes}">
-              ${logo}
-              <h3>${escapeHtml(brand.name)}</h3>
-              <p>${escapeHtml(brand.description)}</p>
-            </article>
-          `;
-        }).join("");
-      } catch (error) {
-        console.error(error);
-      }
-    }
-
-    loadBrandCards();
-  </script>
-
 </body>
 </html>
