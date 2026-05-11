@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Et al Solutions LLC",
+    "description": "The umbrella company delivering strategy, implementation, and technical leadership across the portfolio.",
+    "logo": "https://public.etal.solutions/assets/simplifai/logos/SIMPLIFAI-SILVER.png",
+    "full": true
+  },
+  {
+    "name": "SIMPLIFAI",
+    "description": "A.I. training and accessible enablement designed to help people and businesses use A.I. with confidence.",
+    "logo": "https://public.etal.solutions/assets/simplifai/logos/SIMPLIFAI-SILVER.png",
+    "full": false
+  },
+  {
+    "name": "Solutions et al",
+    "description": "General consulting and practical solution design for organizations that need focused technology guidance.",
+    "logo": "https://public.etal.solutions/assets/sea/logos/SEA-OFFICIAL.png",
+    "full": false
+  },
+  {
+    "name": "The Transformation Thread",
+    "description": "Thought leadership exploring business transformation, A.I., and the decisions that shape meaningful change.",
+    "logo": "https://public.etal.solutions/assets/the-transformation-thread/logos/the-transformation-thread-OFFICIAL.png",
+    "full": false
+  },
+  {
+    "name": "25th Hour",
+    "description": "Ideas, tools, and guidance focused on helping people make the most of the free time created through the thoughtful adoption of A.I.",
+    "logo": "https://public.etal.solutions/assets/25th-hour/logos/25th-hour-OFFICIAL.png",
+    "full": false
+  }
+]
