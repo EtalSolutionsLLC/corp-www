@@ -109,6 +109,7 @@
     .panel {
       display: flex;
       align-items: center;
+      min-height: auto;
       padding: clamp(42px, 6vh, 76px) 0;
       transition: min-height 220ms ease, padding 220ms ease;
     }
@@ -938,7 +939,7 @@
 
       .panel:target,
       body:not(:has(section:target)) #home {
-        min-height: auto;
+        min-height: calc(100svh - var(--header-h));
         padding-top: 38px;
         padding-bottom: 44px;
       }
