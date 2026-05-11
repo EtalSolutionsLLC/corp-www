@@ -842,25 +842,34 @@
 
     .footer-legal {
       display: flex;
-      align-items: center;
-      gap: 14px;
       flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
     }
 
-    .footer-cookie-button {
+    .footer-legal a,
+    .cookie-preferences-link {
       appearance: none;
       border: 0;
       padding: 0;
       background: transparent;
       color: inherit;
+      cursor: pointer;
       font: inherit;
       text-decoration: underline;
-      cursor: pointer;
+      text-underline-offset: 3px;
     }
 
-    .footer-cookie-button:hover,
-    .footer-cookie-button:focus-visible {
+    .footer-legal a:hover,
+    .footer-legal a:focus-visible,
+    .cookie-preferences-link:hover,
+    .cookie-preferences-link:focus-visible {
       color: var(--blue-2);
+    }
+
+    .footer-separator {
+      color: rgba(15, 23, 42, 0.55);
     }
 
     @media (max-width: 1120px) {

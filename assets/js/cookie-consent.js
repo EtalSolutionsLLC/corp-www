@@ -4,6 +4,19 @@ const CAT_NECESSARY = 'necessary';
 const CAT_ANALYTICS = 'analytics';
 const CAT_MARKETING = 'marketing';
 
+function openCookiePreferences(event) {
+  const trigger = event.target.closest('[data-cookie-preferences]');
+  if (!trigger) return;
+
+  event.preventDefault();
+
+  if (typeof CookieConsent !== 'undefined' && typeof CookieConsent.showPreferences === 'function') {
+    CookieConsent.showPreferences();
+  }
+}
+
+document.addEventListener('click', openCookiePreferences);
+
 function updateGoogleConsent() {
   const analyticsConsent = CookieConsent.acceptedCategory(CAT_ANALYTICS) ? 'granted' : 'denied';
   const marketingConsent = CookieConsent.acceptedCategory(CAT_MARKETING) ? 'granted' : 'denied';
