@@ -2,11 +2,13 @@
   "etal.solutions": {
     "brandName": "Et al Solutions",
     "contactEmail": "davidomer@etal.solutions",
-    "ga4MeasurementId": "G-BGTM-59XLJP3Q"
+    "ga4MeasurementId": "G-B3YZ2HTFTL",
+    "gtmContainerId": "GTM-59XLJP3Q"
   },
   "www.simplifai.team": {
     "brandName": "SIMPLIFAI",
     "contactEmail": "davidomer@simplifai.team",
-    "ga4MeasurementId": "G-GTM-59XLJP3Q"
+    "ga4MeasurementId": "G-B3YZ2HTFTL",
+    "gtmContainerId": "GTM-59XLJP3Q"
   }
 }

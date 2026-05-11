@@ -839,6 +839,30 @@
       color: #202733;
     }
 
+
+    .footer-legal {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .footer-cookie-button {
+      appearance: none;
+      border: 0;
+      padding: 0;
+      background: transparent;
+      color: inherit;
+      font: inherit;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    .footer-cookie-button:hover,
+    .footer-cookie-button:focus-visible {
+      color: var(--blue-2);
+    }
+
     @media (max-width: 1120px) {
       .about-layout,
       .services-band,

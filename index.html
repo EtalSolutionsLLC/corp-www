@@ -1,13 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- CookieYes consent banner / consent manager -->
-  <script
-    id="cookieyes"
-    type="text/javascript"
-    src="https://cdn-cookieyes.com/client_data/fdec8a7179190e46927e592d/script.js"
-    async>
+  <!-- Cookie consent defaults must load before Google Tag Manager. -->
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('consent', 'default', {
+      ad_storage: 'denied',
+      ad_user_data: 'denied',
+      ad_personalization: 'denied',
+      analytics_storage: 'denied',
+      functionality_storage: 'granted',
+      personalization_storage: 'denied',
+      security_storage: 'granted',
+      wait_for_update: 500
+    });
   </script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orestbida/cookieconsent@3.1.0/dist/cookieconsent.css">
 
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -362,9 +371,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <a href="#about">About</a>
           <a href="#contact">Contact</a>
         </nav>
-        <div>© 2025 Et al Solutions LLC. <a href="https://public.etal.solutions/docs/et-al-solutions-llc/et-al-solutions-llc-privacy-policy.html">Privacy Policy</a></div>
+        <div class="footer-legal">© 2025 Et al Solutions LLC. <a href="https://public.etal.solutions/docs/et-al-solutions-llc/et-al-solutions-llc-privacy-policy.html">Privacy Policy</a><button type="button" class="footer-cookie-button" data-cc="show-preferencesModal">Cookie Preferences</button></div>
       </div>
     </footer>
   </div>
+  <script type="module" src="assets/js/cookie-consent.js"></script>
+
 </body>
 </html>
