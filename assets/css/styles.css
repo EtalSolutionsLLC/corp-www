@@ -1210,7 +1210,9 @@ body:not(:has(section:target)) #home {
 }
 
 #transformation-thread-logo {
-  max-height: 240px;
+  max-width: 100%;
+  max-height: 270px;
+  object-fit: contain;
 }
 
 .brand-page-copy h1 {
