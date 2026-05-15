@@ -826,8 +826,8 @@ body:not(:has(section:target)) #home {
 .site-footer .container {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 20px;
+  justify-content: flex-end;
+  gap: 0.75rem;
   flex-wrap: wrap;
 }
 
@@ -839,12 +839,19 @@ body:not(:has(section:target)) #home {
   color: #202733;
 }
 
+.footer-container {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
 
 .footer-legal {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: center;
+  justify-content: right;
   gap: 6px;
 }
 
