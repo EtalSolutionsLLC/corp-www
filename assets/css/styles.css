@@ -1209,6 +1209,10 @@ body:not(:has(section:target)) #home {
   object-fit: contain;
 }
 
+#transformation-thread-logo {
+  max-height: 240px;
+}
+
 .brand-page-copy h1 {
   margin: 0 0 22px;
   font-size: clamp(2.8rem, 5.4vw, 5.2rem);
