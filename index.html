@@ -57,11 +57,15 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 alt="${escapeHtml(brand.name)} logo"
               />` : "";
 
+          const link = brand.url ? `
+              <a class="brand-link" href="${escapeHtml(brand.url)}">Explore ${escapeHtml(brand.name)}</a>` : "";
+
           return `
             <article class="${classes}">
               ${logo}
               <h3>${escapeHtml(brand.name)}</h3>
               <p>${escapeHtml(brand.description)}</p>
+              ${link}
             </article>
           `;
         }).join("");
@@ -303,21 +307,25 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <article class="brand-card">
               <h3>SIMPLIF<span style="color:#123bff">AI</span></h3>
               <p>A.I. training and accessible enablement designed to help people and businesses use A.I. with confidence.</p>
+              <a class="brand-link" href="brands/simplifai.html">Explore SIMPLIFAI</a>
             </article>
 
             <article class="brand-card">
               <h3>Solutions et al</h3>
               <p>General consulting and practical solution design for organizations that need focused technology guidance.</p>
+              <a class="brand-link" href="brands/solutions-et-al.html">Explore Solutions et al</a>
             </article>
 
             <article class="brand-card">
               <h3>The Transformation Thread</h3>
               <p>Thought leadership exploring business transformation, A.I., and the decisions that shape meaningful change.</p>
+              <a class="brand-link" href="brands/transformation-thread.html">Explore The Transformation Thread</a>
             </article>
 
             <article class="brand-card">
               <h3>25th Hour</h3>
               <p>Ideas, tools, and guidance focused on helping people make the most of the free time created through the thoughtful adoption of A.I.</p>
+              <a class="brand-link" href="brands/25th-hour.html">Explore 25th Hour</a>
             </article>
           </div>
         </div>
