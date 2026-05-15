@@ -730,13 +730,13 @@ body:not(:has(section:target)) #home {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
   margin-top: 28px;
-  max-width: 820px;
+  max-width: 900px;
 }
 
 .founder-principles span {
   display: block;
   min-height: 86px;
-  padding: 18px;
+  padding: 18px 14px;
   border: 1px solid rgba(255,255,255,0.12);
   background: rgba(255,255,255,0.045);
   color: rgba(255,255,255,0.88);
