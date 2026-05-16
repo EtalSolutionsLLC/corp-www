@@ -1,0 +1,244 @@
+#!/usr/bin/env bash
+
+# Static runtime deploy tasks.
+#
+# Responsibilities:
+# - Render static HTML partials into deployable pages.
+# - Keep deployed output fully static.
+# - Preserve Portmason marker comments for repeatable/idempotent rendering.
+#
+# Marker model:
+#
+#   <!-- PM:HEADER -->
+#   rendered content
+#   <!-- /PM:HEADER -->
+#
+# Markers are managed regions. They remain in production HTML.
+
+set -euo pipefail
+
+: "${CUR_SCRIPT:=$(basename "${BASH_SOURCE[0]:-${0:-}}")}"
+export CUR_SCRIPT
+
+: "${PORTMASON_SHARE:="$(cd -- "$(dirname -- "${BASH_SOURCE[0]:-${0:-}}")" && pwd -P)"}"
+. "${PORTMASON_SHARE}/pm-helpers" "$@"
+
+pm_partial_name_to_file() {
+    local __out="$1"
+    local partial_name="$2"
+
+    local partial_slug
+    partial_slug="$(printf '%s' "$partial_name" | tr '[:upper:]' '[:lower:]')"
+
+    printf -v "$__out" '%s/partials/%s.html' "${SITE_DIR}" "$partial_slug"
+}
+
+pm_find_html_pages() {
+    local site_dir="$1"
+
+    find "${site_dir}" \
+        -type f \
+        -name '*.html' \
+        -not -path "${site_dir}/partials/*" \
+        -not -path '*/partials/*' \
+        -print
+}
+
+pm_extract_partial_names() {
+    local page="$1"
+
+    grep -Eoh '<!--[[:space:]]*PM:[A-Z0-9_-]+[[:space:]]*-->' "$page" 2>/dev/null \
+        | sed -E 's/.*PM:([A-Z0-9_-]+).*/\1/' \
+        | sort -u \
+        || true
+}
+
+pm_count_partial_start_markers() {
+    local __out="$1"
+    local page="$2"
+    local partial_name="$3"
+
+    local count
+    count="$(
+        grep -Ec "<!--[[:space:]]*PM:${partial_name}[[:space:]]*-->" "$page" 2>/dev/null \
+            || true
+    )"
+
+    printf -v "$__out" '%s' "$count"
+}
+
+pm_count_partial_end_markers() {
+    local __out="$1"
+    local page="$2"
+    local partial_name="$3"
+
+    local count
+    count="$(
+        grep -Ec "<!--[[:space:]]*/PM:${partial_name}[[:space:]]*-->" "$page" 2>/dev/null \
+            || true
+    )"
+
+    printf -v "$__out" '%s' "$count"
+}
+
+verify_partial_markers_balanced() {
+    local page="$1"
+    local partial_name="$2"
+
+    local start_count
+    local end_count
+
+    pm_count_partial_start_markers start_count "$page" "$partial_name"
+    pm_count_partial_end_markers end_count "$page" "$partial_name"
+
+    if [[ "$start_count" -eq 0 && "$end_count" -eq 0 ]]; then
+        return 0
+    fi
+
+    if [[ "$start_count" -eq 0 ]]; then
+        die "Missing start marker for ${partial_name} in ${page}"
+    fi
+
+    if [[ "$end_count" -eq 0 ]]; then
+        die "Missing end marker for ${partial_name} in ${page}"
+    fi
+
+    if [[ "$start_count" -ne "$end_count" ]]; then
+        die "Unbalanced partial markers for ${partial_name} in ${page}: start=${start_count}, end=${end_count}"
+    fi
+}
+
+render_partials() {
+    : "${SITE_DIR:?SITE_DIR is required}"
+
+    if [[ ! -d "${SITE_DIR}" ]]; then
+        die "Static site directory not found: ${SITE_DIR}"
+    fi
+
+    if [[ ! -d "${SITE_DIR}/partials" ]]; then
+        warn "No partials directory found: ${SITE_DIR}/partials"
+        return 0
+    fi
+
+    local page
+    local partial_name
+    local partial_file
+
+    while IFS= read -r page; do
+        [[ -f "$page" ]] || continue
+
+        while IFS= read -r partial_name; do
+            [[ -n "$partial_name" ]] || continue
+
+            verify_partial_markers_balanced "$page" "$partial_name"
+
+            pm_partial_name_to_file partial_file "$partial_name"
+            render_partial "$page" "$partial_name" "$partial_file"
+        done < <(pm_extract_partial_names "$page")
+    done < <(pm_find_html_pages "${SITE_DIR}")
+}
+
+render_partial() {
+    local page="$1"
+    local partial_name="$2"
+    local partial_file="$3"
+
+    if [[ ! -f "$page" ]]; then
+        die "Page not found while rendering partial: ${page}"
+    fi
+
+    if [[ ! -f "$partial_file" ]]; then
+        die "Partial file not found for ${partial_name}: ${partial_file}"
+    fi
+
+    local tmp_file
+    tmp_file="$(mktemp)"
+
+    awk \
+        -v partial_name="$partial_name" \
+        -v partial_file="$partial_file" '
+        BEGIN {
+            start_marker = "<!-- PM:" partial_name " -->"
+            end_marker = "<!-- /PM:" partial_name " -->"
+            in_block = 0
+            rendered = 0
+
+            while ((getline partial_line < partial_file) > 0) {
+                partial = partial partial_line ORS
+            }
+            close(partial_file)
+        }
+
+        $0 ~ "<!--[[:space:]]*PM:" partial_name "[[:space:]]*-->" {
+            print start_marker
+            printf "%s", partial
+            print end_marker
+            in_block = 1
+            rendered++
+            next
+        }
+
+        $0 ~ "<!--[[:space:]]*/PM:" partial_name "[[:space:]]*-->" {
+            in_block = 0
+            next
+        }
+
+        in_block == 0 {
+            print
+        }
+
+        END {
+            if (rendered == 0) {
+                exit 10
+            }
+        }
+        ' "$page" > "$tmp_file" || {
+            local rc=$?
+            rm -f "$tmp_file"
+
+            case "$rc" in
+                10)
+                    die "Failed to render ${partial_name}; no start marker processed in ${page}"
+                    ;;
+                *)
+                    die "Failed to render ${partial_name} into ${page}" "$rc"
+                    ;;
+            esac
+        }
+
+    mv "$tmp_file" "$page"
+    log INFO "Rendered partial ${partial_name} into ${page}"
+}
+
+verify_all_partial_markers_balanced() {
+    : "${SITE_DIR:?SITE_DIR is required}"
+
+    local page
+    local partial_name
+
+    while IFS= read -r page; do
+        [[ -f "$page" ]] || continue
+
+        while IFS= read -r partial_name; do
+            [[ -n "$partial_name" ]] || continue
+            verify_partial_markers_balanced "$page" "$partial_name"
+        done < <(pm_extract_partial_names "$page")
+    done < <(pm_find_html_pages "${SITE_DIR}")
+}
+
+pm_deploy_static_main() {
+    : "${SITE_DIR:?SITE_DIR is required}"
+
+    log INFO "pm-deploy-static: verifying partial markers"
+    verify_all_partial_markers_balanced
+
+    log INFO "pm-deploy-static: rendering partials"
+    render_partials
+
+    log INFO "pm-deploy-static: verifying rendered partial markers"
+    verify_all_partial_markers_balanced
+
+    log INFO "pm-deploy-static: complete"
+}
+
+pm_deploy_static_main "$@"

@@ -1,31 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Cookie consent defaults must load before Google Tag Manager. -->
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('consent', 'default', {
-      ad_storage: 'denied',
-      ad_user_data: 'denied',
-      ad_personalization: 'denied',
-      analytics_storage: 'denied',
-      functionality_storage: 'granted',
-      personalization_storage: 'denied',
-      security_storage: 'granted',
-      wait_for_update: 500
-    });
-  </script>
+  <script src="assets/js/site-config.js" data-config-path="config.generated.json"></script>
 
-<!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-59XLJP3Q');</script>
-<!-- End Google Tag Manager -->
-
-  <script>
+<script>
     function escapeHtml(value) {
       return String(value ?? "")
         .replaceAll("&", "&amp;")
@@ -80,9 +58,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       loadBrandCards();
     }
   </script>
-
-
-  <meta charset="UTF-8" />
+<meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
   <title>Et al Solutions LLC</title>
@@ -91,26 +67,23 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <link rel="stylesheet" href="assets/css/cookie-consent-overrides.css" />
 </head>
 <body>
+<div class="page-shell">
+<!-- PM:HEADER -->
+<header class="site-header">
+  <div class="container">
+    <a class="brand" href="/#home">ET AL SOLUTIONS LLC</a>
+    <nav class="nav" aria-label="Primary">
+      <a href="/#home">Home</a>
+      <a href="/#brands">Brands</a>
+      <a href="/#services">Services</a>
+      <a href="/#ai-sdlc-optimization">Featured Offer</a>
+      <a href="/#about">About</a>
+      <a href="/#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+<!-- /PM:HEADER -->
 
-<!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-59XLJP3Q"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
-
-  <div class="page-shell">
-    <header class="site-header">
-      <div class="container">
-        <a class="brand" href="#home">ET AL SOLUTIONS LLC</a>
-        <nav class="nav" aria-label="Primary">
-          <a href="#home">Home</a>
-          <a href="#brands">Brands</a>
-          <a href="#services">Services</a>
-          <a href="#ai-sdlc-optimization">Featured Offer</a>
-          <a href="#about">About</a>
-          <a href="#contact">Contact</a>
-        </nav>
-      </div>
-    </header>
 
     <main>
       <section class="hero panel" id="home">
@@ -359,7 +332,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <p>Share the problem, the goal, or the thing that keeps getting harder than it should be.</p>
             <a class="contact-link" href="mailto:info@etalsolutions.tech">
               <span class="contact-icon">✉</span>
-              <span>info@etalsolutions.tech</span>
+              <span data-config-text="SITE_CONTACT_EMAIL">info@etalsolutions.tech</span>
             </a>
             <a class="contact-link" href="tel:+15622835192">
               <span class="contact-icon">☎</span>
@@ -370,17 +343,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </section>
     </main>
 
-    <footer class="site-footer">
-      <div class="container">
-        <div class="footer-legal">
-          <span>© 2025 Et al Solutions LLC.</span>
-          <span class="footer-separator" aria-hidden="true">·</span>
-          <a href="https://public.etal.solutions/docs/et-al-solutions-llc/et-al-solutions-llc-privacy-policy.html" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
-          <span class="footer-separator" aria-hidden="true">·</span>
-          <a href="#cookie-preferences" id="cookie-preferences-link" data-cookie-preferences data-cc="show-preferencesModal">Cookie preferences</a>
-        </div>
-      </div>
-    </footer>
+<!-- PM:FOOTER -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-legal">
+      <span>© 2025 Et al Solutions LLC.</span>
+      <span class="footer-separator" aria-hidden="true">·</span>
+      <a href="https://public.etal.solutions/docs/et-al-solutions-llc/et-al-solutions-llc-privacy-policy.html" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
+      <span class="footer-separator" aria-hidden="true">·</span>
+      <a href="#cookie-preferences" id="cookie-preferences-link" data-cookie-preferences data-cc="show-preferencesModal">Cookie preferences</a>
+    </div>
+  </div>
+</footer>
+<!-- /PM:FOOTER -->
   </div>
 <script src="https://cdn.jsdelivr.net/gh/orestbida/cookieconsent@3.1.0/dist/cookieconsent.umd.js"></script>
 <script src="assets/js/cookie-consent.js"></script>
