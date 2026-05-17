@@ -105,7 +105,7 @@ img { max-width: 100%; display: block; }
 }
 
 section[id] {
-  scroll-margin-top: calc(var(--header-h) + 12px);
+  scroll-margin-top: calc(var(--header-h)); /* + 12px);(*/
 }
 
 .panel {
