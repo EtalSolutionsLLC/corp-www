@@ -112,7 +112,7 @@ section[id] {
   display: block;
   min-height: auto;
   padding: clamp(42px, 6vh, 76px) 0;
-  scroll-margin-top: calc(var(--header-h) + 12px);
+  scroll-margin-top: calc(var(--header-h)); /* + 12px);*/
 }
 
 .panel:target {
