@@ -43,25 +43,3 @@ The homepage includes a brand directory section. Individual brand pages live und
 - `brands/25th-hour.html`
 
 The brand directory data lives in `content/brands.json`.
-
-## The Transformation Thread blog interface
-
-The Transformation Thread brand page includes a native static blog interface at:
-
-```text
-brands/transformation-thread.html#blog
-```
-
-The interface is intentionally static and low-conflict. It uses the existing site CSS and does not embed a third-party blog widget.
-
-Supporting content data lives in:
-
-```text
-content/transformation-thread-posts.json
-```
-
-For now, article cards link to email requests or future article URLs. When a real article is published, update both the card link in `brands/transformation-thread.html` and the matching `url` value in `content/transformation-thread-posts.json`.
-
-## Transformation Thread blog title treatment
-
-The Transformation Thread blog interface uses `.thread-blog-intro` as a title/intro panel and `.thread-featured-post` / `.thread-post-card` as article surfaces. Keep the title panel visually distinct so it does not read as another article card.

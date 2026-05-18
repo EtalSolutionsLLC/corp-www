@@ -1,0 +1,34 @@
+{
+  "brand": "The Transformation Thread",
+  "description": "Native static blog interface data for the Transformation Thread brand page.",
+  "posts": [
+    {
+      "title": "What transformation actually asks of a business",
+      "category": "Transformation Strategy",
+      "status": "Featured",
+      "summary": "Transformation is a practical sequence of choices about what to simplify, what to preserve, and where technology can reduce friction without creating new confusion.",
+      "url": "mailto:info@etalsolutions.tech?subject=Transformation%20Thread%20Featured%20Article"
+    },
+    {
+      "title": "Start with the work, not the tool",
+      "category": "A.I. Adoption",
+      "status": "Draft",
+      "summary": "Durable A.I. adoption begins with workflows, decisions, and pain points before selecting platforms.",
+      "url": "mailto:info@etalsolutions.tech?subject=Start%20with%20the%20work%20article"
+    },
+    {
+      "title": "The smallest useful transformation plan",
+      "category": "Operating Model",
+      "status": "Draft",
+      "summary": "A simple planning pattern for moving from vague improvement goals to manageable technology-enabled changes.",
+      "url": "mailto:info@etalsolutions.tech?subject=Smallest%20useful%20transformation%20plan"
+    },
+    {
+      "title": "Legacy systems are often carrying business memory",
+      "category": "Systems Thinking",
+      "status": "Draft",
+      "summary": "A perspective piece on treating older systems as operational knowledge, not just technical debt.",
+      "url": "mailto:info@etalsolutions.tech?subject=Legacy%20systems%20business%20memory"
+    }
+  ]
+}
