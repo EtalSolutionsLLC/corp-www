@@ -7,6 +7,7 @@
 # - Keep deployed output fully static.
 # - Preserve Portmason marker comments for repeatable/idempotent rendering.
 # - Support page-specific partial tokens, including CASE_SUBTITLE.
+# - Support generic body data-* tokens, e.g. data-brand-name -> {{BRAND_NAME}}.
 # - Roll back the current HTML page if rendering that page fails.
 #
 # Marker model:
@@ -22,13 +23,28 @@
 #   Preferred page-level attribute:
 #     <body data-case-subtitle="Integration Case Study">
 #
-#   Supported partial token:
+#   Supported page token:
 #     {{CASE_SUBTITLE}}
+#
+#   Generic body data-* token model:
+#     <body data-brand-name="SIMPLIFA.I."> -> {{BRAND_NAME}}
+#     <body data-page-title="Example"> -> {{PAGE_TITLE}}
 #
 #   Fallbacks for CASE_SUBTITLE:
 #     1. <body data-case-subtitle="...">
 #     2. content/case-studies.json entry matching the page URL or ID slug
 #     3. "Architecture Case Study"
+#
+# Env token model:
+#
+#   Any static HTML page or partial can use public-safe .env values:
+#     {{GTM_CONTAINER_ID}}
+#     {{GA4_MEASUREMENT_ID}}
+#     {{SITE_URL}}
+#
+#   Values are loaded from ENV_FILE.generated when present, otherwise ENV_FILE.
+#   Secret-looking variables are intentionally excluded from HTML rendering.
+#   Unknown tokens are left unchanged and reported as warnings.
 
 set -euo pipefail
 
@@ -136,16 +152,16 @@ pm_make_page_backup() {
     local __out="$1"
     local page="$2"
 
-    local backup_file=""
-    backup_file="$(mktemp)"
+    local resolved_backup_file=""
+    resolved_backup_file="$(mktemp)"
 
-    if ! cp -p "$page" "$backup_file"; then
-        rm -f "$backup_file"
+    if ! cp -p "$page" "$resolved_backup_file"; then
+        rm -f "$resolved_backup_file"
         log ERROR "Failed to create rollback backup for ${page}"
         return 1
     fi
 
-    printf -v "$__out" '%s' "$backup_file"
+    printf -v "$__out" '%s' "$resolved_backup_file"
 }
 
 pm_restore_page_backup() {
@@ -180,6 +196,267 @@ pm_html_unescape_minimal() {
     decoded_value="${decoded_value//&gt;/>}"
 
     printf -v "$__out" '%s' "$decoded_value"
+}
+
+
+pm_token_env_source_file() {
+    local __out="$1"
+
+    local resolved_env_source=""
+
+    if [[ -n "${ENV_FILE:-}" && -r "${ENV_FILE}.generated" ]]; then
+        resolved_env_source="${ENV_FILE}.generated"
+    elif [[ -n "${ENV_FILE:-}" && -r "${ENV_FILE}" ]]; then
+        resolved_env_source="${ENV_FILE}"
+    elif [[ -r "${SITE_DIR}/.env.generated" ]]; then
+        resolved_env_source="${SITE_DIR}/.env.generated"
+    elif [[ -r "${SITE_DIR}/.env" ]]; then
+        resolved_env_source="${SITE_DIR}/.env"
+    fi
+
+    printf -v "$__out" '%s' "$resolved_env_source"
+}
+
+pm_is_public_html_env_key() {
+    local key="$1"
+
+    [[ "$key" =~ ^[A-Za-z_][A-Za-z0-9_]*$ ]] || return 1
+
+    case "$key" in
+        *_TOKEN|*_SECRET|*_KEY|*_PASSWORD|*PRIVATE*|*CREDENTIAL*|*AUTH*|ENV_FILE|DEBUG|VERBOSE|CUR_SCRIPT|PATH|HOME|PWD|OLDPWD|SHELL|SHLVL|USER|LOGNAME|LANG|LANGUAGE|TERM|PORT|XDG_*)
+            return 1
+            ;;
+    esac
+
+    return 0
+}
+
+pm_write_public_env_token_map() {
+    local out_file="$1"
+    local env_source=""
+
+    : > "$out_file"
+
+    pm_token_env_source_file env_source
+
+    if [[ -z "$env_source" ]]; then
+        warn "No env file available for static token rendering. Expected ENV_FILE, ENV_FILE.generated, .env.generated, or .env."
+        return 0
+    fi
+
+    if ! command -v python3 >/dev/null 2>&1; then
+        log ERROR "python3 is required for static token map generation."
+        return 1
+    fi
+
+    if python3 - "$env_source" "$out_file" <<'PYTOKENMAP'
+import ast
+import re
+import sys
+from pathlib import Path
+
+env_source, out_file = sys.argv[1:3]
+key_pattern = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
+secret_patterns = (
+    "_TOKEN",
+    "_SECRET",
+    "_KEY",
+    "_PASSWORD",
+)
+blocked_exact = {
+    "ENV_FILE", "DEBUG", "VERBOSE", "CUR_SCRIPT", "PATH", "HOME", "PWD",
+    "OLDPWD", "SHELL", "SHLVL", "USER", "LOGNAME", "LANG", "LANGUAGE",
+    "TERM", "PORT",
+}
+blocked_contains = ("PRIVATE", "CREDENTIAL", "AUTH")
+
+def is_public_key(key: str) -> bool:
+    if not key_pattern.match(key):
+        return False
+    if key in blocked_exact:
+        return False
+    if key.startswith("XDG_") or key.startswith("LC_"):
+        return False
+    if any(key.endswith(suffix) for suffix in secret_patterns):
+        return False
+    if any(part in key for part in blocked_contains):
+        return False
+    return True
+
+def decode_value(raw: str) -> str:
+    raw = raw.strip()
+    if not raw:
+        return ""
+    if (raw.startswith('"') and raw.endswith('"')) or (raw.startswith("'") and raw.endswith("'")):
+        try:
+            return ast.literal_eval(raw)
+        except Exception:
+            return raw[1:-1]
+    if " #" in raw:
+        raw = raw.split(" #", 1)[0].rstrip()
+    return raw
+
+pairs = []
+for line in Path(env_source).read_text(encoding="utf-8").splitlines():
+    stripped = line.strip()
+    if not stripped or stripped.startswith("#"):
+        continue
+    if stripped.startswith("export "):
+        stripped = stripped[len("export "):].strip()
+    if "=" not in stripped:
+        continue
+    key, raw_value = stripped.split("=", 1)
+    key = key.strip()
+    if not is_public_key(key):
+        continue
+    pairs.append((key, decode_value(raw_value)))
+
+with open(out_file, "wb") as fh:
+    for key, value in pairs:
+        fh.write(key.encode("utf-8") + b"\0" + value.encode("utf-8") + b"\0")
+PYTOKENMAP
+    then
+        :
+    else
+        local rc=$?
+        log ERROR "Failed to build static token map from ${env_source}; rc=${rc}"
+        return "$rc"
+    fi
+}
+
+render_page_tokens() {
+    local page="$1"
+
+    if [[ ! -f "$page" ]]; then
+        log ERROR "Page not found while rendering tokens: ${page}"
+        return 1
+    fi
+
+    if ! command -v python3 >/dev/null 2>&1; then
+        log ERROR "python3 is required for static token rendering."
+        return 1
+    fi
+
+    local case_subtitle=""
+    local token_map_file=""
+    local tmp_file=""
+    local unresolved_file=""
+
+    pm_page_case_subtitle case_subtitle "$page"
+
+    token_map_file="$(mktemp)"
+    tmp_file="$(mktemp)"
+    unresolved_file="$(mktemp)"
+
+    if ! pm_write_public_env_token_map "$token_map_file"; then
+        rm -f "$token_map_file" "$tmp_file" "$unresolved_file"
+        return 1
+    fi
+
+    if python3 - "$page" "$tmp_file" "$token_map_file" "$unresolved_file" "$case_subtitle" <<'PYTOKENRENDER'
+import re
+import sys
+from pathlib import Path
+
+page_path, out_path, token_map_path, unresolved_path, case_subtitle = sys.argv[1:6]
+
+raw = Path(token_map_path).read_bytes()
+parts = raw.split(b"\0")
+env = {}
+for i in range(0, max(0, len(parts) - 1), 2):
+    if not parts[i]:
+        continue
+    key = parts[i].decode("utf-8", "replace")
+    value = parts[i + 1].decode("utf-8", "replace")
+    env[key] = value
+
+def html_unescape_minimal(value: str) -> str:
+    return (
+        value.replace("&quot;", "\"")
+        .replace("&#34;", "\"")
+        .replace("&apos;", "'")
+        .replace("&#39;", "'")
+        .replace("&amp;", "&")
+        .replace("&lt;", "<")
+        .replace("&gt;", ">")
+    )
+
+def data_attr_to_token(attr_name: str) -> str:
+    # data-brand-name -> BRAND_NAME
+    # data-case-subtitle -> CASE_SUBTITLE
+    return attr_name[5:].replace("-", "_").upper()
+
+def extract_body_data_tokens(html: str) -> dict[str, str]:
+    tokens = {}
+    body_match = re.search(r"<body\b[^>]*>", html, flags=re.IGNORECASE | re.DOTALL)
+    if not body_match:
+        return tokens
+
+    body_tag = body_match.group(0)
+    attr_pattern = re.compile(
+        r"\b(data-[A-Za-z0-9_-]+)\s*=\s*(?:\"([^\"]*)\"|'([^']*)')",
+        flags=re.IGNORECASE,
+    )
+
+    for match in attr_pattern.finditer(body_tag):
+        attr_name = match.group(1).lower()
+        raw_value = match.group(2) if match.group(2) is not None else match.group(3)
+        token_name = data_attr_to_token(attr_name)
+        if re.match(r"^[A-Z][A-Z0-9_]*$", token_name):
+            tokens[token_name] = html_unescape_minimal(raw_value)
+
+    return tokens
+
+text = Path(page_path).read_text(encoding="utf-8")
+
+page_tokens = extract_body_data_tokens(text)
+# Preserve the existing CASE_SUBTITLE fallback behavior. A page-level
+# data-case-subtitle value wins because extract_body_data_tokens() populates it first.
+if not page_tokens.get("CASE_SUBTITLE"):
+    page_tokens["CASE_SUBTITLE"] = case_subtitle
+
+token_pattern = re.compile(r"\{\{([A-Z][A-Z0-9_]*)\}\}")
+unresolved = set()
+
+def replace(match: re.Match[str]) -> str:
+    key = match.group(1)
+    if key in page_tokens:
+        return page_tokens[key]
+    if key in env:
+        return env[key]
+    unresolved.add(key)
+    return match.group(0)
+
+rendered = token_pattern.sub(replace, text)
+Path(out_path).write_text(rendered, encoding="utf-8")
+Path(unresolved_path).write_text("\n".join(sorted(unresolved)), encoding="utf-8")
+PYTOKENRENDER
+    then
+        :
+    else
+        local rc=$?
+        rm -f "$token_map_file" "$tmp_file" "$unresolved_file"
+        log ERROR "Failed to render static tokens in ${page}; rc=${rc}"
+        return "$rc"
+    fi
+
+    if [[ -s "$unresolved_file" ]]; then
+        while IFS= read -r unresolved_token; do
+            [[ -n "$unresolved_token" ]] || continue
+            warn "Unresolved static token in ${page}: {{${unresolved_token}}}"
+        done < "$unresolved_file"
+    fi
+
+    if ! mv "$tmp_file" "$page"; then
+        local rc=$?
+        rm -f "$token_map_file" "$tmp_file" "$unresolved_file"
+        log ERROR "Failed to replace token-rendered page: ${page}; rc=${rc}"
+        return "$rc"
+    fi
+
+    rm -f "$token_map_file" "$unresolved_file"
+    log INFO "Rendered static tokens in ${page}"
+    return 0
 }
 
 pm_extract_body_data_attr() {
@@ -354,6 +631,13 @@ render_page_partials() {
     fi
 
     if ! verify_page_partial_markers_balanced "$page"; then
+        rc=$?
+        pm_restore_page_backup "$page" "$backup_file"
+        pm_discard_page_backup "$backup_file"
+        return "$rc"
+    fi
+
+    if ! render_page_tokens "$page"; then
         rc=$?
         pm_restore_page_backup "$page" "$backup_file"
         pm_discard_page_backup "$backup_file"

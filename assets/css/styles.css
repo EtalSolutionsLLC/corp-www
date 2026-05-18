@@ -85,11 +85,20 @@ img { max-width: 100%; display: block; }
   white-space: nowrap;
 }
 
+.brand-word {
+  letter-spacing: 0.02em;
+}
+
+.brand-ai {
+  color: #123BFF;
+  text-shadow: 0 0 10px rgba(18, 59, 255, 0.45);
+}
+
 .nav {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 34px;
+  gap: 16px;
   flex-wrap: wrap;
 }
 
