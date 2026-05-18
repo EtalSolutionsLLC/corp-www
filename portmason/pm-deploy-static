@@ -6,6 +6,7 @@
 # - Render static HTML partials into deployable pages.
 # - Keep deployed output fully static.
 # - Preserve Portmason marker comments for repeatable/idempotent rendering.
+# - Support page-specific partial tokens, including CASE_SUBTITLE.
 # - Roll back the current HTML page if rendering that page fails.
 #
 # Marker model:
@@ -15,10 +16,23 @@
 #   <!-- /PM:HEADER -->
 #
 # Markers are managed regions. They remain in production HTML.
+#
+# Page-specific token model:
+#
+#   Preferred page-level attribute:
+#     <body data-case-subtitle="Integration Case Study">
+#
+#   Supported partial token:
+#     {{CASE_SUBTITLE}}
+#
+#   Fallbacks for CASE_SUBTITLE:
+#     1. <body data-case-subtitle="...">
+#     2. content/case-studies.json entry matching the page URL or ID slug
+#     3. "Architecture Case Study"
 
 set -euo pipefail
 
-: "${CUR_SCRIPT:=$(basename "${BASH_SOURCE[0]:-${0:-}}")}"
+: "${CUR_SCRIPT:=$(basename "${BASH_SOURCE[0]:-${0:-}}")}" 
 export CUR_SCRIPT
 
 : "${PORTMASON_SHARE:="$(cd -- "$(dirname -- "${BASH_SOURCE[0]:-${0:-}}")" && pwd -P)"}"
@@ -32,7 +46,7 @@ pm_partial_name_to_file() {
     local __out="$1"
     local partial_name="$2"
 
-    local partial_slug
+    local partial_slug=""
     partial_slug="$(printf '%s' "$partial_name" | tr '[:upper:]' '[:lower:]')"
 
     printf -v "$__out" '%s/partials/%s.html' "${SITE_DIR}" "$partial_slug"
@@ -63,13 +77,13 @@ pm_count_partial_start_markers() {
     local page="$2"
     local partial_name="$3"
 
-    local count
-    count="$(
+    local marker_count=""
+    marker_count="$(
         grep -Ec "<!--[[:space:]]*PM:${partial_name}[[:space:]]*-->" "$page" 2>/dev/null \
             || true
     )"
 
-    printf -v "$__out" '%s' "$count"
+    printf -v "$__out" '%s' "$marker_count"
 }
 
 pm_count_partial_end_markers() {
@@ -77,13 +91,13 @@ pm_count_partial_end_markers() {
     local page="$2"
     local partial_name="$3"
 
-    local count
-    count="$(
+    local marker_count=""
+    marker_count="$(
         grep -Ec "<!--[[:space:]]*/PM:${partial_name}[[:space:]]*-->" "$page" 2>/dev/null \
             || true
     )"
 
-    printf -v "$__out" '%s' "$count"
+    printf -v "$__out" '%s' "$marker_count"
 }
 
 verify_partial_markers_balanced() {
@@ -150,6 +164,131 @@ pm_discard_page_backup() {
     local backup_file="${1:-}"
 
     [[ -n "$backup_file" ]] && rm -f "$backup_file"
+}
+
+pm_html_unescape_minimal() {
+    local __out="$1"
+    local input_value="${2:-}"
+    local decoded_value="$input_value"
+
+    decoded_value="${decoded_value//&quot;/\"}"
+    decoded_value="${decoded_value//&#34;/\"}"
+    decoded_value="${decoded_value//&apos;/\'}"
+    decoded_value="${decoded_value//&#39;/\'}"
+    decoded_value="${decoded_value//&amp;/&}"
+    decoded_value="${decoded_value//&lt;/<}"
+    decoded_value="${decoded_value//&gt;/>}"
+
+    printf -v "$__out" '%s' "$decoded_value"
+}
+
+pm_extract_body_data_attr() {
+    local __out="$1"
+    local page="$2"
+    local attr_name="$3"
+
+    local raw_attr_value=""
+    local decoded_attr_value=""
+
+    raw_attr_value="$(
+        awk -v attr="${attr_name}" '
+            BEGIN { IGNORECASE = 1 }
+            /<body([[:space:]>]|$)/ {
+                body = $0
+                while (body !~ />/ && (getline next_line) > 0) {
+                    body = body " " next_line
+                }
+
+                pattern_dq = attr "[[:space:]]*=[[:space:]]*\"[^\"]*\""
+                pattern_sq = attr "[[:space:]]*=[[:space:]]*'\''[^'\'']*'\''"
+
+                if (match(body, pattern_dq)) {
+                    found = substr(body, RSTART, RLENGTH)
+                    sub(/^[^=]*=[[:space:]]*\"/, "", found)
+                    sub(/\"$/, "", found)
+                    print found
+                    exit
+                }
+
+                if (match(body, pattern_sq)) {
+                    found = substr(body, RSTART, RLENGTH)
+                    sub(/^[^=]*=[[:space:]]*'\''/, "", found)
+                    sub(/'\''$/, "", found)
+                    print found
+                    exit
+                }
+            }
+        ' "$page" 2>/dev/null || true
+    )"
+
+    pm_html_unescape_minimal decoded_attr_value "$raw_attr_value"
+    printf -v "$__out" '%s' "$decoded_attr_value"
+}
+
+pm_json_case_subtitle_for_page() {
+    local __out="$1"
+    local page="$2"
+
+    local json_file="${SITE_DIR}/content/case-studies.json"
+    local json_subtitle=""
+
+    if [[ ! -f "$json_file" ]]; then
+        printf -v "$__out" '%s' ""
+        return 0
+    fi
+
+    if command -v python3 >/dev/null 2>&1; then
+        json_subtitle="$(python3 -c '
+import json
+import os
+import sys
+
+site_dir, page, json_file = sys.argv[1:4]
+rel_page = os.path.relpath(page, site_dir).replace(os.sep, "/")
+page_slug = os.path.splitext(os.path.basename(page))[0]
+
+try:
+    with open(json_file, "r", encoding="utf-8") as fh:
+        items = json.load(fh)
+except Exception:
+    sys.exit(0)
+
+if not isinstance(items, list):
+    sys.exit(0)
+
+for item in items:
+    if not isinstance(item, dict):
+        continue
+    url = str(item.get("url", "")).lstrip("/")
+    item_id = str(item.get("id", ""))
+    tag = str(item.get("tag", ""))
+
+    if tag and (url == rel_page or item_id == page_slug):
+        print(tag)
+        break
+' "$SITE_DIR" "$page" "$json_file" 2>/dev/null || true)"
+    fi
+
+    printf -v "$__out" '%s' "$json_subtitle"
+}
+
+pm_page_case_subtitle() {
+    local __out="$1"
+    local page="$2"
+
+    local subtitle_value=""
+
+    pm_extract_body_data_attr subtitle_value "$page" "data-case-subtitle"
+
+    if [[ -z "$subtitle_value" ]]; then
+        pm_json_case_subtitle_for_page subtitle_value "$page"
+    fi
+
+    if [[ -z "$subtitle_value" ]]; then
+        subtitle_value="Architecture Case Study"
+    fi
+
+    printf -v "$__out" '%s' "$subtitle_value"
 }
 
 render_partials() {
@@ -240,12 +379,22 @@ render_partial() {
         return 1
     fi
 
+    local case_subtitle=""
+    pm_page_case_subtitle case_subtitle "$page"
+
     local tmp_file=""
     tmp_file="$(mktemp)"
 
     if ! awk \
         -v partial_name="$partial_name" \
-        -v partial_file="$partial_file" '
+        -v partial_file="$partial_file" \
+        -v case_subtitle="$case_subtitle" '
+        function render_template(input, output) {
+            output = input
+            gsub(/\{\{CASE_SUBTITLE\}\}/, case_subtitle, output)
+            return output
+        }
+
         BEGIN {
             start_marker = "<!-- PM:" partial_name " -->"
             end_marker = "<!-- /PM:" partial_name " -->"
@@ -253,7 +402,7 @@ render_partial() {
             rendered = 0
 
             while ((getline partial_line < partial_file) > 0) {
-                partial = partial partial_line ORS
+                partial = partial render_template(partial_line) ORS
             }
             close(partial_file)
         }
