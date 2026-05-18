@@ -218,6 +218,10 @@ body:not(:has(section:target)) .brand-page-hero {
   color: rgba(255,255,255,0.78);
 }
 
+.section-inline-logo {
+  max-width:120px;
+}
+
 .section-kicker.light {
   color: var(--blue);
 }
