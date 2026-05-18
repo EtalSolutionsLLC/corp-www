@@ -223,7 +223,7 @@ body:not(:has(section:target)) .brand-page-hero {
   height: 1em;
   width: auto;
   max-width: 160px;
-  vertical-align: -0.1em;
+  vertical-align: -0.25em;
   margin: 0 0.15em;
   object-fit: contain;
 }
