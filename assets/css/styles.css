@@ -1479,6 +1479,8 @@ body:not(:has(section:target)) .brand-page-hero {
   max-height: none;
   object-fit: contain;
   object-position: left top;
+  margin-top: -50px;
+  margin-left: -45px;
 }
 
 .thread-blog-logo[src=""],
