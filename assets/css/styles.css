@@ -1424,8 +1424,8 @@ body:not(:has(section:target)) .brand-page-hero {
 
 .thread-blog-showcase {
   display: grid;
-  grid-template-columns: clamp(170px, 15vw, 220px) minmax(0, 1fr);
-  gap: clamp(28px, 4vw, 56px);
+  grid-template-columns: clamp(260px, 22vw, 320px) minmax(0, 1fr);
+  gap: clamp(24px, 3vw, 42px);
   align-items: stretch;
   width: 100%;
   height: min(520px, calc(100dvh - 230px));
@@ -1442,13 +1442,13 @@ body:not(:has(section:target)) .brand-page-hero {
 }
 .thread-blog-masthead {
   display: flex;
-  min-width: 280px;
+  min-width: 0;
   height: 100%;
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
   overflow: hidden;
-  padding: clamp(18px, 2.4vw, 28px) 18px 22px 24px;
+  padding: clamp(20px, 2.4vw, 30px) 18px 22px 28px;
   border-left: 5px solid #f27907;
   background:
     linear-gradient(180deg, rgba(242, 121, 7, 0.11), transparent 44%),
@@ -1460,14 +1460,14 @@ body:not(:has(section:target)) .brand-page-hero {
   align-items: flex-start;
   justify-content: flex-start;
   width: 100%;
-  min-height: 28px;
+  min-height: 0;
   margin: 0 0 16px;
 }
 
 .thread-blog-logo {
   display: block;
-  width: min(104px, 100%);
-  max-height: 150px;
+  width: min(208px, 100%);
+  max-height: 96px;
   object-fit: contain;
   object-position: left top;
 }
@@ -1657,8 +1657,8 @@ body:not(:has(section:target)) .brand-page-hero {
   }
 
   .thread-blog-showcase {
-    grid-template-columns: clamp(165px, 20vw, 215px) minmax(0, 1fr);
-    gap: clamp(22px, 3vw, 36px);
+    grid-template-columns: clamp(240px, 25vw, 300px) minmax(0, 1fr);
+    gap: clamp(22px, 3vw, 34px);
   }
 
   .thread-blog-title {
