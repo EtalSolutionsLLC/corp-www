@@ -1410,34 +1410,30 @@ body:not(:has(section:target)) .brand-page-hero {
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding: clamp(18px, 2.6vh, 30px) 0 calc(var(--footer-height, 48px) + 28px);
+  padding: clamp(12px, 1.8vh, 22px) 0 calc(var(--footer-height, 48px) + 56px);
   background:
     radial-gradient(circle at 12% 12%, rgba(242, 121, 7, 0.13), transparent 0 24%),
     radial-gradient(circle at 84% 6%, rgba(18, 59, 255, 0.10), transparent 0 24%),
     linear-gradient(135deg, #0b111d 0%, #121a2b 52%, #080e19 100%);
   color: var(--white);
 }
+
 .thread-blog .container {
   width: min(100% - 48px, 1180px);
   margin: 0 auto;
 }
 
 .thread-blog-showcase {
-
-
-  height: min(600px, calc(100dvh - 178px));
-  min-height: 560px;
-  overflow: hidden;
-
-
   display: grid;
   grid-template-columns: clamp(170px, 15vw, 220px) minmax(0, 1fr);
   gap: clamp(28px, 4vw, 56px);
   align-items: stretch;
   width: 100%;
-/*  height: min(520px, calc(100dvh - 230px));
-  min-height: 470px;
-  overflow: hidden; */
+
+  height: auto;
+  min-height: 600px;
+  overflow: visible;
+
   margin: 0;
   padding: 0;
   background:
@@ -1447,15 +1443,17 @@ body:not(:has(section:target)) .brand-page-hero {
     0 30px 90px rgba(0, 0, 0, 0.35),
     inset 0 1px 0 rgba(255, 255, 255, 0.055);
 }
+
 .thread-blog-masthead {
   display: flex;
   min-width: 280px;
-  height: 100%;
+  min-height: 600px;
+  height: auto;
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  overflow: hidden;
-  padding: clamp(18px, 2.4vw, 28px) 18px 22px 24px;
+  overflow: visible;
+  padding: clamp(18px, 2.4vw, 28px) 18px 34px 24px;
   border-left: 5px solid #f27907;
   background:
     linear-gradient(180deg, rgba(242, 121, 7, 0.11), transparent 44%),
@@ -1687,13 +1685,12 @@ body:not(:has(section:target)) .brand-page-hero {
   .thread-blog-showcase {
     grid-template-columns: 1fr;
     height: auto;
-    min-height: auto;
+    min-height: 560px;
     overflow: visible;
   }
 
   .thread-blog-masthead {
     height: auto;
-    min-height: auto;
     padding-right: clamp(18px, 4vw, 32px);
   }
 
@@ -1708,6 +1705,7 @@ body:not(:has(section:target)) .brand-page-hero {
 
   .thread-blog-actions {
     margin-top: 18px;
+    padding-bottom: 18px;
   }
 
   .thread-post-layout {
