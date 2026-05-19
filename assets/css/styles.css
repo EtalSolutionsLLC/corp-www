@@ -1423,16 +1423,23 @@ body:not(:has(section:target)) .brand-page-hero {
 }
 
 .thread-blog-showcase {
+
+
+  height: min(600px, calc(100dvh - 178px));
+  min-height: 560px;
+  overflow: hidden;
+
+
   display: grid;
-  grid-template-columns: clamp(260px, 22vw, 320px) minmax(0, 1fr);
-  gap: clamp(24px, 3vw, 42px);
+  grid-template-columns: clamp(170px, 15vw, 220px) minmax(0, 1fr);
+  gap: clamp(28px, 4vw, 56px);
   align-items: stretch;
   width: 100%;
-  height: min(520px, calc(100dvh - 230px));
+/*  height: min(520px, calc(100dvh - 230px));
   min-height: 470px;
+  overflow: hidden; */
   margin: 0;
   padding: 0;
-  overflow: hidden;
   background:
     linear-gradient(90deg, rgba(242, 121, 7, 0.10), transparent 34%),
     rgba(10, 16, 29, 0.72);
@@ -1442,13 +1449,13 @@ body:not(:has(section:target)) .brand-page-hero {
 }
 .thread-blog-masthead {
   display: flex;
-  min-width: 0;
+  min-width: 280px;
   height: 100%;
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
   overflow: hidden;
-  padding: clamp(20px, 2.4vw, 30px) 18px 22px 28px;
+  padding: clamp(18px, 2.4vw, 28px) 18px 22px 24px;
   border-left: 5px solid #f27907;
   background:
     linear-gradient(180deg, rgba(242, 121, 7, 0.11), transparent 44%),
@@ -1460,14 +1467,17 @@ body:not(:has(section:target)) .brand-page-hero {
   align-items: flex-start;
   justify-content: flex-start;
   width: 100%;
-  min-height: 0;
-  margin: 0 0 16px;
+  min-height: 92px;
+  margin: 0 0 14px;
+  overflow: visible;
 }
 
 .thread-blog-logo {
   display: block;
-  width: min(208px, 100%);
-  max-height: 96px;
+  width: clamp(84px, 7vw, 96px);
+  height: auto;
+  max-width: none;
+  max-height: none;
   object-fit: contain;
   object-position: left top;
 }
@@ -1657,8 +1667,8 @@ body:not(:has(section:target)) .brand-page-hero {
   }
 
   .thread-blog-showcase {
-    grid-template-columns: clamp(240px, 25vw, 300px) minmax(0, 1fr);
-    gap: clamp(22px, 3vw, 34px);
+    grid-template-columns: clamp(165px, 20vw, 215px) minmax(0, 1fr);
+    gap: clamp(22px, 3vw, 36px);
   }
 
   .thread-blog-title {
