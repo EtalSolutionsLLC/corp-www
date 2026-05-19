@@ -12,6 +12,7 @@
   "MANAGED_BY": "github-pages",
   "OWNER": "omer",
   "OWNER_ALIAS": "etalsolutions",
+  "PM_STATIC_EXCLUDE_DIRS": "capture",
   "RUNTIME_ADAPTER_CODE": "static-github",
   "SITE_BRAND_NAME": "Et al Solutions LLC",
   "SITE_CONTACT_EMAIL": "info@etalsolutions.tech",
