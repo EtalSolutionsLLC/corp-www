@@ -1,0 +1,38 @@
+[
+  {
+    "id": "what-can-ai-do-for-you",
+    "status": "featured",
+    "audience": "Non-technical consumers",
+    "name": "What can A.I. do for you?",
+    "shortName": "What can A.I. do for you?",
+    "kicker": "Featured Offer",
+    "summary": "A plain-language A.I. discovery session for people who are curious about A.I. but do not know where to start.",
+    "outcome": "Walk away with a simple personal A.I. use-case map and a few practical next steps.",
+    "url": "offers/what-can-ai-do-for-you.html",
+    "cta": "Explore the Offer",
+    "tags": [
+      "Beginner-friendly",
+      "Personal use cases",
+      "Plain language",
+      "No technical background needed"
+    ]
+  },
+  {
+    "id": "ai-optimized-sdlc-assessment",
+    "status": "archive",
+    "audience": "Software teams",
+    "name": "A.I.-Optimized SDLC Assessment",
+    "shortName": "A.I. SDLC Assessment",
+    "kicker": "Professional Offer",
+    "summary": "A focused assessment and design sprint for software teams that want to use A.I. across the SDLC without losing control of quality, security, or accountability.",
+    "outcome": "Use-case map, verification gates, accountability model, and a practical roadmap.",
+    "url": "offers/ai-optimized-sdlc-assessment.html",
+    "cta": "View the Sprint",
+    "tags": [
+      "Software delivery",
+      "Governance",
+      "Quality",
+      "Roadmap"
+    ]
+  }
+]

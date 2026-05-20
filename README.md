@@ -65,3 +65,21 @@ For now, article cards link to email requests or future article URLs. When a rea
 ## Transformation Thread blog title treatment
 
 The Transformation Thread blog interface uses `.thread-blog-intro` as a title/intro panel and `.thread-featured-post` / `.thread-post-card` as article surfaces. Keep the title panel visually distinct so it does not read as another article card.
+
+## Offer pages
+
+Featured offers now live under `offers/`, similar to brand pages.
+
+Current offer pages:
+
+- `offers/index.html` — offer archive
+- `offers/what-can-ai-do-for-you.html` — featured consumer A.I. offer
+- `offers/ai-optimized-sdlc-assessment.html` — archived/professional SDLC offer
+
+Offer metadata is stored in:
+
+```text
+content/offers.json
+```
+
+To swap the featured offer, update the homepage featured card/section and point it to the appropriate `offers/*.html` page. Keep previous offers in the archive so campaign history is not lost.
