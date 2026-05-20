@@ -66,20 +66,59 @@ For now, article cards link to email requests or future article URLs. When a rea
 
 The Transformation Thread blog interface uses `.thread-blog-intro` as a title/intro panel and `.thread-featured-post` / `.thread-post-card` as article surfaces. Keep the title panel visually distinct so it does not read as another article card.
 
-## Offer pages
+## Promotion pages and featured-promotion partials
 
-Featured offers now live under `offers/`, similar to brand pages.
-
-Current offer pages:
-
-- `offers/index.html` — offer archive
-- `offers/what-can-ai-do-for-you.html` — featured consumer A.I. offer
-- `offers/ai-optimized-sdlc-assessment.html` — archived/professional SDLC offer
-
-Offer metadata is stored in:
+Promotions use the same structural/data split as brands:
 
 ```text
-content/offers.json
+partials/promotions/*.html  = structural HTML fragments used by the homepage render
+content/promotions.json     = data/catalog metadata used for archive/list behavior
+promotions/*.html           = standalone promotion landing pages
+promotions/index.html       = promotion archive page
 ```
 
-To swap the featured offer, update the homepage featured card/section and point it to the appropriate `offers/*.html` page. Keep previous offers in the archive so campaign history is not lost.
+Current promotion pages:
+
+- `promotions/index.html` — promotion archive
+- `promotions/what-can-ai-do-for-you.html` — current consumer A.I. promotion
+- `promotions/ai-optimized-sdlc-assessment.html` — past/professional SDLC promotion
+
+Current promotion partials:
+
+- `partials/promotions/current-featured.html` — the homepage promotion slot rendered by `pm-setup`
+- `partials/promotions/what-can-ai-do-for-you.html` — reusable source partial for the current consumer promotion
+- `partials/promotions/ai-optimized-sdlc-assessment.html` — reusable source partial for the SDLC promotion
+
+The homepage owns the stable anchor and wrapper:
+
+```html
+<section class="section-light panel" id="promotions" aria-labelledby="featured-promotion-title">
+<!-- PM:PROMOTIONS-CURRENT-FEATURED -->
+  ...rendered promotion partial...
+<!-- /PM:PROMOTIONS-CURRENT-FEATURED -->
+</section>
+```
+
+To swap the featured promotion:
+
+```bash
+cp partials/promotions/current-featured.html    partials/promotions/<old-promotion-slug>.html
+
+cp partials/promotions/<new-promotion-slug>.html    partials/promotions/current-featured.html
+
+pm-setup
+```
+
+Each promotion partial should include a link to the archive:
+
+```html
+<a class="hero-cta secondary" href="/promotions/">Past Promotions</a>
+```
+
+Keep naming clear:
+
+```text
+Structural HTML: partials/promotions/current-featured.html
+Catalog data:    content/promotions.json
+Landing pages:   promotions/<promotion-slug>.html
+```
