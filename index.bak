@@ -126,14 +126,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           </div>
 
           <aside class="featured-offer" aria-label="Featured offer">
-            <span class="featured-offer-kicker">Current Campaign</span>
-            <h2>A.I.-Optimized<br>SDLC Assessment</h2>
+            <span class="featured-offer-kicker">Featured Offer</span>
+            <h2>What can A.I.<br>do for you?</h2>
             <div class="featured-offer-meta" aria-label="Offer details">
-              <span><strong>12-hour sprint</strong></span>
-              <span>Fixed price: <strong>$1,200</strong></span>
+              <span><strong>Plain language</strong></span>
+              <span><strong>No tech background</strong></span>
             </div>
-            <p>Turn scattered A.I. usage into a governed software delivery process.</p>
-            <a class="featured-offer-cta" href="#ai-sdlc-optimization">View the Sprint</a>
+            <p>A calm, practical first step for people who are curious about A.I. but do not know where to start.</p>
+            <a class="featured-offer-cta" href="offers/what-can-ai-do-for-you.html">Explore the Offer</a>
           </aside>
 
           <div class="hero-support">
@@ -237,58 +237,52 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           </div>
         </div>
       </section>
-
-      <section class="section-light panel" id="ai-sdlc-optimization">
+      <section class="section-light panel" id="what-can-ai-do-for-you">
         <div class="container promo-layout">
           <div class="section-copy">
             <span class="section-kicker light">Featured Offer</span>
-            <h2>A.I.-Optimized SDLC Assessment</h2>
+            <h2>What can A.I. do for you?</h2>
             <p>
-              A focused assessment and design sprint for software teams that want to use A.I. across the SDLC without losing control of quality, security, or accountability.
+              A plain-language A.I. discovery session for non-technical people who want to understand what A.I. can actually do for their everyday work and life.
             </p>
             <p>
-              I evaluate the current delivery process, identify safe A.I. opportunities, define practical guardrails, and provide a short roadmap the team can actually use.
+              The focus is simple: identify a few realistic ways A.I. could help, avoid the hype, and leave with practical next steps you can actually try.
             </p>
 
-            <ul class="promo-pill-list" aria-label="Assessment principles">
-              <li>Human-led</li>
-              <li>Test-driven</li>
-              <li>Governed</li>
-              <li>Verified</li>
+            <ul class="promo-pill-list" aria-label="Offer principles">
+              <li>Plain language</li>
+              <li>Beginner-friendly</li>
+              <li>Practical use cases</li>
+              <li>No tech background needed</li>
             </ul>
           </div>
 
-          <article class="promo-card accent" aria-label="A.I.-Optimized SDLC Assessment details">
-            <h3>A.I.-Optimized SDLC Assessment</h3>
-            <p>Turn scattered A.I. usage into a governed software delivery process.</p>
-
-            <div class="promo-price">
-              $1,200 <small>fixed price</small>
-            </div>
+          <article class="promo-card accent" aria-label="What can A.I. do for you details">
+            <h3>What can A.I. do for you?</h3>
+            <p>A calm, practical first step for people who are curious about A.I. but do not know where to start.</p>
 
             <div class="promo-detail-grid">
               <div class="promo-detail">
-                <strong>12-hour sprint</strong>
-                <p>Current-state review, opportunity map, guardrails, and roadmap.</p>
-              </div>
-              <div class="promo-detail">
-                <strong>Practical outputs</strong>
-                <p>Use-case map, verification gates, and accountability model.</p>
-              </div>
-              <div class="promo-detail">
                 <strong>Best fit</strong>
-                <p>Small to mid-sized software teams using or evaluating A.I. tools.</p>
+                <p>People who keep hearing about A.I. but want a simple explanation of where it could actually help.</p>
+              </div>
+              <div class="promo-detail">
+                <strong>Outcome</strong>
+                <p>A short personal use-case map and a few practical next steps.</p>
+              </div>
+              <div class="promo-detail">
+                <strong>Approach</strong>
+                <p>No jargon, no pressure, and no assumption that every task needs automation.</p>
               </div>
               <div class="promo-detail">
                 <strong>Goal</strong>
-                <p>Faster delivery with stronger process, review, and confidence.</p>
+                <p>Make A.I. feel useful, safe, and approachable enough to try.</p>
               </div>
             </div>
 
             <div class="promo-actions">
-<!--              <a class="hero-cta" href="mailto:info@etalsolutions.tech?subject=A.I.%20SDLC%20Assessment%20Inquiry">Book the Sprint</a> -->
-              <a class="hero-cta" href="https://outlook.office.com/bookwithme/user/74526c29d14348708c4b83c724b1bbc3@etal.solutions?anonymous&ismsaljsauthenabled&ep=pcard">Book the Sprint</a>
-              <a class="hero-cta secondary" href="#contact">Ask a Question</a>
+              <a class="hero-cta" href="offers/what-can-ai-do-for-you.html">Explore the Offer</a>
+              <a class="hero-cta secondary" href="offers/">View Offer Archive</a>
             </div>
           </article>
         </div>
