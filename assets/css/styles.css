@@ -1465,7 +1465,7 @@ body:not(:has(section:target)) .brand-page-hero {
 }
 .thread-blog-masthead {
   display: flex;
-  min-width: 280px;
+  min-width: 1180px;
   min-height: 600px;
   height: auto;
   flex-direction: column;
@@ -1548,7 +1548,7 @@ body:not(:has(section:target)) .brand-page-hero {
   text-underline-offset: 5px;
 }
 
-.thread-back-link:hover,
+.thread-back-link:hover,a
 .thread-back-link:focus-visible {
   color: #f27907;
 }
@@ -1559,7 +1559,7 @@ body:not(:has(section:target)) .brand-page-hero {
   height: 100%;
   grid-template-rows: minmax(0, 1.18fr) minmax(0, 0.82fr);
   gap: 12px;
-  padding: clamp(18px, 2.2vw, 30px) clamp(18px, 2.2vw, 30px) 0 0;
+  padding: clamp(18px, 2.2vw, 30px) clamp(18px, 2.2vw, 30px) 30px 0;
   margin-left: 25px;
 }
 
