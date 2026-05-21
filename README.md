@@ -74,7 +74,7 @@ Promotions use the same structural/data split as brands:
 partials/promotions/*.html  = structural HTML fragments used by the homepage render
 content/promotions.json     = data/catalog metadata used for archive/list behavior
 promotions/*.html           = standalone promotion landing pages
-promotions/index.html       = promotion archive page
+promotions/index.html       = promotion archive landing page with a PM:PROMOTIONS-ARCHIVE render slot
 ```
 
 Current promotion pages:
@@ -109,6 +109,19 @@ cp partials/promotions/<new-promotion-slug>.html    partials/promotions/current-
 pm-setup
 ```
 
+
+The promotion archive landing page is rendered at setup time from `content/promotions.json`:
+
+```html
+<div class="promotions-card-grid" id="details" aria-label="Promotion archive">
+  <!-- PM:PROMOTIONS-ARCHIVE -->
+  ...rendered promotion archive cards...
+  <!-- /PM:PROMOTIONS-ARCHIVE -->
+</div>
+```
+
+The JSON file owns archive/card data such as title, status, summary, URL, CTA, and tags. The archive page owns the public page structure and styling. Do not use `content/promotions.json` for structural HTML.
+
 Each promotion partial should include a link to the archive:
 
 ```html
@@ -120,5 +133,6 @@ Keep naming clear:
 ```text
 Structural HTML: partials/promotions/current-featured.html
 Catalog data:    content/promotions.json
+Archive render:  promotions/index.html using PM:PROMOTIONS-ARCHIVE
 Landing pages:   promotions/<promotion-slug>.html
 ```
