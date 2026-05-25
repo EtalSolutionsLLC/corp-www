@@ -2119,3 +2119,128 @@ body:not(:has(section:target)) .brand-page-hero {
     min-height: auto;
   }
 }
+
+/* Mobile swipe affordances for sections that scroll horizontally.
+   Prevent page-level horizontal drift while preserving local swipe regions. */
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.page-shell {
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+.mobile-swipe-hint {
+  display: none;
+}
+
+@media (max-width: 760px) {
+  .mobile-swipe-hint {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    width: min(calc(100% - (var(--inner-gutter) * 2)), var(--max));
+    margin: 0 auto 12px;
+    color: rgba(18, 59, 255, 0.82);
+    font-size: 0.78rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  .mobile-swipe-hint span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.45rem;
+    height: 1.45rem;
+    border-radius: 999px;
+    background: rgba(18, 59, 255, 0.10);
+    color: var(--blue-2);
+    font-size: 1rem;
+    letter-spacing: 0;
+  }
+
+  .mobile-swipe-hint::after {
+    content: "";
+    flex: 1 1 auto;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(18, 59, 255, 0.30), transparent);
+  }
+
+  .section-dark .mobile-swipe-hint {
+    color: rgba(255, 255, 255, 0.82);
+  }
+
+  .section-dark .mobile-swipe-hint span {
+    background: rgba(143, 178, 255, 0.16);
+    color: #ffffff;
+  }
+
+  .section-dark .mobile-swipe-hint::after {
+    background: linear-gradient(90deg, rgba(143, 178, 255, 0.36), transparent);
+  }
+
+  .services-band,
+  .promo-layout {
+    width: min(calc(100% - (var(--inner-gutter) * 2)), var(--max));
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: visible;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -webkit-mask-image: linear-gradient(90deg, #000 0 calc(100% - 48px), rgba(0, 0, 0, 0.22) calc(100% - 14px), transparent 100%);
+    mask-image: linear-gradient(90deg, #000 0 calc(100% - 48px), rgba(0, 0, 0, 0.22) calc(100% - 14px), transparent 100%);
+  }
+
+  .services-band::-webkit-scrollbar,
+  .promo-layout::-webkit-scrollbar {
+    display: none;
+  }
+
+  .promo-layout {
+    display: flex;
+    grid-template-columns: none;
+    gap: 16px;
+    align-items: stretch;
+    justify-content: flex-start;
+    padding-bottom: 14px;
+  }
+
+  .promo-layout > .section-copy,
+  .promo-layout > .promo-card {
+    flex: 0 0 min(84vw, 360px);
+    scroll-snap-align: start;
+  }
+
+  .promo-layout > .section-copy {
+    padding: 22px;
+    border: 1px solid rgba(16, 23, 34, 0.08);
+    background: rgba(255, 255, 255, 0.72);
+    box-shadow: 0 10px 28px rgba(16, 23, 34, 0.045);
+  }
+
+  .promo-card {
+    min-width: 0;
+  }
+
+  .promo-actions {
+    align-items: flex-start;
+    flex-direction: column;
+    flex-wrap: nowrap;
+  }
+
+  .promo-actions .hero-cta {
+    width: 100%;
+  }
+
+  .promo-actions .promotion-archive-inline {
+    min-height: auto;
+  }
+}
