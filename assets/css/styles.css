@@ -1064,7 +1064,7 @@ body:not(:has(section:target)) .brand-page-hero {
   :root {
     --header-h: 118px;
     --footer-h: 76px;
-    --shell-w: min(calc(100% - 20px), var(--max));
+    --shell-w: 100%;
     --inner-gutter: 24px;
   }
 
@@ -2131,6 +2131,12 @@ body {
 .page-shell {
   max-width: 100%;
   overflow-x: clip;
+}
+
+@media (max-width: 820px) {
+  .page-shell {
+    width: 100%;
+  }
 }
 
 .mobile-swipe-hint {
