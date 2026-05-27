@@ -1,0 +1,22 @@
+{
+  "name": "promotions",
+  "dataFile": "items.json",
+  "cssFile": "promotions.css",
+  "sectionHref": "/#promotions",
+  "detailBaseHref": "/promotions/",
+  "labels": {
+    "itemFallback": "Promotion",
+    "allItems": "All Promotions",
+    "heroCta": "View Details",
+    "learnMore": "Learn More",
+    "newer": "Newer promotion",
+    "previous": "Previous promotion",
+    "end": "End of promotions",
+    "scrollHint": "Scroll sideways through catalog items."
+  },
+  "regions": {
+    "heroTeaser": "CATALOG-PROMOTIONS-HERO-TEASER",
+    "featured": "CATALOG-PROMOTIONS-FEATURED",
+    "fullList": "CATALOG-PROMOTIONS-FULL-LIST"
+  }
+}

@@ -88,6 +88,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <title>Et al Solutions LLC</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orestbida/cookieconsent@3.1.0/dist/cookieconsent.css" />
     <link rel="stylesheet" href="assets/css/styles.css" />
+    <link rel="stylesheet" href="catalogs/promotions/promotions.css" />
     <link rel="stylesheet" href="assets/css/cookie-consent-overrides.css" />
 </head>
 <body>
@@ -133,16 +134,18 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <h1>Technology Solutions for Modern Small Businesses</h1>
           </div>
 
-          <aside class="featured-promotion" aria-label="Featured promotion">
-            <span class="featured-promotion-kicker">Current Promotion</span>
-            <h2>A.I.-Optimized<br>SDLC Assessment</h2>
-            <div class="featured-promotion-meta" aria-label="Promotion details">
-              <span><strong>12-hour sprint</strong></span>
-              <span>Fixed price: <strong>$1,200</strong></span>
+          <!-- PM:CATALOG-PROMOTIONS-HERO-TEASER -->
+          <aside class="catalog-hero-card" aria-label="Featured catalog item">
+            <span class="catalog-hero-kicker">Past Promotion</span>
+            <h2>Everyday A.I. Session</h2>
+            <div class="catalog-hero-meta" aria-label="Catalog item details">
+              <span>General consumers</span>
+              <span>Price: <strong>$149</strong></span>
             </div>
-            <p>Turn scattered A.I. usage into a governed software delivery process.</p>
-            <a class="featured-promotion-cta" href="#ai-sdlc-optimization">View the Sprint</a>
+            <p>A friendly, practical A.I. session for everyday people who want useful help without the jargon.</p>
+            <a class="catalog-hero-cta" href="/#promotions">View Details</a>
           </aside>
+<!-- /PM:CATALOG-PROMOTIONS-HERO-TEASER -->
 
           <div class="hero-support">
             <p class="hero-sub">
@@ -196,8 +199,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       </section>
 
       <section class="section-dark panel" id="services">
-        <p class="mobile-swipe-hint" aria-hidden="true">Swipe sideways for more <span>→</span></p>
-        <div class="container services-band">
+        <p class="mobile-swipe-hint" aria-hidden="true" data-swipe-hint data-forward-text="Swipe sideways for service details" data-back-text="Swipe left for service summary">Swipe sideways for service details <span>→</span></p>
+        <div class="container services-band" data-swipe-region>
           <div class="services-stack">
             <span class="section-kicker">Services</span>
             <div class="service-line">
@@ -247,62 +250,213 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </div>
       </section>
 
-      <section class="section-light panel" id="promotions" aria-labelledby="featured-promotion-title">
-<!-- PM:PROMOTIONS-CURRENT-FEATURED -->
-        <p class="mobile-swipe-hint promotion-swipe-hint" aria-hidden="true">Swipe sideways for promotion details <span>→</span></p>
-        <div class="container promo-layout">
-          <div class="section-copy">
-            <span class="section-kicker light">Featured Promotion</span>
-            <h2 id="featured-promotion-title">A.I.-Optimized SDLC Assessment</h2>
-            <p>
-              A focused assessment and design sprint for software teams that want to use A.I. across the SDLC without losing control of quality, security, or accountability.
-            </p>
-            <p>
-              I evaluate the current delivery process, identify safe A.I. opportunities, define practical guardrails, and provide a short roadmap the team can actually use.
-            </p>
+      <section class="section-light panel catalog-home-section" id="promotions" aria-labelledby="catalog-page-title">
+        <div class="container catalog-page-layout">
+          <section class="catalog-page-head" id="promotions-top" aria-labelledby="catalog-page-title">
+            <span class="section-kicker light">Promotions</span>
+            <h2 id="catalog-page-title">Focused promotions for practical progress.</h2>
+            <p>Explore current and past offers designed to make A.I., automation, and software delivery more useful, approachable, and actionable.</p>
+          </section>
 
-            <ul class="promo-pill-list" aria-label="Assessment principles">
+          <div class="catalog-full-list" id="promotion-details" aria-label="Promotion details">
+<!-- PM:CATALOG-PROMOTIONS-FULL-LIST -->
+      <section class="catalog-carousel" aria-label="Catalog carousel" data-catalog-carousel>
+
+        <div class="catalog-carousel-instructions" data-catalog-nav data-newer-label="Newer promotion" data-previous-label="Previous promotion" data-end-label="End of promotions">
+
+          <span class="catalog-scroll-hint">Scroll sideways through catalog items.</span>
+
+          <span data-catalog-newer-slot><span class="catalog-direction-empty"></span></span>
+
+          <span data-catalog-previous-slot><a class="catalog-direction-link" href="#ai-optimized-sdlc-assessment">Previous promotion: <strong>A.I. SDLC Assessment</strong> <span>→</span></a></span>
+
+        </div>
+
+        <div class="catalog-carousel-track" data-catalog-track>
+
+      <section class="catalog-carousel-item is-featured" data-catalog-item data-catalog-slug="what-can-ai-do-for-you" data-catalog-title="Everyday A.I. Session">
+        <div class="catalog-item-panels">
+          <article class="catalog-card catalog-panel catalog-panel-summary is-featured" aria-label="What Can A.I. Do for You? summary">
+            <span class="catalog-badge">Past Promotion</span>
+            <h2>What Can A.I. Do for You?</h2>
+            <p class="catalog-subtitle">A friendly, practical A.I. session for everyday people who want useful help without the jargon.</p>
+            <p>A plain-language A.I. discovery session for people who are curious about A.I. but do not know where to start.</p>
+            <div class="catalog-price">$149 <small>fixed price</small></div>
+            <ul class="catalog-tag-list" aria-label="Tags">
+              <li>Everyday A.I.</li>
+              <li>Plain-language</li>
+              <li>Hands-on</li>
+              <li>No tech background needed</li>
+            </ul>
+          </article>
+          <aside class="catalog-detail-panel catalog-panel catalog-panel-detail" id="what-can-ai-do-for-you-details" aria-label="What Can A.I. Do for You? details">
+            <span class="catalog-badge">Past Promotion</span>
+            <h3>Everyday A.I. Session</h3>
+            <p class="catalog-subtitle">A friendly, practical A.I. session for everyday people who want useful help without the jargon.</p>
+            <div class="catalog-description">
+              <p>I help you find simple ways A.I. can support daily tasks, communication, reminders, photo sharing, planning, writing, organizing, and staying connected with the people who matter.</p>
+              <p>This is for people who want useful guidance without jargon, coding, or technical pressure.</p>
+            </div>
+            <div class="catalog-attribute-grid">
+              <div class="catalog-attribute">
+                <strong>60-minute session</strong>
+                <p>Friendly walkthrough, real-life examples, and simple next steps.</p>
+              </div>
+              <div class="catalog-attribute">
+                <strong>Practical uses</strong>
+                <p>Messages, reminders, photos, planning, writing, organizing, and everyday tasks.</p>
+              </div>
+              <div class="catalog-attribute">
+                <strong>Best fit</strong>
+                <p>Consumers, families, caregivers, retirees, and curious non-technical users.</p>
+              </div>
+              <div class="catalog-attribute">
+                <strong>Goal</strong>
+                <p>Leave with a short personal A.I. plan you can actually use.</p>
+              </div>
+            </div>
+            <div class="catalog-sections">
+              <section class="catalog-section-note">
+                <h3>Bring your real life</h3>
+                <p>The session starts with the tasks, questions, and frustrations you already have. Then we identify where A.I. can help simply and safely.</p>
+              </section>
+              <section class="catalog-section-note">
+                <h3>Inspired by the Series campaign</h3>
+                <p>This offer continues the same idea: making A.I. make sense for real people by focusing on connection, confidence, and practical everyday usefulness.</p>
+              </section>
+            </div>
+            <div class="catalog-actions">
+              <a class="hero-cta" href="https://outlook.office.com/bookwithme/user/74526c29d14348708c4b83c724b1bbc3@etal.solutions?anonymous&amp;ismsaljsauthenabled&amp;ep=pcard">Book the Session</a>
+              <a class="catalog-inline-link" href="/#promotions">All Promotions →</a>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="catalog-carousel-item" data-catalog-item data-catalog-slug="ai-optimized-sdlc-assessment" data-catalog-title="A.I. SDLC Assessment">
+        <div class="catalog-item-panels">
+          <article class="catalog-card catalog-panel catalog-panel-summary" aria-label="A.I.-Optimized SDLC Assessment summary">
+            <span class="catalog-badge">Featured Promotion</span>
+            <h2>A.I.-Optimized SDLC Assessment</h2>
+            <p class="catalog-subtitle">Turn scattered A.I. usage into a governed software delivery process.</p>
+            <p>A focused assessment and design sprint for software teams that want to use A.I. across the SDLC without losing control of quality, security, or accountability.</p>
+            <div class="catalog-price">$1,200 <small>fixed price</small></div>
+            <ul class="catalog-tag-list" aria-label="Tags">
               <li>Human-led</li>
               <li>Test-driven</li>
               <li>Governed</li>
               <li>Verified</li>
             </ul>
-          </div>
-
-          <article class="promo-card accent" aria-label="A.I.-Optimized SDLC Assessment details">
-            <h3>A.I.-Optimized SDLC Assessment</h3>
-            <p>Turn scattered A.I. usage into a governed software delivery process.</p>
-
-            <div class="promo-price">
-              $1,200 <small>fixed price</small>
+          </article>
+          <aside class="catalog-detail-panel catalog-panel catalog-panel-detail" id="ai-optimized-sdlc-assessment-details" aria-label="A.I.-Optimized SDLC Assessment details">
+            <span class="catalog-badge">Featured Promotion</span>
+            <h3>A.I. SDLC Assessment</h3>
+            <p class="catalog-subtitle">Turn scattered A.I. usage into a governed software delivery process.</p>
+            <div class="catalog-description">
+              <p>I evaluate the current delivery process, identify safe A.I. opportunities, define practical guardrails, and provide a short roadmap the team can actually use.</p>
+              <p>The goal is faster delivery with stronger process, review, and confidence.</p>
             </div>
-
-            <div class="promo-detail-grid">
-              <div class="promo-detail">
+            <div class="catalog-attribute-grid">
+              <div class="catalog-attribute">
                 <strong>12-hour sprint</strong>
                 <p>Current-state review, opportunity map, guardrails, and roadmap.</p>
               </div>
-              <div class="promo-detail">
+              <div class="catalog-attribute">
                 <strong>Practical outputs</strong>
                 <p>Use-case map, verification gates, and accountability model.</p>
               </div>
-              <div class="promo-detail">
+              <div class="catalog-attribute">
                 <strong>Best fit</strong>
                 <p>Small to mid-sized software teams using or evaluating A.I. tools.</p>
               </div>
-              <div class="promo-detail">
+              <div class="catalog-attribute">
                 <strong>Goal</strong>
                 <p>Faster delivery with stronger process, review, and confidence.</p>
               </div>
             </div>
-
-            <div class="promo-actions">
-              <a class="hero-cta" href="https://outlook.office.com/bookwithme/user/74526c29d14348708c4b83c724b1bbc3@etal.solutions?anonymous&ismsaljsauthenabled&ep=pcard">Book the Sprint</a>
-              <a class="promotion-archive-inline" href="/promotions/">Past Promotions →</a>
+            <div class="catalog-sections">
+              <section class="catalog-section-note">
+                <h3>What this covers</h3>
+                <p>A current-state review of how the team delivers software, where A.I. is already appearing, and where it can safely help.</p>
+              </section>
+              <section class="catalog-section-note">
+                <h3>What you receive</h3>
+                <p>A practical opportunity map, recommended guardrails, verification checkpoints, and a short roadmap for responsible adoption.</p>
+              </section>
             </div>
-          </article>
+            <div class="catalog-actions">
+              <a class="hero-cta" href="https://outlook.office.com/bookwithme/user/74526c29d14348708c4b83c724b1bbc3@etal.solutions?anonymous&amp;ismsaljsauthenabled&amp;ep=pcard">Book the Sprint</a>
+              <a class="catalog-inline-link" href="/#promotions">All Promotions →</a>
+            </div>
+          </aside>
         </div>
-<!-- /PM:PROMOTIONS-CURRENT-FEATURED -->
+      </section>
+
+      <section class="catalog-carousel-item" data-catalog-item data-catalog-slug="industry-ai-fusion-assessment" data-catalog-title="Industry A.I. Assessment">
+        <div class="catalog-item-panels">
+          <article class="catalog-card catalog-panel catalog-panel-summary" aria-label="Industry A.I. Fusion Assessment summary">
+            <span class="catalog-badge">Past Promotion</span>
+            <h2>Industry A.I. Fusion Assessment</h2>
+            <p class="catalog-subtitle">Find practical, low-disruption ways to apply A.I. inside a real business operation.</p>
+            <p>A practical A.I. assessment for business owners and operators who want to identify useful A.I. opportunities without chasing hype or disrupting the way their teams already work.</p>
+            <div class="catalog-price">$750 <small>fixed price</small></div>
+            <ul class="catalog-tag-list" aria-label="Tags">
+              <li>Industry A.I.</li>
+              <li>Practical</li>
+              <li>Low-disruption</li>
+              <li>Operator-friendly</li>
+            </ul>
+          </article>
+          <aside class="catalog-detail-panel catalog-panel catalog-panel-detail" id="industry-ai-fusion-assessment-details" aria-label="Industry A.I. Fusion Assessment details">
+            <span class="catalog-badge">Past Promotion</span>
+            <h3>Industry A.I. Assessment</h3>
+            <p class="catalog-subtitle">Find practical, low-disruption ways to apply A.I. inside a real business operation.</p>
+            <div class="catalog-description">
+              <p>I review the way the business currently serves customers, manages work, handles staffing pressure, tracks information, and responds to operational friction.</p>
+              <p>The result is a short, practical opportunity map showing where A.I. can help first, what should wait, and how to adopt it with the least amount of disruption.</p>
+            </div>
+            <div class="catalog-attribute-grid">
+              <div class="catalog-attribute">
+                <strong>Business-use review</strong>
+                <p>A focused review of customer service, staffing, operations, workflows, and recurring friction.</p>
+              </div>
+              <div class="catalog-attribute">
+                <strong>Opportunity map</strong>
+                <p>Clear recommendations for where A.I. can help now, where it may help later, and what to avoid.</p>
+              </div>
+              <div class="catalog-attribute">
+                <strong>Best fit</strong>
+                <p>Food service, healthcare, hospitality, manufacturing, retail, and service-based businesses.</p>
+              </div>
+              <div class="catalog-attribute">
+                <strong>Goal</strong>
+                <p>Identify practical A.I. use cases that improve responsiveness, accuracy, efficiency, and customer experience.</p>
+              </div>
+            </div>
+            <div class="catalog-sections">
+              <section class="catalog-section-note">
+                <h3>What this covers</h3>
+                <p>The assessment looks for practical A.I. opportunities such as customer service automation, predictive staffing, inventory support, scheduling, maintenance alerts, personalization, operational reporting, and workflow simplification.</p>
+              </section>
+              <section class="catalog-section-note">
+                <h3>Inspired by the Industry A.I. series</h3>
+                <p>This promotion grew out of the industry-focused A.I. education series covering food service, healthcare, hospitality, manufacturing, and retail.</p>
+              </section>
+            </div>
+            <div class="catalog-actions">
+              <a class="hero-cta" href="https://outlook.office.com/bookwithme/user/74526c29d14348708c4b83c724b1bbc3@etal.solutions?anonymous&amp;ismsaljsauthenabled&amp;ep=pcard">Book the Assessment</a>
+              <a class="catalog-inline-link" href="/#promotions">All Promotions →</a>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+        </div>
+
+      </section>
+<!-- /PM:CATALOG-PROMOTIONS-FULL-LIST -->
+          </div>
+        </div>
       </section>
 
       <section class="section-dark panel" id="brands">
@@ -411,5 +565,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <script src="https://cdn.jsdelivr.net/gh/orestbida/cookieconsent@3.1.0/dist/cookieconsent.umd.js"></script>
 <script src="assets/js/cookie-consent.js"></script>
 
+<script src="assets/js/catalog-carousel.js" defer></script>
 </body>
 </html>
