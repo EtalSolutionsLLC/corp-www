@@ -1,3 +1,4 @@
+
 {
   "brand": "The Transformation Thread",
   "description": "Native static blog interface data for the Transformation Thread brand page.",
@@ -29,6 +30,27 @@
       "status": "Draft",
       "summary": "A perspective piece on treating older systems as operational knowledge, not just technical debt.",
       "url": "mailto:info@etalsolutions.tech?subject=Legacy%20systems%20business%20memory"
+    },
+    {
+      "title": "Experience should not expire",
+      "category": "Workforce Transformation",
+      "status": "Draft",
+      "summary": "A practical look at how hiring systems, workplace assumptions, and automated screening can undervalue older workers—and why transformation should preserve experience instead of filtering it out.",
+      "url": "mailto:info@etalsolutions.tech?subject=Experience%20should%20not%20expire"
+    },
+    {
+      "title": "Is it too late for a Skynet scenario?",
+      "category": "A.I. Risk",
+      "status": "Draft",
+      "summary": "A grounded reflection on whether A.I. has already become too embedded to control, and why the real risk may be less about machines waking up and more about people surrendering judgment too casually.",
+      "url": "mailto:info@etalsolutions.tech?subject=Is%20it%20too%20late%20for%20a%20Skynet%20scenario"
+    },
+    {
+      "title": "Automation needs accountability before scale",
+      "category": "A.I. Governance",
+      "status": "Draft",
+      "summary": "A reminder that the safest transformation plans do not begin with speed; they begin with ownership, review paths, exception handling, and clear decisions about where human judgment must remain in the loop.",
+      "url": "mailto:info@etalsolutions.tech?subject=Automation%20needs%20accountability%20before%20scale"
     }
   ]
 }

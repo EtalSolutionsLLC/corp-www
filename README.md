@@ -50,7 +50,7 @@ Catalog styling
 
 Rendered routes
   index.html
-  brands/*.html
+  transformation-thread/index.html
   index.html#promotions
 ```
 
@@ -133,7 +133,7 @@ Catalogs are reusable data-driven collections.
 Each catalog lives in:
 
 ```text
-catalogs/<catalog-name>/catalog.json
+catalogs/<catalog-name>/<catalog-name>.json
 catalogs/<catalog-name>/items.json
 catalogs/<catalog-name>/<catalog-name>.css
 ```
@@ -141,7 +141,7 @@ catalogs/<catalog-name>/<catalog-name>.css
 Current catalog:
 
 ```text
-catalogs/promotions/catalog.json
+catalogs/promotions/promotions.json
 catalogs/promotions/items.json
 catalogs/promotions/promotions.css
 ```
@@ -149,9 +149,9 @@ catalogs/promotions/promotions.css
 The catalog name is declared by each catalog manifest. For example:
 
 ```text
-catalogs/promotions/catalog.json + items.json + promotions.css = self-registering promotions catalog
-catalogs/blog/catalog.json + items.json + blog.css = blog catalog
-catalogs/services/catalog.json + items.json + services.css = services catalog
+catalogs/promotions/promotions.json + items.json + promotions.css = self-registering promotions catalog
+catalogs/blog/blog.json + items.json + blog.css = blog catalog
+catalogs/services/services.json + items.json + services.css = services catalog
 ```
 
 The catalog renderer should stay domain-agnostic. A promotion is not a special renderer type; it is a catalog item displayed on the promotions route.
@@ -364,30 +364,30 @@ The behavior is handled by:
 
 Do not remove the hints unless the section no longer uses a horizontal swipe layout.
 
-## Brand pages
+## Brands catalog
 
-Brand pages live under:
-
-```text
-brands/
-```
-
-The brand directory data lives in:
+Brand identities are rendered from the self-registering Brands catalog:
 
 ```text
-content/brands.json
+catalogs/brands/brands.json
+catalogs/brands/items.json
+catalogs/brands/brands.css
 ```
 
-The homepage brand section uses this data for the brand cards.
+The SPA homepage owns the placement marker only. The catalog renderer owns the brand carousel and the ancillary brand overview. The root `brands/` route folder has been removed.
 
-Individual brand pages are static HTML pages and use shared brand header/footer partials.
+The Transformation Thread remains outside the Brands catalog as a standalone long-form/blog experience:
+
+```text
+transformation-thread/index.html
+```
 
 ## The Transformation Thread blog interface
 
 The Transformation Thread brand page includes a native static blog interface at:
 
 ```text
-brands/transformation-thread.html#blog
+transformation-thread/#blog
 ```
 
 Supporting card data lives in:
@@ -405,7 +405,7 @@ Use names that make ownership clear.
 Good examples:
 
 ```text
-catalogs/promotions/catalog.json
+catalogs/promotions/promotions.json
 catalogs/promotions/items.json
 catalogs/promotions/promotions.css
 PM:CATALOG-PROMOTIONS-HERO-TEASER

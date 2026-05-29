@@ -27,61 +27,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <!-- End Google Tag Manager -->
 <!-- /PM:TRACKING-CONSENT-PART1 -->
 
-<script>
-    function escapeHtml(value) {
-      return String(value ?? "")
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
-    }
-
-    async function loadBrandCards() {
-      const grid = document.getElementById("brands-grid");
-      if (!grid) return;
-
-      const source = grid.getAttribute("data-source") || "content/brands.json";
-
-      try {
-        const response = await fetch(source, { cache: "no-store" });
-        if (!response.ok) throw new Error(`Unable to load ${source}`);
-
-        const brands = await response.json();
-        if (!Array.isArray(brands) || brands.length === 0) return;
-
-        grid.innerHTML = brands.map((brand) => {
-          const classes = brand.full ? "brand-card full" : "brand-card";
-          const logo = brand.logo ? `
-              <img
-                class="brand-logo"
-                src="${escapeHtml(brand.logo)}"
-                alt="${escapeHtml(brand.name)} logo"
-              />` : "";
-
-          const link = brand.url ? `
-              <a class="brand-link" href="${escapeHtml(brand.url)}">Explore ${escapeHtml(brand.name)}</a>` : "";
-
-          return `
-            <article class="${classes}">
-              ${logo}
-              <h3>${escapeHtml(brand.name)}</h3>
-              <p>${escapeHtml(brand.description)}</p>
-              ${link}
-            </article>
-          `;
-        }).join("");
-      } catch (error) {
-        console.error(error);
-      }
-    }
-
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", loadBrandCards);
-    } else {
-      loadBrandCards();
-    }
-  </script>
 <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
@@ -89,6 +34,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orestbida/cookieconsent@3.1.0/dist/cookieconsent.css" />
     <link rel="stylesheet" href="assets/css/styles.css" />
     <link rel="stylesheet" href="catalogs/promotions/promotions.css" />
+    <link rel="stylesheet" href="catalogs/brands/brands.css" />
     <link rel="stylesheet" href="assets/css/cookie-consent-overrides.css" />
 </head>
 <body>
@@ -109,18 +55,16 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <div class="nav-dropdown">
         <a class="nav-dropdown-trigger" href="/#brands" aria-haspopup="true">Brands</a>
         <div class="nav-dropdown-menu" aria-label="Brand pages">
-          <a href="/brands/simplifai.html">SIMPLIFAI</a>
-          <a href="/brands/solutions-et-al.html">Solutions et al</a>
-          <a href="/brands/transformation-thread.html">The Transformation Thread</a>
-          <a href="/brands/25th-hour.html">25th Hour</a>
+          <a href="/#brands" data-catalog-target="simplifai">SIMPLIFAI</a>
+          <a href="/#brands" data-catalog-target="solutions-et-al">Solutions et al</a>
+          <a href="/#brands" data-catalog-target="25th-hour">25th Hour</a>
           <a href="/#brands">All Brands</a>
         </div>
       </div>
 
       <a href="/#services">&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;Services</a>
       <a href="/#promotions">Promotions</a>
-      <a href="/#promotions">Promotions</a>
-      <a href="/brands/transformation-thread.html">Blog</a>
+      <a href="/transformation-thread/">Blog</a>
       <a href="/#about">About</a>
       <a href="/#contact">Contact</a>
     </nav>
@@ -263,7 +207,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
           <div class="catalog-full-list" id="promotion-details" aria-label="Promotion details">
 <!-- PM:CATALOG-PROMOTIONS-FULL-LIST -->
-      <section class="catalog-carousel" aria-label="Catalog carousel" data-catalog-carousel>
+      <section class="catalog-carousel" aria-label="Catalog carousel" data-catalog-carousel data-catalog-default="what-can-ai-do-for-you">
 
         <div class="catalog-carousel-instructions" data-catalog-nav data-newer-label="Newer promotion" data-previous-label="Previous promotion" data-end-label="End of promotions">
 
@@ -462,46 +406,286 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </div>
       </section>
 
-      <section class="section-dark panel" id="brands">
+      <section class="section-dark panel brand-catalog-section" id="brands" aria-labelledby="brands-title">
         <div class="container">
           <div class="section-head-center">
-            <h2>Focused Brands. One Strong Foundation.</h2>
+            <span class="section-kicker">Brands</span>
+            <h2 id="brands-title">Focused brands, one strong foundation.</h2>
             <p>
-              Et al Solutions LLC brings together a portfolio of brands designed to support consulting, A.I. education, and business transformation.
+              Explore the core brand identities in the Et al Solutions LLC portfolio. The Transformation Thread remains a separate article and thought-leadership experience.
             </p>
           </div>
+        </div>
+<!-- PM:CATALOG-BRANDS-FULL-LIST -->
+      <section class="catalog-carousel brand-catalog-carousel" aria-label="Brand identity carousel" data-catalog-carousel data-catalog-default="simplifai">
 
-          <div class="brands-grid" id="brands-grid" data-source="content/brands.json">
-            <article class="brand-card full">
-              <h3>Et al Solutions LLC</h3>
-              <p>The umbrella company delivering strategy, implementation, and technical leadership across the portfolio.</p>
+        <div class="catalog-carousel-instructions" data-catalog-nav data-newer-label="Previous brand" data-previous-label="Next brand" data-end-label="End of brands">
+
+          <span class="catalog-scroll-hint">Scroll sideways through brand identities.</span>
+
+          <span data-catalog-newer-slot><span class="catalog-direction-empty"></span></span>
+
+          <span data-catalog-previous-slot><a class="catalog-direction-link" href="#solutions-et-al">Next brand: <strong>Solutions et al</strong> <span>→</span></a></span>
+
+        </div>
+
+        <div class="catalog-carousel-track" data-catalog-track>
+
+      <section class="catalog-carousel-item brand-identity-item is-featured" data-catalog-item data-catalog-slug="simplifai" data-catalog-title="SIMPLIFAI">
+        <article class="brand-identity-page">
+          <section class="brand-page-hero panel">
+            <div class="container">
+              <div class="brand-page-copy">
+                <p class="hero-kicker">A.I. Training &amp; Enablement</p>
+                <h1>Practical A.I. education for everyday work.</h1>
+                <p><span class="brand-word">SIMPLIF<span class="brand-ai">A.I.</span></span> helps people and smaller businesses use A.I. with confidence through accessible training, plain-language guidance, and practical workflows that reduce friction instead of adding complexity.</p>
+                <div class="brand-page-actions">
+                  <a class="hero-cta" href="mailto:info@etalsolutions.tech?subject=SIMPLIFAI%20A.I.%20Training%20Inquiry">Ask About A.I. Training</a>
+                </div>
+                <a class="brand-overview-link" href="#brands-overview" data-catalog-overview-open="brands-overview">Brand overview →</a>
+              </div>
+              <aside class="brand-page-logo-card" aria-label="SIMPLIFAI logo">
+                <img src="https://public.etal.solutions/assets/simplifai/logos/SIMPLIFAI-SILVER.png" alt="SIMPLIFAI logo" />
+              </aside>
+            </div>
+          </section>
+        <section class="section-light panel">
+          <div class="container">
+            <div class="section-head-center">
+              <span class="section-kicker light">Brand Focus</span>
+              <h2>What <img class="section-inline-logo" src="https://public.etal.solutions/assets/simplifai/logos/SIMPLIFAI-SILVER.png" alt="SIMPLIFAI logo" /> Is Built For</h2>
+              <p>SIMPLIFAI helps people and smaller businesses use A.I. with confidence through accessible training, plain-language guidance, and practical workflows that reduce friction instead of adding complexity.</p>
+            </div>
+            <div class="brand-detail-grid">
+              <article class="brand-detail-card">
+                <strong>Who it helps</strong>
+              <p>Individuals, teams, and small businesses that want useful A.I. habits without needing to become technical experts.</p>
+              </article>
+              <article class="brand-detail-card">
+                <strong>What it offers</strong>
+              <ul>
+                <li>A.I. basics and confidence building</li>
+                <li>Prompting and workflow guidance</li>
+                <li>Practical use cases for everyday operations</li>
+              </ul>
+              </article>
+              <article class="brand-detail-card">
+                <strong>Why it exists</strong>
+              <p>To make A.I. feel approachable, useful, and safe enough to use in real work.</p>
+              </article>
+            </div>
+          </div>
+        </section>
+        <section class="brand-details-band panel">
+          <div class="container">
+            <div class="section-head-center">
+              <span class="section-kicker">Current Role</span>
+              <h2>How <img class="section-inline-logo" src="https://public.etal.solutions/assets/simplifai/logos/SIMPLIFAI-SILVER.png" alt="SIMPLIFAI logo" /> fits the portfolio</h2>
+              <p>Each brand serves a distinct purpose while sharing the same foundation: practical technology, clear thinking, and useful outcomes.</p>
+            </div>
+            <div class="brand-details-list" aria-label="Brand attributes">
+              <span>Training brand</span>
+              <span>Accessible A.I.</span>
+              <span>Business-friendly</span>
+              <span>Practical workflows</span>
+            </div>
+          </div>
+        </section>
+        <section class="section-light panel">
+          <div class="container brand-final-cta">
+            <span class="section-kicker light">Next Step</span>
+            <h2>Start with the brand that fits the problem.</h2>
+            <p>Whether the need is education, consulting, transformation strategy, or better use of A.I.-enabled time, the work starts with a clear conversation.</p>
+            <a class="hero-cta" href="mailto:info@etalsolutions.tech?subject=SIMPLIFAI%20A.I.%20Training%20Inquiry">Ask About A.I. Training</a>
+          </div>
+        </section>
+        </article>
+      </section>
+
+      <section class="catalog-carousel-item brand-identity-item" data-catalog-item data-catalog-slug="solutions-et-al" data-catalog-title="Solutions et al">
+        <article class="brand-identity-page">
+          <section class="brand-page-hero panel">
+            <div class="container">
+              <div class="brand-page-copy">
+                <p class="hero-kicker">Consulting &amp; Practical Delivery</p>
+                <h1>Focused technology guidance for real operational problems.</h1>
+                <p>Solutions et al is the consulting and delivery brand for organizations that need clear technical direction, practical systems, and implementation support without unnecessary ceremony.</p>
+                <div class="brand-page-actions">
+                  <a class="hero-cta" href="mailto:info@etalsolutions.tech?subject=Solutions%20et%20al%20Project%20Inquiry">Discuss a Project</a>
+                </div>
+                <a class="brand-overview-link" href="#brands-overview" data-catalog-overview-open="brands-overview">Brand overview →</a>
+              </div>
+              <aside class="brand-page-logo-card" aria-label="Solutions et al logo">
+                <img src="https://public.etal.solutions/assets/sea/logos/SEA-OFFICIAL.png" alt="Solutions et al logo" />
+              </aside>
+            </div>
+          </section>
+        <section class="section-light panel">
+          <div class="container">
+            <div class="section-head-center">
+              <span class="section-kicker light">Brand Focus</span>
+              <h2>What <img class="section-inline-logo" src="https://public.etal.solutions/assets/sea/logos/SEA-OFFICIAL.png" alt="Solutions et al logo" /> Is Built For</h2>
+              <p>Solutions et al is the consulting and delivery brand for organizations that need clear technical direction, practical systems, and implementation support without unnecessary ceremony.</p>
+            </div>
+            <div class="brand-detail-grid">
+              <article class="brand-detail-card">
+                <strong>Who it helps</strong>
+              <p>Organizations that need a focused technical partner to clarify options, simplify decisions, and move from idea to working solution.</p>
+              </article>
+              <article class="brand-detail-card">
+                <strong>What it offers</strong>
+              <ul>
+                <li>Technology consulting and solution design</li>
+                <li>Web, integration, and workflow projects</li>
+                <li>Hands-on implementation and handoff support</li>
+              </ul>
+              </article>
+              <article class="brand-detail-card">
+                <strong>Why it exists</strong>
+              <p>To turn business problems into maintainable technology solutions that people can actually use.</p>
+              </article>
+            </div>
+          </div>
+        </section>
+        <section class="brand-details-band panel">
+          <div class="container">
+            <div class="section-head-center">
+              <span class="section-kicker">Current Role</span>
+              <h2>How <img class="section-inline-logo" src="https://public.etal.solutions/assets/sea/logos/SEA-OFFICIAL.png" alt="Solutions et al logo" /> fits the portfolio</h2>
+              <p>Each brand serves a distinct purpose while sharing the same foundation: practical technology, clear thinking, and useful outcomes.</p>
+            </div>
+            <div class="brand-details-list" aria-label="Brand attributes">
+              <span>Consulting brand</span>
+              <span>Solution design</span>
+              <span>Implementation support</span>
+              <span>Clear handoff</span>
+            </div>
+          </div>
+        </section>
+        <section class="section-light panel">
+          <div class="container brand-final-cta">
+            <span class="section-kicker light">Next Step</span>
+            <h2>Start with the brand that fits the problem.</h2>
+            <p>Whether the need is education, consulting, transformation strategy, or better use of A.I.-enabled time, the work starts with a clear conversation.</p>
+            <a class="hero-cta" href="mailto:info@etalsolutions.tech?subject=Solutions%20et%20al%20Project%20Inquiry">Discuss a Project</a>
+          </div>
+        </section>
+        </article>
+      </section>
+
+      <section class="catalog-carousel-item brand-identity-item" data-catalog-item data-catalog-slug="25th-hour" data-catalog-title="25th Hour">
+        <article class="brand-identity-page">
+          <section class="brand-page-hero panel">
+            <div class="container">
+              <div class="brand-page-copy">
+                <p class="hero-kicker">Time, Focus &amp; A.I.-Enabled Leverage</p>
+                <h1>Helping people use reclaimed time with intention.</h1>
+                <p>25th Hour focuses on the human side of A.I. adoption: what people do with the time, attention, and creative energy that thoughtful automation can give back.</p>
+                <div class="brand-page-actions">
+                  <a class="hero-cta" href="mailto:info@etalsolutions.tech?subject=25th%20Hour%20Inquiry">Start a Conversation</a>
+                </div>
+                <a class="brand-overview-link" href="#brands-overview" data-catalog-overview-open="brands-overview">Brand overview →</a>
+              </div>
+              <aside class="brand-page-logo-card" aria-label="25th Hour logo">
+                <img src="https://public.etal.solutions/assets/25th-hour/logos/25th-hour-OFFICIAL.png" alt="25th Hour logo" />
+              </aside>
+            </div>
+          </section>
+        <section class="section-light panel">
+          <div class="container">
+            <div class="section-head-center">
+              <span class="section-kicker light">Brand Focus</span>
+              <h2>What <img class="section-inline-logo" src="https://public.etal.solutions/assets/25th-hour/logos/25th-hour-OFFICIAL.png" alt="25th Hour logo" /> Is Built For</h2>
+              <p>25th Hour focuses on the human side of A.I. adoption: what people do with the time, attention, and creative energy that thoughtful automation can give back.</p>
+            </div>
+            <div class="brand-detail-grid">
+              <article class="brand-detail-card">
+                <strong>Who it helps</strong>
+              <p>People and teams interested in using A.I. not just to move faster, but to make better use of their time and attention.</p>
+              </article>
+              <article class="brand-detail-card">
+                <strong>What it offers</strong>
+              <ul>
+                <li>Ideas for practical time leverage</li>
+                <li>A.I.-assisted productivity themes</li>
+                <li>Guidance for more intentional workflows</li>
+              </ul>
+              </article>
+              <article class="brand-detail-card">
+                <strong>Why it exists</strong>
+              <p>To keep the purpose of efficiency human: more space for better thinking, better work, and better living.</p>
+              </article>
+            </div>
+          </div>
+        </section>
+        <section class="brand-details-band panel">
+          <div class="container">
+            <div class="section-head-center">
+              <span class="section-kicker">Current Role</span>
+              <h2>How <img class="section-inline-logo" src="https://public.etal.solutions/assets/25th-hour/logos/25th-hour-OFFICIAL.png" alt="25th Hour logo" /> fits the portfolio</h2>
+              <p>Each brand serves a distinct purpose while sharing the same foundation: practical technology, clear thinking, and useful outcomes.</p>
+            </div>
+            <div class="brand-details-list" aria-label="Brand attributes">
+              <span>Developing brand</span>
+              <span>A.I. leverage</span>
+              <span>Time reclaimed</span>
+              <span>Human-centered</span>
+            </div>
+          </div>
+        </section>
+        <section class="section-light panel">
+          <div class="container brand-final-cta">
+            <span class="section-kicker light">Next Step</span>
+            <h2>Start with the brand that fits the problem.</h2>
+            <p>Whether the need is education, consulting, transformation strategy, or better use of A.I.-enabled time, the work starts with a clear conversation.</p>
+            <a class="hero-cta" href="mailto:info@etalsolutions.tech?subject=25th%20Hour%20Inquiry">Start a Conversation</a>
+          </div>
+        </section>
+        </article>
+      </section>
+
+        </div>
+
+      </section>
+
+      <section class="catalog-overview brand-catalog-overview catalog-overview-drawer" data-catalog-overview-panel="brands-overview" hidden aria-hidden="true" role="dialog" aria-labelledby="brands-overview-title">
+        <div class="container">
+          <button class="catalog-overview-close" type="button" data-catalog-overview-close aria-label="Close catalog overview">Close ×</button>
+          <div class="brand-catalog-overview-shell">
+            <div class="brand-catalog-overview-copy">
+              <span class="section-kicker light">Brand Portfolio</span>
+              <h2 id="brands-overview-title">Focused brands, one strong foundation.</h2>
+              <p>Et al Solutions LLC brings together focused brands for practical A.I. education, technology consulting, transformation thinking, and human-centered time leverage. The brand identities are the primary catalog items; this overview is supporting context for how they fit together.</p>
+              <div class="brand-page-actions">
+                <a class="hero-cta" href="/#contact">Contact Et al Solutions</a>
+                <a class="hero-cta secondary" href="/transformation-thread/">Read The Transformation Thread</a>
+              </div>
+            </div>
+            <aside class="brand-page-logo-card" aria-label="Et al Solutions LLC symbol">
+              <img src="https://public.etal.solutions/assets/et-al-solutions-llc/logos/et-al-solutions-llc-SYMBOL.png" alt="Et al Solutions LLC symbol" />
+            </aside>
+          </div>
+          <div class="brand-detail-grid brand-catalog-overview-grid">
+            <article class="brand-detail-card">
+              <strong>Shared foundation</strong>
+              <p>All brands share the same practical bias: clear thinking, useful systems, honest guidance, and maintainable outcomes.</p>
             </article>
-
-            <article class="brand-card">
-              <h3>SIMPLIF<span style="color:#123bff">AI</span></h3>
-              <p>A.I. training and accessible enablement designed to help people and businesses use A.I. with confidence.</p>
-              <a class="brand-link" href="brands/simplifai.html">Explore SIMPLIFAI</a>
+            <article class="brand-detail-card">
+              <strong>Different entry points</strong>
+              <ul>
+                <li>SIMPLIFAI for practical A.I. education and enablement</li>
+                <li>Solutions et al for consulting, solution design, and implementation</li>
+                <li>25th Hour for time, focus, and human-centered A.I. leverage</li>
+              </ul>
             </article>
-
-            <article class="brand-card">
-              <h3>Solutions et al</h3>
-              <p>General consulting and practical solution design for organizations that need focused technology guidance.</p>
-              <a class="brand-link" href="brands/solutions-et-al.html">Explore Solutions et al</a>
-            </article>
-
-            <article class="brand-card">
-              <h3>The Transformation Thread</h3>
-              <p>Thought leadership exploring business transformation, A.I., and the decisions that shape meaningful change.</p>
-              <a class="brand-link" href="brands/transformation-thread.html">Explore The Transformation Thread</a>
-            </article>
-
-            <article class="brand-card">
-              <h3>25th Hour</h3>
-              <p>Ideas, tools, and guidance focused on helping people make the most of the free time created through the thoughtful adoption of A.I.</p>
-              <a class="brand-link" href="brands/25th-hour.html">Explore 25th Hour</a>
+            <article class="brand-detail-card">
+              <strong>Standalone exception</strong>
+              <p>The Transformation Thread remains outside the Brands catalog as a separate long-form thought-leadership and article experience.</p>
             </article>
           </div>
         </div>
+      </section>
+<!-- /PM:CATALOG-BRANDS-FULL-LIST -->
       </section>
 
       <section class="section-light panel" id="contact">

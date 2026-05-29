@@ -1,0 +1,56 @@
+{
+  "name": "brands",
+  "layout": "brandIdentityCarousel",
+  "dataFile": "items.json",
+  "cssFile": "brands.css",
+  "sectionHref": "/#brands",
+  "detailBaseHref": "/#brands",
+  "labels": {
+    "newer": "Previous brand",
+    "previous": "Next brand",
+    "end": "End of brands",
+    "scrollHint": "Scroll sideways through brand identities."
+  },
+  "regions": {
+    "fullList": "CATALOG-BRANDS-FULL-LIST"
+  },
+  "defaultItem": "simplifai",
+  "overview": {
+    "enabled": true,
+    "id": "brands-overview",
+    "linkLabel": "Brand overview",
+    "kicker": "Brand Portfolio",
+    "title": "Focused brands, one strong foundation.",
+    "summary": "Et al Solutions LLC brings together focused brands for practical A.I. education, technology consulting, transformation thinking, and human-centered time leverage. The brand identities are the primary catalog items; this overview is supporting context for how they fit together.",
+    "logo": "https://public.etal.solutions/assets/et-al-solutions-llc/logos/et-al-solutions-llc-SYMBOL.png",
+    "logoAlt": "Et al Solutions LLC symbol",
+    "cards": [
+      {
+        "title": "Shared foundation",
+        "body": "All brands share the same practical bias: clear thinking, useful systems, honest guidance, and maintainable outcomes."
+      },
+      {
+        "title": "Different entry points",
+        "items": [
+          "SIMPLIFAI for practical A.I. education and enablement",
+          "Solutions et al for consulting, solution design, and implementation",
+          "25th Hour for time, focus, and human-centered A.I. leverage"
+        ]
+      },
+      {
+        "title": "Standalone exception",
+        "body": "The Transformation Thread remains outside the Brands catalog as a separate long-form thought-leadership and article experience."
+      }
+    ],
+    "actions": [
+      {
+        "label": "Contact Et al Solutions",
+        "href": "/#contact"
+      },
+      {
+        "label": "Read The Transformation Thread",
+        "href": "/transformation-thread/"
+      }
+    ]
+  }
+}

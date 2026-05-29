@@ -14,6 +14,13 @@
       .replace(/'/g, "&#39;");
   }
 
+  function cssEscape(value) {
+    if (window.CSS && typeof window.CSS.escape === "function") {
+      return window.CSS.escape(value);
+    }
+    return String(value || "").replace(/[^a-zA-Z0-9_-]/g, "\\$&");
+  }
+
   function catalogItems(carousel) {
     return Array.prototype.slice.call(carousel.querySelectorAll("[data-catalog-item]"));
   }
@@ -30,20 +37,19 @@
 
   function findCatalogItemBySlug(slug) {
     if (!slug) return null;
-    try {
-      return document.querySelector('[data-catalog-item][data-catalog-slug="' + CSS.escape(slug) + '"]');
-    } catch (error) {
-      return Array.prototype.slice.call(document.querySelectorAll("[data-catalog-item]")).find(function (item) {
-        return itemSlug(item) === slug;
-      }) || null;
-    }
+    return document.querySelector('[data-catalog-item][data-catalog-slug="' + cssEscape(slug) + '"]');
+  }
+
+  function findOverviewPanelById(id) {
+    if (!id) return null;
+    return document.querySelector('[data-catalog-overview-panel="' + cssEscape(id) + '"]');
   }
 
   function linkHtml(label, item, direction) {
     var href = "#" + itemSlug(item);
     var title = itemTitle(item);
-
     var slug = itemSlug(item);
+
     if (direction === "newer") {
       return '<a class="catalog-direction-link" data-catalog-target="' + htmlEscape(slug) + '" href="' + htmlEscape(href) + '"><span>←</span> ' + htmlEscape(label) + ': <strong>' + htmlEscape(title) + '</strong></a>';
     }
@@ -91,30 +97,39 @@
     previousSlot.innerHTML = previous ? linkHtml(previousLabel, previous, "previous") : '<span class="catalog-direction-empty">' + htmlEscape(endLabel) + '</span>';
   }
 
-  function preserveWindowScroll(callback) {
-    var x = window.scrollX;
-    var y = window.scrollY;
-    callback();
-    window.scrollTo(x, y);
-    window.requestAnimationFrame(function () {
-      window.scrollTo(x, y);
-      window.requestAnimationFrame(function () {
-        window.scrollTo(x, y);
-      });
-    });
+  function carouselForItem(item) {
+    return item ? item.closest("[data-catalog-carousel]") : null;
   }
 
-  function scrollToItem(item, instant) {
+  function catalogSectionForCarousel(carousel) {
+    return carousel ? carousel.closest(".panel[id], section[id]") : null;
+  }
+
+  function catalogSectionForItem(item) {
+    return catalogSectionForCarousel(carouselForItem(item));
+  }
+
+  function catalogSectionForOverview(panel) {
+    return panel ? panel.closest(".panel[id], section[id]") : null;
+  }
+
+  function itemLeftWithinTrack(item, track) {
+    if (!item || !track) return 0;
+    var itemRect = item.getBoundingClientRect();
+    var trackRect = track.getBoundingClientRect();
+    return itemRect.left - trackRect.left + track.scrollLeft;
+  }
+
+  function scrollTrackToItem(item, instant) {
     if (!item) return;
 
-    var carousel = item.closest("[data-catalog-carousel]");
+    var carousel = carouselForItem(item);
     var track = carousel ? carousel.querySelector("[data-catalog-track]") : null;
     if (!track) return;
 
-    preserveWindowScroll(function () {
-      track.scrollTo({ left: item.offsetLeft, behavior: instant ? "auto" : "smooth" });
-      updateCarouselNav(carousel);
-    });
+    var left = itemLeftWithinTrack(item, track);
+    track.scrollTo({ left: left, behavior: instant ? "auto" : "smooth" });
+    updateCarouselNav(carousel);
 
     item.classList.add("is-targeted");
     window.setTimeout(function () {
@@ -122,14 +137,103 @@
     }, 1200);
   }
 
-  function handleHash(instant) {
-    var slug = window.location.hash ? window.location.hash.slice(1) : "";
-    var item = findCatalogItemBySlug(slug);
+  function repeatHorizontalAlignment(item, instant) {
     if (!item) return;
+    scrollTrackToItem(item, instant);
+    window.requestAnimationFrame(function () {
+      scrollTrackToItem(item, true);
+      window.setTimeout(function () { scrollTrackToItem(item, true); }, 120);
+      window.setTimeout(function () { scrollTrackToItem(item, true); }, 320);
+    });
+  }
 
-    window.setTimeout(function () {
-      scrollToItem(item, instant);
-    }, instant ? 0 : 40);
+  function defaultItemForCarousel(carousel) {
+    if (!carousel) return null;
+    var defaultSlug = carousel.getAttribute("data-catalog-default") || "";
+    if (defaultSlug) {
+      var defaultItem = carousel.querySelector('[data-catalog-item][data-catalog-slug="' + cssEscape(defaultSlug) + '"]');
+      if (defaultItem) return defaultItem;
+    }
+    return carousel.querySelector("[data-catalog-item]");
+  }
+
+  function defaultItemForSectionId(sectionId) {
+    if (!sectionId) return null;
+    var section = document.getElementById(sectionId);
+    var carousel = section ? section.querySelector("[data-catalog-carousel]") : null;
+    return defaultItemForCarousel(carousel);
+  }
+
+  function catalogTargetForHash(hash) {
+    var slug = hash ? hash.replace(/^#/, "") : "";
+    if (!slug) return null;
+
+    var item = findCatalogItemBySlug(slug);
+    if (item) {
+      return { item: item, section: catalogSectionForItem(item), isSectionDefault: false };
+    }
+
+    item = defaultItemForSectionId(slug);
+    if (item) {
+      return { item: item, section: document.getElementById(slug), isSectionDefault: true };
+    }
+
+    return null;
+  }
+
+  function closeOverviewPanels() {
+    document.querySelectorAll("[data-catalog-overview-panel]").forEach(function (panel) {
+      panel.hidden = true;
+      panel.setAttribute("aria-hidden", "true");
+    });
+  }
+
+  function openOverviewPanel(panel, instant, updateHash) {
+    if (!panel) return;
+
+    closeOverviewPanels();
+    panel.hidden = false;
+    panel.setAttribute("aria-hidden", "false");
+
+    var section = catalogSectionForOverview(panel);
+    if (section) {
+      section.scrollIntoView({ behavior: instant ? "auto" : "smooth", block: "center" });
+    }
+
+    var id = panel.getAttribute("data-catalog-overview-panel") || "";
+    if (updateHash && id) {
+      updateHashWithoutJump("#" + id);
+    }
+
+    var closeButton = panel.querySelector("[data-catalog-overview-close]");
+    if (closeButton) {
+      window.setTimeout(function () { closeButton.focus({ preventScroll: true }); }, 50);
+    }
+  }
+
+  function closeOverviewAndReturn(panel) {
+    var section = catalogSectionForOverview(panel);
+    closeOverviewPanels();
+
+    if (section && section.id) {
+      var defaultItem = defaultItemForSectionId(section.id);
+      if (defaultItem) {
+        activateCatalogTarget({ item: defaultItem, section: section, isSectionDefault: true }, false, true);
+      }
+      updateHashWithoutJump("#" + section.id);
+    }
+  }
+
+  function activateCatalogTarget(target, instant, includeSectionScroll) {
+    if (!target || !target.item) return;
+
+    closeOverviewPanels();
+
+    if (includeSectionScroll && target.section) {
+      target.section.scrollIntoView({ behavior: instant ? "auto" : "smooth", block: "center" });
+    }
+
+    repeatHorizontalAlignment(target.item, instant);
   }
 
   function updateHashWithoutJump(hash) {
@@ -138,30 +242,108 @@
       window.history.pushState(null, "", hash);
       return;
     }
+    window.location.hash = hash;
+  }
+
+  function handleHash(instant) {
+    var slug = window.location.hash ? window.location.hash.slice(1) : "";
+    if (!slug) return;
+
+    var overviewPanel = findOverviewPanelById(slug);
+    if (overviewPanel) {
+      openOverviewPanel(overviewPanel, instant, false);
+      return;
+    }
+
+    var target = catalogTargetForHash(slug);
+    if (!target) {
+      closeOverviewPanels();
+      return;
+    }
+
+    activateCatalogTarget(target, instant, true);
+  }
+
+  function hashFromHref(href) {
+    if (!href) return "";
+    var hashIndex = href.indexOf("#");
+    if (hashIndex < 0) return "";
+    return href.slice(hashIndex + 1);
+  }
+
+  function samePageHashFromLink(link) {
+    var raw = link.getAttribute("href") || "";
+    if (!raw || raw === "#") return "";
+
+    try {
+      var url = new URL(raw, window.location.href);
+      if (url.origin !== window.location.origin) return "";
+      var currentPath = window.location.pathname.replace(/\/index\.html$/, "/");
+      var linkPath = url.pathname.replace(/\/index\.html$/, "/");
+      if (currentPath !== linkPath) return "";
+      return url.hash ? url.hash.slice(1) : "";
+    } catch (error) {
+      return raw.charAt(0) === "#" ? raw.slice(1) : hashFromHref(raw);
+    }
   }
 
   function wireCatalogLinks() {
     document.addEventListener("click", function (event) {
-      var link = event.target.closest ? event.target.closest('a[href^="#"]') : null;
+      var link = event.target.closest ? event.target.closest("a[href]") : null;
       if (!link) return;
 
-      var href = link.getAttribute("href");
-      var explicitTarget = link.getAttribute("data-catalog-target") || "";
-      var slug = explicitTarget || (href ? href.slice(1) : "");
-      var item = findCatalogItemBySlug(slug);
+      var overviewId = link.getAttribute("data-catalog-overview-open") || "";
+      if (overviewId) {
+        var overviewPanel = findOverviewPanelById(overviewId);
+        if (overviewPanel) {
+          event.preventDefault();
+          openOverviewPanel(overviewPanel, false, true);
+        }
+        return;
+      }
 
-      if (explicitTarget && !item) {
+      var explicitTarget = link.getAttribute("data-catalog-target") || "";
+      var hrefHash = samePageHashFromLink(link);
+      var slug = explicitTarget || hrefHash;
+      if (!slug) return;
+
+      var target = catalogTargetForHash(slug);
+
+      if (explicitTarget && !target) {
+        if (!hrefHash) return;
         event.preventDefault();
         link.setAttribute("aria-disabled", "true");
         return;
       }
 
-      if (item) {
+      if (target && target.item) {
         event.preventDefault();
-        scrollToItem(item, false);
-        updateHashWithoutJump("#" + slug);
+
+        var itemCarousel = carouselForItem(target.item);
+        var linkCarousel = link.closest("[data-catalog-carousel]");
+        var shouldScrollSection = itemCarousel !== linkCarousel;
+        var hashToSet = explicitTarget || hrefHash;
+
+        activateCatalogTarget(target, false, shouldScrollSection);
+        updateHashWithoutJump("#" + hashToSet);
       }
     }, true);
+
+    document.addEventListener("click", function (event) {
+      var closeButton = event.target.closest ? event.target.closest("[data-catalog-overview-close]") : null;
+      if (!closeButton) return;
+      event.preventDefault();
+      closeOverviewAndReturn(closeButton.closest("[data-catalog-overview-panel]"));
+    }, true);
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key !== "Escape") return;
+      var openPanel = document.querySelector("[data-catalog-overview-panel]:not([hidden])");
+      if (openPanel) {
+        event.preventDefault();
+        closeOverviewAndReturn(openPanel);
+      }
+    });
   }
 
   function wireCarousels() {

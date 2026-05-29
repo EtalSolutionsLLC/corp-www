@@ -121,10 +121,16 @@ section[id] {
 
 .panel:target {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
   min-height: calc(100svh - var(--header-h) - var(--footer-h));
   padding-top: 0;
   padding-bottom: 0;
+}
+
+[hidden] {
+  display: none !important;
 }
 
 body:not(:has(section:target)) #home,
