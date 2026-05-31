@@ -266,7 +266,8 @@ body:not(:has(section:target)) .brand-page-hero {
   background: linear-gradient(135deg, var(--blue), var(--blue-2));
   color: var(--white);
   font-weight: 800;
-  border-radius: 4px;
+  border-radius: 0;
+/*  border-radius: 4px; */
   box-shadow: 0 14px 34px rgba(18,59,255,0.32);
 }
 
@@ -306,7 +307,8 @@ body:not(:has(section:target)) .brand-page-hero {
   top: 0.52em;
   width: 7px;
   height: 7px;
-  border-radius: 50%;
+  border-radius: 0
+/*   border-radius: 50%; */
   background: var(--blue);
   box-shadow: 0 0 14px rgba(18,59,255,0.65);
 }
@@ -318,7 +320,8 @@ body:not(:has(section:target)) .brand-page-hero {
   width: min(100%, 370px);
   padding: clamp(22px, 2.6vw, 30px);
   border: 1px solid rgba(0, 255, 178, 0.48);
-  border-radius: 12px;
+  border-radius: 0;
+/*  border-radius: 12px; */
   background:
     linear-gradient(145deg, rgba(255,255,255,0.055), rgba(255,255,255,0.018)),
     rgba(5, 12, 24, 0.52);
@@ -393,7 +396,8 @@ body:not(:has(section:target)) .brand-page-hero {
   background: linear-gradient(135deg, var(--blue), var(--blue-2));
   color: var(--white);
   font-weight: 850;
-  border-radius: 4px;
+  border-radius: 0;
+/*  border-radius: 4px; */
   box-shadow: 0 14px 34px rgba(18,59,255,0.28);
 }
 
@@ -801,7 +805,8 @@ body:not(:has(section:target)) .brand-page-hero {
   background: linear-gradient(135deg, var(--blue), var(--blue-2));
   color: var(--white);
   font-weight: 800;
-  border-radius: 4px;
+  border-radius: 0;
+/*  border-radius: 4px; */
 }
 
 .contact-card {
@@ -1211,7 +1216,8 @@ body:not(:has(section:target)) .brand-page-hero {
 
   .featured-promotion {
     padding: 18px;
-    border-radius: 10px;
+    border-radius: 0;
+/*    border-radius: 10px; */
     backdrop-filter: none;
   }
 
@@ -1311,7 +1317,8 @@ body:not(:has(section:target)) .brand-page-hero {
   color: rgba(255,255,255,0.94);
   font-size: 0.92rem;
   font-weight: 800;
-  border-radius: 4px;
+  border-radius: 0;
+/*  border-radius: 4px; */
 }
 
 .brand-link:hover,
@@ -1852,7 +1859,8 @@ body:not(:has(section:target)) .brand-page-hero {
 .promotion-page-card,
 .promotion-steps-card {
   border: 1px solid rgba(18, 59, 255, 0.14);
-  border-radius: 14px;
+  border-radius: 0;
+/*  border-radius: 14px; */
   background:
     linear-gradient(145deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.74)),
     rgba(255, 255, 255, 0.88);

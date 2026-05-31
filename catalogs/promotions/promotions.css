@@ -31,7 +31,8 @@
   width: min(100%, 370px);
   padding: clamp(22px, 2.6vw, 30px);
   border: 1px solid rgba(0, 255, 178, 0.48);
-  border-radius: 12px;
+  border-radius: 0;
+/*  border-radius: 12px;*/
   background:
     linear-gradient(145deg, rgba(255,255,255,0.055), rgba(255,255,255,0.018)),
     rgba(5, 12, 24, 0.52);
@@ -402,7 +403,8 @@
   min-height: clamp(420px, calc(100dvh - 250px), 560px);
   border: 1px solid rgba(18, 59, 255, 0.13);
   border-top: 4px solid var(--catalog-blue-2);
-  border-radius: 16px;
+  border-radius: 0;
+/*  border-radius: 16px;*/
   background:
     linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(247, 249, 255, 0.92)),
     #ffffff;
@@ -575,7 +577,8 @@
 .catalog-section-note {
   padding: 12px;
   border: 1px solid rgba(18, 59, 255, 0.10);
-  border-radius: 10px;
+  border-radius: 0;
+/*  border-radius: 10px; */
   background: rgba(255, 255, 255, 0.72);
 }
 
@@ -698,7 +701,8 @@
     padding: 24px;
     border: 1px solid rgba(18, 59, 255, 0.13);
     border-top: 4px solid var(--catalog-blue-2);
-    border-radius: 14px;
+    border-radius: 0;
+    /* border-radius: 14px; */
     background: #ffffff;
     box-shadow: 0 16px 42px rgba(5, 12, 24, 0.10);
     scroll-snap-align: center;
@@ -820,7 +824,8 @@
   .catalog-item-panels {
     grid-template-columns: minmax(0, 0.9fr) minmax(420px, 1.1fr);
     min-height: clamp(340px, calc(100dvh - var(--header-h, 84px) - var(--footer-h, 56px) - 150px), 485px);
-    border-radius: 14px;
+    border-radius: 0;
+/*    border-radius: 14px;*/
   }
 
   .catalog-panel {
@@ -920,7 +925,8 @@
 
   .catalog-section-note {
     padding: 9px 10px;
-    border-radius: 8px;
+    border-radius: 0;
+/*    border-radius: 8px; */
   }
 
   .catalog-section-note h3 {
@@ -1009,7 +1015,8 @@
   min-height: 0;
   border: 1px solid rgba(18, 59, 255, 0.13);
   border-top: 4px solid var(--catalog-blue-2);
-  border-radius: 16px;
+  border-radius: 0;
+/*  border-radius: 16px; */
   background:
     linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(247, 249, 255, 0.92)),
     #ffffff;
@@ -1114,7 +1121,8 @@
     grid-template-columns: 1fr;
     width: min(calc(100% - 36px), 640px);
     margin: 0 auto;
-    border-radius: 14px;
+    border-radius: 0;
+/*    border-radius: 14px; */
   }
 
   .catalog-list-item .catalog-panel {
@@ -1276,7 +1284,8 @@ body.has-catalog-modal-open {
   transform: translate(-50%, -50%);
   padding: clamp(20px, 2.8vw, 30px);
   border: 1px solid rgba(87, 144, 255, 0.58);
-  border-radius: 16px;
+  border-radius: 0;
+/*  border-radius: 16px; */
   background:
     linear-gradient(145deg, rgba(9, 26, 55, 0.99), rgba(5, 14, 31, 0.99)),
     #071326;
@@ -1364,7 +1373,8 @@ body.has-catalog-modal-open {
     margin: 0;
     padding: 12px 16px;
     border: 1px solid rgba(18, 59, 255, 0.16);
-    border-radius: 14px;
+    border-radius: 0;
+/*    border-radius: 14px; */
     background: rgba(255, 255, 255, 0.90);
     box-shadow: 0 14px 36px rgba(5, 12, 24, 0.10);
   }
@@ -1394,7 +1404,8 @@ body.has-catalog-modal-open {
   .catalog-carousel:not(.brand-catalog-carousel) .catalog-item-panels {
     display: block;
     min-height: 100%;
-    border-radius: 14px;
+    border-radius: 0;
+/*    border-radius: 14px; */
   }
 
   .catalog-carousel:not(.brand-catalog-carousel) .catalog-panel-summary {
@@ -1469,7 +1480,8 @@ body.has-catalog-modal-open {
 /* Catalog card refinement — flatter corners and a restrained luminous edge.
    Light catalog cards now visually relate to the square dark Services tiles. */
 .catalog-item-panels {
-  border-radius: 4px;
+  border-radius: 0;
+/*  border-radius: 4px; */
   box-shadow:
     0 0 0 1px rgba(18, 59, 255, 0.10),
     0 0 26px rgba(18, 59, 255, 0.11),
@@ -1502,7 +1514,8 @@ body.has-catalog-modal-open {
 
 @media (min-width: 981px) {
   .catalog-carousel:not(.brand-catalog-carousel) .catalog-item-panels {
-    border-radius: 4px;
+    border-radius: 0;
+/*    border-radius: 4px; */
   }
 }
 

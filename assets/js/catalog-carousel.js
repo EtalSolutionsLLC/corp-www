@@ -452,11 +452,10 @@
     closeOverviewPanels();
 
     if (includeSectionScroll && target.section) {
-      // Brands is a catalog landing experience, not a single-card destination.
-      // Always present its heading and overview copy when navigation enters the
-      // section, even when the visitor selected a specific brand from the menu.
-      var shouldAlignToTop = target.section.id === "brands";
-      var scrollBlock = shouldAlignToTop || (isMobileViewport() && target.isSectionDefault) ? "start" : "center";
+      // Catalog landing pages share one targeting rule: desktop centers the
+      // complete catalog surface; mobile starts at the section heading so the
+      // visitor can read through the cards naturally.
+      var scrollBlock = isMobileViewport() && target.isSectionDefault ? "start" : "center";
       repeatSectionAlignment(target.section, instant, scrollBlock);
     }
 
@@ -498,29 +497,10 @@
     window.location.hash = hash;
   }
 
-  function brandSelectionFromHistory() {
-    var state = window.history ? window.history.state : null;
-    return state && typeof state.catalogTarget === "string" ? state.catalogTarget : "";
-  }
-
-  function canonicalizeBrandTarget(target, replace) {
-    if (!target || !target.item || !target.section || target.section.id !== "brands") return;
-    var slug = itemSlug(target.item);
-    var state = { catalogTarget: slug };
-    if (replace) {
-      replaceHashWithoutJump("#brands", slug, state);
-    } else {
-      updateHashWithoutJump("#brands", slug, state);
-    }
-  }
-
   function handleHash(instant) {
     closeAllNavDropdowns(null);
     var hashSlug = window.location.hash ? window.location.hash.slice(1) : "";
     var slug = hashSlug;
-    if (hashSlug === "brands") {
-      slug = brandSelectionFromHistory() || hashSlug;
-    }
     updateSelectedNavOption(slug);
     if (!slug) return;
 
@@ -538,13 +518,6 @@
 
     activateCatalogTarget(target, instant, true);
 
-    // A Brand is selected within the Brands catalog; it is not a separate SPA
-    // section. Keep #brands as the authoritative vertical landing target and
-    // preserve the selected Brand as history state. This prevents child-item
-    // hashes from fighting the landing-page alignment rules.
-    if (target.section && target.section.id === "brands" && hashSlug !== "brands") {
-      canonicalizeBrandTarget(target, true);
-    }
   }
 
   function hashFromHref(href) {
@@ -949,14 +922,9 @@
         var linkCarousel = link.closest("[data-catalog-carousel]");
         var shouldScrollSection = itemCarousel !== linkCarousel;
         var hashToSet = explicitTarget || hrefHash;
-        var isBrandTarget = !!(target.section && target.section.id === "brands");
 
-        activateCatalogTarget(target, false, shouldScrollSection || isBrandTarget);
-        if (isBrandTarget) {
-          canonicalizeBrandTarget(target, false);
-        } else {
-          updateHashWithoutJump("#" + hashToSet);
-        }
+        activateCatalogTarget(target, false, shouldScrollSection);
+        updateHashWithoutJump("#" + hashToSet);
       }
     }, true);
 

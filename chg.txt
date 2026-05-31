@@ -1,5 +1,2 @@
-index.html
 assets/js/catalog-carousel.js
 catalogs/brands/brands.css
-catalogs/brands/items.json
-portmason/pm-deploy-static

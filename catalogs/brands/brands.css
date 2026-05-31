@@ -163,7 +163,8 @@
   z-index: 900;
   overflow: auto;
   border: 1px solid rgba(18, 59, 255, 0.22);
-  border-radius: 18px;
+  border-radius: 0;
+/*  border-radius: 18px; */
   box-shadow: 0 28px 80px rgba(5, 12, 24, 0.28);
   padding: clamp(24px, 3vw, 44px);
 }
@@ -332,7 +333,8 @@
   .catalog-overview-drawer {
     inset: calc(var(--header-h) + 10px) 12px calc(var(--footer-h) + 10px);
     padding: 20px 16px;
-    border-radius: 14px;
+    border-radius: 0;
+/*    border-radius: 14px; */
   }
 }
 
@@ -415,7 +417,8 @@
     margin: 0;
     padding: 12px 16px;
     border: 1px solid rgba(18, 59, 255, 0.16);
-    border-radius: 14px;
+    border-radius: 0;
+/*    border-radius: 14px;*/
     background: rgba(255, 255, 255, 0.92);
     box-shadow: 0 14px 36px rgba(5, 12, 24, 0.10);
   }
@@ -572,7 +575,8 @@
    subtle electric-blue glow so the dark cards remain visually distinct. */
 .brand-catalog-section.catalog-home-section .catalog-item-panels,
 .brand-catalog-section.catalog-home-section .catalog-carousel-item.is-featured .catalog-item-panels {
-  border-radius: 4px;
+  border-radius: 0;
+/*  border-radius: 4px; */
   box-shadow:
     0 0 0 1px rgba(143, 178, 255, 0.14),
     0 0 28px rgba(18, 59, 255, 0.18),
@@ -590,12 +594,6 @@
   filter: drop-shadow(0 0 12px rgba(143, 178, 255, 0.32));
 }
 
-/* Brands landing target guardrail: land at the top of the catalog section so
-   the heading, overview copy, and card row are presented as one experience. */
-#brands {
-  scroll-margin-top: calc(var(--header-h, 84px) + 10px);
-}
-
 /* Brand detail actions use the shared luminous-text affordance. */
 .brand-catalog-section .catalog-details-toggle {
   color: #8db6ff;
@@ -606,18 +604,6 @@
 .brand-catalog-section .catalog-details-toggle:focus-visible {
   color: #ffffff;
   text-shadow: 0 0 20px rgba(143, 178, 255, 0.82);
-}
-
-/* Brands target-state correction.
-   The shared .panel:target rule vertically centers most sections. Brands is a
-   catalog landing page, so its heading and overview must begin at the top of
-   viewport when #brands is targeted. */
-#brands.panel:target {
-  display: block;
-  min-height: auto;
-  padding: 28px 0 0;
-  justify-content: flex-start;
-  align-items: stretch;
 }
 
 /* Compact Brand detail modals: keep the complete brand story visible without
