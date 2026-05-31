@@ -35,6 +35,117 @@
     return item.getAttribute("data-catalog-title") || (titleElement ? titleElement.textContent : "");
   }
 
+  var CATALOG_PAGE_SIZE = 3;
+
+  function catalogPages(carousel) {
+    if (!carousel) return [];
+    var track = carousel.querySelector("[data-catalog-track]");
+    if (!track) return [];
+    return Array.prototype.slice.call(track.querySelectorAll(":scope > [data-catalog-page]"));
+  }
+
+  function ensureCatalogPages(carousel) {
+    if (!carousel) return [];
+    var track = carousel.querySelector("[data-catalog-track]");
+    if (!track) return [];
+
+    var existingPages = catalogPages(carousel);
+    if (existingPages.length) return existingPages;
+
+    var items = Array.prototype.slice.call(track.querySelectorAll(":scope > [data-catalog-item]"));
+    if (!items.length) return [];
+
+    var page = null;
+    items.forEach(function (item, index) {
+      if (index % CATALOG_PAGE_SIZE === 0) {
+        page = document.createElement("div");
+        page.className = "catalog-carousel-page";
+        page.setAttribute("data-catalog-page", String(Math.floor(index / CATALOG_PAGE_SIZE)));
+        page.setAttribute("aria-label", "Catalog page " + String(Math.floor(index / CATALOG_PAGE_SIZE) + 1));
+        track.appendChild(page);
+      }
+
+      var slot = document.createElement("div");
+      slot.className = "catalog-carousel-slot";
+      page.appendChild(slot);
+      slot.appendChild(item);
+    });
+
+    var pages = catalogPages(carousel);
+    if (pages.length) {
+      var finalPage = pages[pages.length - 1];
+      while (finalPage.children.length < CATALOG_PAGE_SIZE) {
+        var emptySlot = document.createElement("div");
+        emptySlot.className = "catalog-carousel-slot is-empty";
+        emptySlot.setAttribute("aria-hidden", "true");
+        finalPage.appendChild(emptySlot);
+      }
+    }
+
+    return pages;
+  }
+
+  function pageForItem(item) {
+    return item ? item.closest("[data-catalog-page]") : null;
+  }
+
+  function activePageIndexForTrack(track, pages) {
+    if (!track || !pages.length) return 0;
+    var left = track.scrollLeft;
+    var bestIndex = 0;
+    var bestDistance = Infinity;
+
+    pages.forEach(function (page, index) {
+      var distance = Math.abs(page.offsetLeft - left);
+      if (distance < bestDistance) {
+        bestDistance = distance;
+        bestIndex = index;
+      }
+    });
+
+    return bestIndex;
+  }
+
+  function pageDirectionLabel(carousel, direction) {
+    var section = catalogSectionForCarousel(carousel);
+    if (section && section.id === "promotions") {
+      return direction === "newer" ? "Newer promotions" : "Older promotions";
+    }
+    if (section && section.id === "brands") {
+      return direction === "newer" ? "Previous brands" : "Next brands";
+    }
+    return direction === "newer" ? "Previous page" : "Next page";
+  }
+
+  function pageControlHtml(carousel, pageIndex, direction) {
+    var label = pageDirectionLabel(carousel, direction);
+    if (direction === "newer") {
+      return '<button class="catalog-direction-link catalog-direction-button" type="button" data-catalog-page-target="' + String(pageIndex) + '"><span>←</span> ' + htmlEscape(label) + '</button>';
+    }
+    return '<button class="catalog-direction-link catalog-direction-button" type="button" data-catalog-page-target="' + String(pageIndex) + '">' + htmlEscape(label) + ' <span>→</span></button>';
+  }
+
+  function scrollTrackToPage(carousel, pageIndex, instant) {
+    if (!carousel) return;
+    var track = carousel.querySelector("[data-catalog-track]");
+    var pages = ensureCatalogPages(carousel);
+    if (!track || !pages.length) return;
+
+    var safeIndex = Math.max(0, Math.min(Number(pageIndex) || 0, pages.length - 1));
+    track.scrollTo({ left: pages[safeIndex].offsetLeft, behavior: instant ? "auto" : "smooth" });
+    window.setTimeout(function () {
+      updateCarouselNav(carousel);
+      updateCatalogDots(carousel);
+    }, instant ? 0 : 180);
+
+    if (!instant) {
+      window.setTimeout(function () {
+        updateCarouselNav(carousel);
+        updateCatalogDots(carousel);
+      }, 760);
+    }
+  }
+
   function findCatalogItemBySlug(slug) {
     if (!slug) return null;
     return document.querySelector('[data-catalog-item][data-catalog-slug="' + cssEscape(slug) + '"]');
@@ -55,6 +166,73 @@
     }
 
     return '<a class="catalog-direction-link" data-catalog-target="' + htmlEscape(slug) + '" href="' + htmlEscape(href) + '">' + htmlEscape(label) + ': <strong>' + htmlEscape(title) + '</strong> <span>→</span></a>';
+  }
+
+  function panelLinkHtml(label, item, panelType, direction) {
+    var slug = itemSlug(item);
+    var href = "#" + slug;
+
+    if (direction === "newer") {
+      return '<a class="catalog-direction-link" data-catalog-target="' + htmlEscape(slug) + '" data-catalog-panel-target="' + htmlEscape(panelType) + '" href="' + htmlEscape(href) + '"><span>←</span> ' + htmlEscape(label) + '</a>';
+    }
+
+    return '<a class="catalog-direction-link" data-catalog-target="' + htmlEscape(slug) + '" data-catalog-panel-target="' + htmlEscape(panelType) + '" href="' + htmlEscape(href) + '">' + htmlEscape(label) + ' <span>→</span></a>';
+  }
+
+  function elementLeftWithinTrack(element, track) {
+    if (!element || !track) return 0;
+    var elementRect = element.getBoundingClientRect();
+    var trackRect = track.getBoundingClientRect();
+    return elementRect.left - trackRect.left + track.scrollLeft;
+  }
+
+  function scrollTrackToPanel(item, panelType, instant) {
+    if (!item) return;
+
+    var carousel = carouselForItem(item);
+    var track = carousel ? carousel.querySelector("[data-catalog-track]") : null;
+    var panel = item.querySelector(panelType === "detail" ? ".catalog-panel-detail" : ".catalog-panel-summary");
+    if (!track || !panel) return;
+
+    var left = elementLeftWithinTrack(panel, track) - Math.max(0, (track.clientWidth - panel.offsetWidth) / 2);
+    track.scrollTo({ left: left, behavior: instant ? "auto" : "smooth" });
+    updateCarouselNav(carousel);
+  }
+
+  function hasSplitPanels(item) {
+    return !!(item && item.querySelector(".catalog-panel-summary") && item.querySelector(".catalog-panel-detail"));
+  }
+
+  function activePanelStateForTrack(track, items) {
+    if (!track || !items.length) return null;
+
+    var trackCenter = track.scrollLeft + (track.clientWidth / 2);
+    var best = null;
+    var bestDistance = Infinity;
+
+    items.forEach(function (item, index) {
+      ["summary", "detail"].forEach(function (panelType) {
+        var panel = item.querySelector(panelType === "detail" ? ".catalog-panel-detail" : ".catalog-panel-summary");
+        if (!panel) return;
+
+        var panelLeft = elementLeftWithinTrack(panel, track);
+        var panelCenter = panelLeft + (panel.offsetWidth / 2);
+        var distance = Math.abs(panelCenter - trackCenter);
+        if (distance < bestDistance) {
+          bestDistance = distance;
+          best = { item: item, index: index, panelType: panelType };
+        }
+      });
+    });
+
+    return best;
+  }
+
+  function usesMobilePanelHints(carousel, items) {
+    if (!carousel || !items.length || !hasSplitPanels(items[0])) return false;
+    if (!window.matchMedia || !window.matchMedia("(max-width: 760px)").matches) return false;
+    var section = catalogSectionForCarousel(carousel);
+    return !!(section && section.id === "promotions");
   }
 
   function activeIndexForTrack(track, items) {
@@ -82,19 +260,25 @@
     var track = carousel.querySelector("[data-catalog-track]");
     var newerSlot = carousel.querySelector("[data-catalog-newer-slot]");
     var previousSlot = carousel.querySelector("[data-catalog-previous-slot]");
-    var items = catalogItems(carousel);
+    var hint = carousel.querySelector(".catalog-scroll-hint");
+    var pages = ensureCatalogPages(carousel);
 
-    if (!nav || !track || !newerSlot || !previousSlot || !items.length) return;
+    if (!nav || !track || !newerSlot || !previousSlot || !pages.length) return;
 
-    var index = activeIndexForTrack(track, items);
-    var newer = items[index - 1] || null;
-    var previous = items[index + 1] || null;
-    var newerLabel = nav.getAttribute("data-newer-label") || "Newer item";
-    var previousLabel = nav.getAttribute("data-previous-label") || "Previous item";
-    var endLabel = nav.getAttribute("data-end-label") || "End of items";
+    var endLabel = nav.getAttribute("data-end-label") || "End of catalog";
+    var pageIndex = activePageIndexForTrack(track, pages);
 
-    newerSlot.innerHTML = newer ? linkHtml(newerLabel, newer, "newer") : '<span class="catalog-direction-empty"></span>';
-    previousSlot.innerHTML = previous ? linkHtml(previousLabel, previous, "previous") : '<span class="catalog-direction-empty">' + htmlEscape(endLabel) + '</span>';
+    newerSlot.innerHTML = pageIndex > 0
+      ? pageControlHtml(carousel, pageIndex - 1, "newer")
+      : '<span class="catalog-direction-empty"></span>';
+
+    previousSlot.innerHTML = pageIndex < pages.length - 1
+      ? pageControlHtml(carousel, pageIndex + 1, "previous")
+      : '<span class="catalog-direction-empty">' + htmlEscape(endLabel) + '</span>';
+
+    if (hint) {
+      hint.textContent = "Page " + String(pageIndex + 1) + " of " + String(pages.length);
+    }
   }
 
   function carouselForItem(item) {
@@ -124,12 +308,10 @@
     if (!item) return;
 
     var carousel = carouselForItem(item);
-    var track = carousel ? carousel.querySelector("[data-catalog-track]") : null;
-    if (!track) return;
-
-    var left = itemLeftWithinTrack(item, track);
-    track.scrollTo({ left: left, behavior: instant ? "auto" : "smooth" });
-    updateCarouselNav(carousel);
+    var page = pageForItem(item);
+    var pages = ensureCatalogPages(carousel);
+    var pageIndex = page ? pages.indexOf(page) : 0;
+    scrollTrackToPage(carousel, pageIndex, instant);
 
     item.classList.add("is-targeted");
     window.setTimeout(function () {
@@ -186,6 +368,7 @@
       panel.hidden = true;
       panel.setAttribute("aria-hidden", "true");
     });
+    if (typeof syncCatalogModalBackdrop === "function") syncCatalogModalBackdrop();
   }
 
   function openOverviewPanel(panel, instant, updateHash) {
@@ -194,6 +377,7 @@
     closeOverviewPanels();
     panel.hidden = false;
     panel.setAttribute("aria-hidden", "false");
+    if (typeof syncCatalogModalBackdrop === "function") syncCatalogModalBackdrop();
 
     var section = catalogSectionForOverview(panel);
     if (section) {
@@ -224,29 +408,120 @@
     }
   }
 
+  function isMobileViewport() {
+    return !!(window.matchMedia && window.matchMedia("(max-width: 760px)").matches);
+  }
+
+  function forceSectionTopAlignment(section) {
+    if (!section) return;
+    // Align the catalog section boundary itself. Using a nested heading anchor
+    // made the Brands landing position sensitive to internal padding and layout
+    // changes, which caused it to settle at inconsistent vertical positions.
+    var topAnchor = section;
+    var scrollMarginTop = parseFloat(window.getComputedStyle(section).scrollMarginTop) || 0;
+    var top = window.scrollY + topAnchor.getBoundingClientRect().top - scrollMarginTop;
+    var root = document.documentElement;
+    var body = document.body;
+    var previousRootBehavior = root.style.scrollBehavior;
+    var previousBodyBehavior = body ? body.style.scrollBehavior : "";
+    root.style.scrollBehavior = "auto";
+    if (body) body.style.scrollBehavior = "auto";
+    window.scrollTo(0, Math.max(0, top));
+    root.style.scrollBehavior = previousRootBehavior;
+    if (body) body.style.scrollBehavior = previousBodyBehavior;
+  }
+
+  function repeatSectionAlignment(section, instant, block) {
+    if (!section) return;
+    section.scrollIntoView({ behavior: instant ? "auto" : "smooth", block: block });
+
+    // Catalog sections can change height while logos, dots, and modal controls
+    // initialize. Re-assert top alignment after layout settles so section-level
+    // navigation never lands halfway down the Brands catalog.
+    if (block === "start") {
+      window.requestAnimationFrame(function () {
+        window.setTimeout(function () { forceSectionTopAlignment(section); }, 180);
+        window.setTimeout(function () { forceSectionTopAlignment(section); }, 460);
+      });
+    }
+  }
+
   function activateCatalogTarget(target, instant, includeSectionScroll) {
     if (!target || !target.item) return;
 
     closeOverviewPanels();
 
     if (includeSectionScroll && target.section) {
-      target.section.scrollIntoView({ behavior: instant ? "auto" : "smooth", block: "center" });
+      // Brands is a catalog landing experience, not a single-card destination.
+      // Always present its heading and overview copy when navigation enters the
+      // section, even when the visitor selected a specific brand from the menu.
+      var shouldAlignToTop = target.section.id === "brands";
+      var scrollBlock = shouldAlignToTop || (isMobileViewport() && target.isSectionDefault) ? "start" : "center";
+      repeatSectionAlignment(target.section, instant, scrollBlock);
     }
 
     repeatHorizontalAlignment(target.item, instant);
   }
 
-  function updateHashWithoutJump(hash) {
+  function updateSelectedNavOption(slug) {
+    document.querySelectorAll(".nav-dropdown-menu a").forEach(function (link) {
+      var target = link.getAttribute("data-catalog-target") || samePageHashFromLink(link);
+      var isSelected = !!(slug && target && target === slug);
+      link.classList.toggle("is-selected", isSelected);
+      if (isSelected) {
+        link.setAttribute("aria-current", "page");
+      } else {
+        link.removeAttribute("aria-current");
+      }
+    });
+  }
+
+  function updateHashWithoutJump(hash, selectedSlug, state) {
     if (!hash || hash === "#") return;
+    var selection = selectedSlug || hash.replace(/^#/, "");
+    updateSelectedNavOption(selection);
     if (window.history && window.history.pushState) {
-      window.history.pushState(null, "", hash);
+      window.history.pushState(state || null, "", hash);
       return;
     }
     window.location.hash = hash;
   }
 
+  function replaceHashWithoutJump(hash, selectedSlug, state) {
+    if (!hash || hash === "#") return;
+    var selection = selectedSlug || hash.replace(/^#/, "");
+    updateSelectedNavOption(selection);
+    if (window.history && window.history.replaceState) {
+      window.history.replaceState(state || null, "", hash);
+      return;
+    }
+    window.location.hash = hash;
+  }
+
+  function brandSelectionFromHistory() {
+    var state = window.history ? window.history.state : null;
+    return state && typeof state.catalogTarget === "string" ? state.catalogTarget : "";
+  }
+
+  function canonicalizeBrandTarget(target, replace) {
+    if (!target || !target.item || !target.section || target.section.id !== "brands") return;
+    var slug = itemSlug(target.item);
+    var state = { catalogTarget: slug };
+    if (replace) {
+      replaceHashWithoutJump("#brands", slug, state);
+    } else {
+      updateHashWithoutJump("#brands", slug, state);
+    }
+  }
+
   function handleHash(instant) {
-    var slug = window.location.hash ? window.location.hash.slice(1) : "";
+    closeAllNavDropdowns(null);
+    var hashSlug = window.location.hash ? window.location.hash.slice(1) : "";
+    var slug = hashSlug;
+    if (hashSlug === "brands") {
+      slug = brandSelectionFromHistory() || hashSlug;
+    }
+    updateSelectedNavOption(slug);
     if (!slug) return;
 
     var overviewPanel = findOverviewPanelById(slug);
@@ -262,6 +537,14 @@
     }
 
     activateCatalogTarget(target, instant, true);
+
+    // A Brand is selected within the Brands catalog; it is not a separate SPA
+    // section. Keep #brands as the authoritative vertical landing target and
+    // preserve the selected Brand as history state. This prevents child-item
+    // hashes from fighting the landing-page alignment rules.
+    if (target.section && target.section.id === "brands" && hashSlug !== "brands") {
+      canonicalizeBrandTarget(target, true);
+    }
   }
 
   function hashFromHref(href) {
@@ -287,8 +570,342 @@
     }
   }
 
+
+  function setNavDropdownOpen(dropdown, isOpen) {
+    if (!dropdown) return;
+
+    var menu = dropdown.querySelector(".nav-dropdown-menu");
+    var trigger = dropdown.querySelector(".nav-dropdown-trigger");
+
+    dropdown.classList.toggle("is-open", !!isOpen);
+    dropdown.classList.remove("is-closing");
+
+    if (menu) {
+      if (isOpen) {
+        menu.hidden = false;
+        menu.setAttribute("aria-hidden", "false");
+      } else {
+        menu.hidden = true;
+        menu.setAttribute("aria-hidden", "true");
+      }
+    }
+
+    if (trigger) {
+      trigger.setAttribute("aria-expanded", isOpen ? "true" : "false");
+      if (!isOpen && typeof trigger.blur === "function") {
+        trigger.blur();
+      }
+    }
+  }
+
+  function closeNavDropdown(dropdown) {
+    if (!dropdown) return;
+
+    var focusedElement = dropdown.querySelector(":focus");
+    if (focusedElement && typeof focusedElement.blur === "function") {
+      focusedElement.blur();
+    }
+
+    setNavDropdownOpen(dropdown, false);
+  }
+
+  function closeAllNavDropdowns(exceptDropdown) {
+    document.querySelectorAll(".nav-dropdown").forEach(function (dropdown) {
+      if (dropdown !== exceptDropdown) {
+        closeNavDropdown(dropdown);
+      }
+    });
+  }
+
+  function openNavDropdown(dropdown) {
+    if (!dropdown) return;
+    closeAllNavDropdowns(dropdown);
+    setNavDropdownOpen(dropdown, true);
+  }
+
+  function toggleNavDropdown(dropdown) {
+    if (!dropdown) return;
+    if (dropdown.classList.contains("is-open")) {
+      closeNavDropdown(dropdown);
+      return;
+    }
+    openNavDropdown(dropdown);
+  }
+
+  function wireNavDropdowns() {
+    document.querySelectorAll(".nav-dropdown").forEach(function (dropdown) {
+      setNavDropdownOpen(dropdown, false);
+    });
+
+    document.addEventListener("click", function (event) {
+      var trigger = event.target.closest ? event.target.closest(".nav-dropdown-trigger") : null;
+      if (trigger) {
+        var triggerDropdown = trigger.closest(".nav-dropdown");
+        if (triggerDropdown) {
+          event.preventDefault();
+          toggleNavDropdown(triggerDropdown);
+          return;
+        }
+      }
+
+      var menuLink = event.target.closest ? event.target.closest(".nav-dropdown-menu a") : null;
+      if (menuLink) {
+        closeAllNavDropdowns(null);
+        return;
+      }
+
+      if (!event.target.closest || !event.target.closest(".nav-dropdown")) {
+        closeAllNavDropdowns(null);
+      }
+    }, true);
+
+    document.addEventListener("pointerdown", function (event) {
+      if (!event.target.closest || !event.target.closest(".nav-dropdown")) {
+        closeAllNavDropdowns(null);
+      }
+    }, true);
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key !== "Escape") return;
+      closeAllNavDropdowns(null);
+    });
+
+    window.addEventListener("scroll", function () {
+      closeAllNavDropdowns(null);
+    }, { passive: true, capture: true });
+  }
+
+  var catalogModalBackdrop = null;
+  var openCatalogDetailPanel = null;
+
+  function ensureCatalogModalBackdrop() {
+    if (catalogModalBackdrop) return catalogModalBackdrop;
+    catalogModalBackdrop = document.querySelector("[data-catalog-modal-backdrop]");
+    if (!catalogModalBackdrop) {
+      catalogModalBackdrop = document.createElement("div");
+      catalogModalBackdrop.className = "catalog-modal-backdrop";
+      catalogModalBackdrop.setAttribute("data-catalog-modal-backdrop", "");
+      catalogModalBackdrop.hidden = true;
+      document.body.appendChild(catalogModalBackdrop);
+    }
+    return catalogModalBackdrop;
+  }
+
+  function syncCatalogModalBackdrop() {
+    var overviewOpen = !!document.querySelector("[data-catalog-overview-panel]:not([hidden])");
+    var detailOpen = !!document.querySelector("[data-catalog-detail-panel]:not([hidden])");
+    var isOpen = overviewOpen || detailOpen;
+    var backdrop = ensureCatalogModalBackdrop();
+    backdrop.hidden = !isOpen;
+    document.body.classList.toggle("has-catalog-modal-open", isOpen);
+  }
+
+  function closeCatalogDetailPanels() {
+    document.querySelectorAll("[data-catalog-detail-panel]").forEach(function (panel) {
+      panel.hidden = true;
+      panel.setAttribute("aria-hidden", "true");
+      panel.classList.remove("is-open");
+      panel.style.removeProperty("--catalog-modal-left");
+      panel.style.removeProperty("--catalog-modal-top");
+    });
+    openCatalogDetailPanel = null;
+    syncCatalogModalBackdrop();
+  }
+
+  function positionCatalogDetailPanel(panel) {
+    if (!panel || panel.hidden) return;
+    var carousel = panel._catalogCarousel || panel.closest("[data-catalog-carousel]");
+    var rect = carousel ? carousel.getBoundingClientRect() : document.documentElement.getBoundingClientRect();
+    var modalWidth = Math.min(panel.offsetWidth || 620, Math.max(280, window.innerWidth - 32));
+    var minCenter = 16 + (modalWidth / 2);
+    var maxCenter = window.innerWidth - 16 - (modalWidth / 2);
+    var desiredCenter = rect.left + (rect.width / 2);
+    var center = Math.max(minCenter, Math.min(maxCenter, desiredCenter));
+    panel.style.setProperty("--catalog-modal-left", center + "px");
+    panel.style.setProperty("--catalog-modal-top", Math.max(88, window.innerHeight / 2) + "px");
+  }
+
+  function openCatalogDetail(panelId, opener) {
+    var panel = panelId ? document.getElementById(panelId) : null;
+    if (!panel) return;
+    closeCatalogDetailPanels();
+    closeOverviewPanels();
+    panel.hidden = false;
+    panel.setAttribute("aria-hidden", "false");
+    panel.classList.add("is-open");
+    openCatalogDetailPanel = panel;
+    positionCatalogDetailPanel(panel);
+    syncCatalogModalBackdrop();
+    var closeButton = panel.querySelector("[data-catalog-detail-close]");
+    if (closeButton) {
+      window.setTimeout(function () { closeButton.focus({ preventScroll: true }); }, 25);
+    }
+    if (opener) panel._catalogReturnFocus = opener;
+  }
+
+  function closeCatalogDetailAndReturn(panel) {
+    var returnFocus = panel && panel._catalogReturnFocus;
+    closeCatalogDetailPanels();
+    if (returnFocus && typeof returnFocus.focus === "function") {
+      window.setTimeout(function () { returnFocus.focus({ preventScroll: true }); }, 25);
+    }
+  }
+
+  function prepareCatalogDetailModals() {
+    document.querySelectorAll("[data-catalog-carousel] [data-catalog-item]").forEach(function (item) {
+      var summary = item.querySelector(".catalog-panel-summary");
+      var detail = item.querySelector(".catalog-panel-detail");
+      if (!summary || !detail || !detail.id) return;
+
+      detail.classList.add("catalog-detail-modal");
+      var sourceSection = catalogSectionForItem(item);
+      detail.classList.toggle("brand-catalog-detail-modal", !!(sourceSection && sourceSection.id === "brands"));
+      detail.setAttribute("data-catalog-detail-panel", "");
+      detail.setAttribute("role", "dialog");
+      detail.setAttribute("aria-modal", "true");
+      detail.setAttribute("aria-hidden", "true");
+      detail.hidden = true;
+
+      // Modal panels must live at the document root. Keeping a panel inside a
+      // card allows ancestor stacking contexts to place it underneath the
+      // shared backdrop, which made Brand details appear empty even though the
+      // content was present. Preserve the originating carousel for positioning.
+      detail._catalogCarousel = item.closest("[data-catalog-carousel]");
+      if (detail.parentElement !== document.body) {
+        document.body.appendChild(detail);
+      }
+
+      if (!detail.querySelector("[data-catalog-detail-close]")) {
+        var closeButton = document.createElement("button");
+        closeButton.className = "catalog-detail-close";
+        closeButton.type = "button";
+        closeButton.setAttribute("data-catalog-detail-close", "");
+        closeButton.setAttribute("aria-label", "Close details");
+        closeButton.textContent = "Close ×";
+        detail.insertBefore(closeButton, detail.firstChild);
+      }
+
+      if (!summary.querySelector("[data-catalog-detail-open]")) {
+        var openButton = document.createElement("button");
+        openButton.className = "catalog-details-toggle";
+        openButton.type = "button";
+        openButton.setAttribute("data-catalog-detail-open", detail.id);
+        openButton.setAttribute("aria-controls", detail.id);
+        openButton.textContent = "View details →";
+        summary.appendChild(openButton);
+      }
+    });
+  }
+
+  function catalogNeedsNavigation(carousel) {
+    if (!carousel) return false;
+    return ensureCatalogPages(carousel).length > 1;
+  }
+
+  function syncCatalogNavigationVisibility(carousel) {
+    if (!carousel) return false;
+    var needsNavigation = catalogNeedsNavigation(carousel);
+    var nav = carousel.querySelector("[data-catalog-nav]");
+    var dots = carousel.querySelector("[data-catalog-dots]");
+    carousel.classList.toggle("is-static-catalog", !needsNavigation);
+    if (nav) nav.hidden = !needsNavigation;
+    if (dots) dots.hidden = !needsNavigation;
+    return needsNavigation;
+  }
+
+  function ensureCatalogDots(carousel) {
+    if (!carousel) return null;
+    var track = carousel.querySelector("[data-catalog-track]");
+    var pages = ensureCatalogPages(carousel);
+    if (!track || !pages.length) return null;
+
+    var dots = carousel.querySelector("[data-catalog-dots]");
+    if (!dots) {
+      dots = document.createElement("div");
+      dots.className = "catalog-position-dots";
+      dots.setAttribute("data-catalog-dots", "");
+      dots.setAttribute("aria-label", "Catalog pages");
+      track.insertAdjacentElement("afterend", dots);
+    }
+
+    if (dots.children.length !== pages.length) {
+      dots.innerHTML = "";
+      pages.forEach(function (page, index) {
+        var button = document.createElement("button");
+        button.type = "button";
+        button.className = "catalog-position-dot";
+        button.setAttribute("data-catalog-dot-index", String(index));
+        button.setAttribute("aria-label", "Show catalog page " + String(index + 1));
+        dots.appendChild(button);
+      });
+    }
+    syncCatalogNavigationVisibility(carousel);
+    return dots;
+  }
+
+  function updateCatalogDots(carousel) {
+    if (!carousel) return;
+    var track = carousel.querySelector("[data-catalog-track]");
+    var pages = ensureCatalogPages(carousel);
+    var dots = ensureCatalogDots(carousel);
+    if (!track || !pages.length || !dots) return;
+    if (!syncCatalogNavigationVisibility(carousel)) return;
+
+    var pageIndex = activePageIndexForTrack(track, pages);
+    pages.forEach(function (page, index) {
+      page.classList.toggle("is-selected", index === pageIndex);
+    });
+    Array.prototype.slice.call(dots.children).forEach(function (dot, index) {
+      var active = index === pageIndex;
+      dot.classList.toggle("is-selected", active);
+      dot.setAttribute("aria-current", active ? "true" : "false");
+    });
+  }
+
+  function wireCatalogDots() {
+    document.querySelectorAll("[data-catalog-carousel]").forEach(function (carousel) {
+      ensureCatalogPages(carousel);
+      ensureCatalogDots(carousel);
+      updateCatalogDots(carousel);
+    });
+
+    document.addEventListener("click", function (event) {
+      var dot = event.target.closest ? event.target.closest("[data-catalog-dot-index]") : null;
+      if (!dot) return;
+      var carousel = dot.closest("[data-catalog-carousel]");
+      var index = Number(dot.getAttribute("data-catalog-dot-index"));
+      if (!Number.isInteger(index)) return;
+      event.preventDefault();
+      scrollTrackToPage(carousel, index, false);
+    });
+  }
+
+  function usesModalDetailHints(carousel, items) {
+    if (!carousel || !items.length || !isMobileViewport()) return false;
+    var section = catalogSectionForCarousel(carousel);
+    return !!(section && section.id === "promotions" && items[0].querySelector("[data-catalog-detail-panel]"));
+  }
+
   function wireCatalogLinks() {
     document.addEventListener("click", function (event) {
+      var pageControl = event.target.closest ? event.target.closest("[data-catalog-page-target]") : null;
+      if (pageControl) {
+        var pageCarousel = pageControl.closest("[data-catalog-carousel]");
+        var pageIndex = Number(pageControl.getAttribute("data-catalog-page-target"));
+        if (pageCarousel && Number.isInteger(pageIndex)) {
+          event.preventDefault();
+          scrollTrackToPage(pageCarousel, pageIndex, false);
+        }
+        return;
+      }
+
+      var detailOpen = event.target.closest ? event.target.closest("[data-catalog-detail-open]") : null;
+      if (detailOpen) {
+        event.preventDefault();
+        openCatalogDetail(detailOpen.getAttribute("data-catalog-detail-open") || "", detailOpen);
+        return;
+      }
+
       var link = event.target.closest ? event.target.closest("a[href]") : null;
       if (!link) return;
 
@@ -303,11 +920,20 @@
       }
 
       var explicitTarget = link.getAttribute("data-catalog-target") || "";
+      var panelTarget = link.getAttribute("data-catalog-panel-target") || "";
       var hrefHash = samePageHashFromLink(link);
       var slug = explicitTarget || hrefHash;
       if (!slug) return;
 
       var target = catalogTargetForHash(slug);
+
+      if (panelTarget && target && target.item) {
+        event.preventDefault();
+        closeOverviewPanels();
+        scrollTrackToPanel(target.item, panelTarget, false);
+        updateHashWithoutJump("#" + slug);
+        return;
+      }
 
       if (explicitTarget && !target) {
         if (!hrefHash) return;
@@ -323,10 +949,29 @@
         var linkCarousel = link.closest("[data-catalog-carousel]");
         var shouldScrollSection = itemCarousel !== linkCarousel;
         var hashToSet = explicitTarget || hrefHash;
+        var isBrandTarget = !!(target.section && target.section.id === "brands");
 
-        activateCatalogTarget(target, false, shouldScrollSection);
-        updateHashWithoutJump("#" + hashToSet);
+        activateCatalogTarget(target, false, shouldScrollSection || isBrandTarget);
+        if (isBrandTarget) {
+          canonicalizeBrandTarget(target, false);
+        } else {
+          updateHashWithoutJump("#" + hashToSet);
+        }
       }
+    }, true);
+
+    document.addEventListener("click", function (event) {
+      var detailClose = event.target.closest ? event.target.closest("[data-catalog-detail-close]") : null;
+      if (!detailClose) return;
+      event.preventDefault();
+      closeCatalogDetailAndReturn(detailClose.closest("[data-catalog-detail-panel]"));
+    }, true);
+
+    document.addEventListener("click", function (event) {
+      if (!event.target.matches || !event.target.matches("[data-catalog-modal-backdrop]")) return;
+      event.preventDefault();
+      closeCatalogDetailPanels();
+      closeOverviewPanels();
     }, true);
 
     document.addEventListener("click", function (event) {
@@ -338,6 +983,12 @@
 
     document.addEventListener("keydown", function (event) {
       if (event.key !== "Escape") return;
+      var detailPanel = document.querySelector("[data-catalog-detail-panel]:not([hidden])");
+      if (detailPanel) {
+        event.preventDefault();
+        closeCatalogDetailAndReturn(detailPanel);
+        return;
+      }
       var openPanel = document.querySelector("[data-catalog-overview-panel]:not([hidden])");
       if (openPanel) {
         event.preventDefault();
@@ -348,6 +999,7 @@
 
   function wireCarousels() {
     document.querySelectorAll("[data-catalog-carousel]").forEach(function (carousel) {
+      ensureCatalogPages(carousel);
       var track = carousel.querySelector("[data-catalog-track]");
       var updateTimer = null;
       if (!track) return;
@@ -356,19 +1008,41 @@
         if (updateTimer) window.clearTimeout(updateTimer);
         updateTimer = window.setTimeout(function () {
           updateCarouselNav(carousel);
+          updateCatalogDots(carousel);
         }, 80);
       }, { passive: true });
 
       updateCarouselNav(carousel);
+      updateCatalogDots(carousel);
+      window.requestAnimationFrame(function () {
+        syncCatalogNavigationVisibility(carousel);
+      });
     });
   }
 
   document.addEventListener("DOMContentLoaded", function () {
+    ensureCatalogModalBackdrop();
+    document.querySelectorAll("[data-catalog-carousel]").forEach(function (carousel) {
+      ensureCatalogPages(carousel);
+    });
+    prepareCatalogDetailModals();
+    wireCatalogDots();
     wireCarousels();
+    wireNavDropdowns();
     wireCatalogLinks();
     handleHash(true);
     window.addEventListener("hashchange", function () {
       handleHash(false);
     });
+    window.addEventListener("popstate", function () {
+      handleHash(false);
+    });
+    window.addEventListener("resize", function () {
+      if (openCatalogDetailPanel) positionCatalogDetailPanel(openCatalogDetailPanel);
+      document.querySelectorAll("[data-catalog-carousel]").forEach(function (carousel) {
+        updateCatalogDots(carousel);
+        syncCatalogNavigationVisibility(carousel);
+      });
+    }, { passive: true });
   });
 }());

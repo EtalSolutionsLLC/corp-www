@@ -335,3 +335,379 @@
     border-radius: 14px;
   }
 }
+
+/* Brand Portfolio modal — Option #2: Soft Blue.
+   Keep the modal surface opaque. Dim the page behind it with the drawer shadow,
+   not with a pseudo-element that can tint the modal itself. */
+.brand-catalog-overview.catalog-overview-drawer {
+  isolation: auto;
+  background-color: #eaf7ff !important;
+  background-image: linear-gradient(
+    135deg,
+    #fbfeff 0%,
+    #eaf7ff 52%,
+    #d8effc 100%
+  ) !important;
+  color: #07111f !important;
+  border: 1px solid rgba(18, 59, 255, 0.18) !important;
+  box-shadow:
+    0 0 0 100vmax rgba(5, 12, 24, 0.36),
+    0 24px 70px rgba(7, 17, 31, 0.24) !important;
+}
+
+.brand-catalog-overview.catalog-overview-drawer::before {
+  content: none !important;
+  display: none !important;
+}
+
+.brand-catalog-overview.catalog-overview-drawer > .container {
+  position: relative;
+  z-index: 1;
+}
+
+.brand-catalog-overview.catalog-overview-drawer h2,
+.brand-catalog-overview.catalog-overview-drawer h3 {
+  color: #07111f !important;
+}
+
+.brand-catalog-overview.catalog-overview-drawer p,
+.brand-catalog-overview.catalog-overview-drawer li {
+  color: #243449 !important;
+}
+
+.brand-catalog-overview.catalog-overview-drawer .catalog-overview-close {
+  color: #07111f !important;
+}
+
+/* Brand catalog UX v2 — right-side desktop navigation, dots, and clean modal backdrop. */
+.brand-catalog-overview.catalog-overview-drawer {
+  z-index: 1400;
+  box-shadow: 0 24px 70px rgba(7, 17, 31, 0.34) !important;
+}
+
+@media (min-width: 981px) {
+  .brand-catalog-section > .container {
+    min-height: 104px;
+  }
+
+  .brand-catalog-section .section-head-center {
+    max-width: 1280px;
+    margin: 0 auto 14px;
+    padding-right: 540px;
+    text-align: left;
+  }
+
+  .brand-catalog-section .section-head-center p {
+    margin-left: 0;
+  }
+
+  .brand-catalog-carousel {
+    position: relative;
+  }
+
+  .brand-catalog-carousel .catalog-carousel-instructions {
+    position: absolute;
+    top: -112px;
+    right: max(18px, calc((100% - 1280px) / 2));
+    z-index: 3;
+    width: min(500px, calc(48vw - 24px));
+    min-height: 74px;
+    margin: 0;
+    padding: 12px 16px;
+    border: 1px solid rgba(18, 59, 255, 0.16);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 14px 36px rgba(5, 12, 24, 0.10);
+  }
+
+  .brand-catalog-carousel .catalog-carousel-instructions::before {
+    content: "Browse brand identities";
+    grid-column: 1 / -1;
+    color: rgba(9, 20, 39, 0.70);
+    font-size: 0.70rem;
+    font-weight: 950;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+}
+
+@media (max-width: 980px) {
+  .brand-catalog-section .section-head-center {
+    padding-right: 0;
+    text-align: center;
+  }
+
+  .brand-catalog-carousel .catalog-carousel-instructions {
+    position: static;
+  }
+}
+
+/* Keep the supporting overview action legible on the light Soft Blue modal. */
+.brand-catalog-overview .hero-cta.secondary {
+  border: 1px solid rgba(18, 59, 255, 0.24);
+  background: rgba(255, 255, 255, 0.86);
+  color: #123bff;
+  box-shadow: none;
+}
+
+.brand-catalog-overview .hero-cta.secondary:hover,
+.brand-catalog-overview .hero-cta.secondary:focus-visible {
+  background: #ffffff;
+  color: #07111f;
+}
+
+/* Standard Brands catalog landing page.
+   Brands now use the shared summary-card catalog pattern used by Promotions. */
+.brand-catalog-section.catalog-home-section {
+  background: transparent;
+  color: var(--catalog-ink, #0b111d);
+}
+
+.brand-catalog-section.catalog-home-section > .catalog-page-layout {
+  width: min(calc(100% - 48px), 1280px);
+}
+
+@media (max-width: 760px) {
+  .brand-catalog-section.catalog-home-section > .catalog-page-layout {
+    width: 100%;
+  }
+}
+
+
+/* Standard Brands catalog landing page — dark alternating panel.
+   The catalog landing page replaces the retired Brand Portfolio modal. */
+.brand-catalog-section.catalog-home-section,
+.brand-catalog-section.catalog-home-section.panel:target,
+.brand-catalog-section.catalog-home-section.section-dark {
+  background:
+    linear-gradient(90deg, rgba(4, 10, 20, 0.99) 0%, rgba(5, 13, 26, 0.97) 58%, rgba(10, 28, 58, 0.90) 100%),
+    linear-gradient(180deg, #091427 0%, #07111f 100%);
+  color: #ffffff;
+}
+
+.brand-catalog-section.catalog-home-section.section-dark::before {
+  display: block;
+}
+
+.brand-catalog-section.catalog-home-section .catalog-page-head h2 {
+  color: #ffffff;
+}
+
+.brand-catalog-section.catalog-home-section .catalog-page-head p {
+  color: rgba(255, 255, 255, 0.76);
+}
+
+.brand-catalog-section.catalog-home-section .section-kicker,
+.brand-catalog-section.catalog-home-section .section-kicker.light {
+  color: #8db6ff;
+}
+
+/* Keep the mobile carousel affordances readable on the dark Brands landing panel. */
+@media (max-width: 980px) {
+  .brand-catalog-section.catalog-home-section .catalog-carousel-instructions,
+  .brand-catalog-section.catalog-home-section .catalog-scroll-hint,
+  .brand-catalog-section.catalog-home-section .catalog-direction-empty,
+  .brand-catalog-section.catalog-home-section .catalog-direction-link {
+    color: rgba(255, 255, 255, 0.82);
+  }
+
+  .brand-catalog-section.catalog-home-section .catalog-direction-link strong {
+    color: #8db6ff;
+  }
+}
+
+/* Brands summary cards — dark translucent tiles to match the Services panel. */
+.brand-catalog-section.catalog-home-section .catalog-item-panels,
+.brand-catalog-section.catalog-home-section .catalog-carousel-item.is-featured .catalog-item-panels {
+  border-color: rgba(255, 255, 255, 0.12);
+  border-top-color: #2f6bff;
+  background: rgba(255, 255, 255, 0.045);
+  box-shadow: none;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.brand-catalog-section.catalog-home-section .catalog-panel-summary {
+  border-right-color: rgba(255, 255, 255, 0.10);
+}
+
+.brand-catalog-section.catalog-home-section .catalog-panel-summary h2,
+.brand-catalog-section.catalog-home-section .catalog-panel-detail h3,
+.brand-catalog-section.catalog-home-section .catalog-attribute strong {
+  color: #ffffff;
+}
+
+.brand-catalog-section.catalog-home-section .catalog-panel p:not(.catalog-subtitle),
+.brand-catalog-section.catalog-home-section .catalog-subtitle,
+.brand-catalog-section.catalog-home-section .catalog-description p,
+.brand-catalog-section.catalog-home-section .catalog-attribute p {
+  color: rgba(255, 255, 255, 0.76);
+}
+
+.brand-catalog-section.catalog-home-section .catalog-badge {
+  color: #8db6ff;
+}
+
+.brand-catalog-section.catalog-home-section .catalog-tag-list li,
+.brand-catalog-section.catalog-home-section .catalog-tag-list span {
+  border-color: rgba(143, 178, 255, 0.24);
+  background: rgba(18, 59, 255, 0.14);
+  color: rgba(255, 255, 255, 0.90);
+}
+
+.brand-catalog-section.catalog-home-section .catalog-carousel-item.is-selected .catalog-item-panels {
+  border-color: rgba(143, 178, 255, 0.72);
+  box-shadow: 0 0 0 2px rgba(18, 59, 255, 0.18), 0 18px 46px rgba(0, 0, 0, 0.22);
+}
+
+@media (max-width: 760px) {
+  .brand-catalog-section.catalog-home-section .catalog-item-panels,
+  .brand-catalog-section.catalog-home-section .catalog-carousel-item.is-featured .catalog-item-panels {
+    background: rgba(255, 255, 255, 0.055);
+  }
+}
+
+
+/* Brands summary tiles — match the square Services treatment, but keep a
+   subtle electric-blue glow so the dark cards remain visually distinct. */
+.brand-catalog-section.catalog-home-section .catalog-item-panels,
+.brand-catalog-section.catalog-home-section .catalog-carousel-item.is-featured .catalog-item-panels {
+  border-radius: 4px;
+  box-shadow:
+    0 0 0 1px rgba(143, 178, 255, 0.14),
+    0 0 28px rgba(18, 59, 255, 0.18),
+    0 18px 44px rgba(0, 0, 0, 0.28);
+}
+
+.brand-catalog-section.catalog-home-section .catalog-carousel-item.is-selected .catalog-item-panels {
+  box-shadow:
+    0 0 0 2px rgba(143, 178, 255, 0.34),
+    0 0 34px rgba(18, 59, 255, 0.30),
+    0 20px 50px rgba(0, 0, 0, 0.34);
+}
+
+.brand-catalog-section.catalog-home-section .catalog-summary-logo {
+  filter: drop-shadow(0 0 12px rgba(143, 178, 255, 0.32));
+}
+
+/* Brands landing target guardrail: land at the top of the catalog section so
+   the heading, overview copy, and card row are presented as one experience. */
+#brands {
+  scroll-margin-top: calc(var(--header-h, 84px) + 10px);
+}
+
+/* Brand detail actions use the shared luminous-text affordance. */
+.brand-catalog-section .catalog-details-toggle {
+  color: #8db6ff;
+  text-shadow: 0 0 14px rgba(143, 178, 255, 0.52);
+}
+
+.brand-catalog-section .catalog-details-toggle:hover,
+.brand-catalog-section .catalog-details-toggle:focus-visible {
+  color: #ffffff;
+  text-shadow: 0 0 20px rgba(143, 178, 255, 0.82);
+}
+
+/* Brands target-state correction.
+   The shared .panel:target rule vertically centers most sections. Brands is a
+   catalog landing page, so its heading and overview must begin at the top of
+   viewport when #brands is targeted. */
+#brands.panel:target {
+  display: block;
+  min-height: auto;
+  padding: 28px 0 0;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+
+/* Compact Brand detail modals: keep the complete brand story visible without
+   requiring a desktop scrollbar. */
+@media (min-width: 761px) {
+  .brand-catalog-detail-modal.is-open {
+    width: min(780px, calc(100vw - 32px));
+    max-height: min(700px, calc(100dvh - var(--header-h, 84px) - var(--footer-h, 56px) - 32px));
+  }
+
+  .brand-catalog-detail-modal .catalog-attribute-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .brand-catalog-detail-modal .catalog-attribute {
+    padding: 11px 12px;
+  }
+
+  .brand-catalog-detail-modal .catalog-detail-summary {
+    margin: 0;
+  }
+}
+
+/* Brand detail modal refinement.
+   The shared promotion modal intentionally suppresses repeated titles. Brand
+   details are different: keep the brand name, remove the duplicative subtitle,
+   and tighten the mobile presentation so the complete story fits without an
+   internal scrollbar. */
+.brand-catalog-detail-modal > h3 {
+  display: block;
+}
+
+.brand-catalog-detail-modal > .catalog-badge,
+.brand-catalog-detail-modal > .catalog-subtitle {
+  display: none;
+}
+
+.brand-catalog-detail-modal .catalog-detail-logo {
+  max-height: 58px;
+  margin: 0;
+}
+
+@media (max-width: 760px) {
+  .brand-catalog-detail-modal.is-open {
+    gap: 8px;
+    padding: 16px;
+  }
+
+  .brand-catalog-detail-modal .catalog-detail-close {
+    margin-bottom: 2px;
+  }
+
+  .brand-catalog-detail-modal .catalog-detail-logo {
+    display: none;
+  }
+
+  .brand-catalog-detail-modal h3 {
+    font-size: 1.62rem;
+    line-height: 1.05;
+  }
+
+  .brand-catalog-detail-modal .catalog-detail-summary {
+    margin: 0;
+    font-size: 1rem !important;
+    line-height: 1.34 !important;
+  }
+
+  .brand-catalog-detail-modal .catalog-attribute-grid {
+    gap: 7px;
+  }
+
+  .brand-catalog-detail-modal .catalog-attribute {
+    padding: 8px 10px;
+  }
+
+  .brand-catalog-detail-modal .catalog-attribute strong {
+    font-size: 0.98rem !important;
+  }
+
+  .brand-catalog-detail-modal .catalog-attribute p {
+    margin-top: 2px;
+    font-size: 0.94rem !important;
+    line-height: 1.28 !important;
+  }
+
+  .brand-catalog-detail-modal .catalog-actions {
+    margin-top: 0;
+  }
+}
+
+.brand-catalog-detail-modal h3 {
+  color: #ffffff;
+}

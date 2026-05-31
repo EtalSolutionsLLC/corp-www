@@ -6,13 +6,14 @@
   "detailBaseHref": "/promotions/",
   "labels": {
     "itemFallback": "Promotion",
-    "allItems": "All Promotions",
     "heroCta": "View Details",
     "learnMore": "Learn More",
     "newer": "Newer promotion",
     "previous": "Previous promotion",
     "end": "End of promotions",
-    "scrollHint": "Scroll sideways through catalog items."
+    "scrollHint": "Scroll sideways through catalog items.",
+    "detail": "Detail",
+    "summary": "Summary"
   },
   "regions": {
     "heroTeaser": "CATALOG-PROMOTIONS-HERO-TEASER",

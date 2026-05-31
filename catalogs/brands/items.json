@@ -46,7 +46,23 @@
     "finalKicker": "Next Step",
     "finalTitle": "Start with the brand that fits the problem.",
     "finalSummary": "Whether the need is education, consulting, transformation strategy, or better use of A.I.-enabled time, the work starts with a clear conversation.",
-    "sortOrder": 10
+    "sortOrder": 10,
+    "subtitle": "Accessible A.I. education and enablement for everyday work.",
+    "detailSummary": "Practical A.I. education that helps people use new tools with confidence.",
+    "detailCards": [
+      {
+        "title": "For",
+        "body": "Individuals, teams, and smaller businesses."
+      },
+      {
+        "title": "Offers",
+        "body": "Plain-language training, prompting guidance, and useful workflows."
+      },
+      {
+        "title": "Purpose",
+        "body": "Make A.I. approachable and practical."
+      }
+    ]
   },
   {
     "id": "solutions-et-al",
@@ -94,7 +110,23 @@
     "finalKicker": "Next Step",
     "finalTitle": "Start with the brand that fits the problem.",
     "finalSummary": "Whether the need is education, consulting, transformation strategy, or better use of A.I.-enabled time, the work starts with a clear conversation.",
-    "sortOrder": 20
+    "sortOrder": 20,
+    "subtitle": "Practical consulting, solution design, and implementation support.",
+    "detailSummary": "Focused consulting and delivery support for practical technology decisions.",
+    "detailCards": [
+      {
+        "title": "For",
+        "body": "Organizations that need clear technical direction."
+      },
+      {
+        "title": "Offers",
+        "body": "Solution design, implementation, integration, and handoff."
+      },
+      {
+        "title": "Purpose",
+        "body": "Turn operational problems into maintainable systems."
+      }
+    ]
   },
   {
     "id": "25th-hour",
@@ -142,6 +174,22 @@
     "finalKicker": "Next Step",
     "finalTitle": "Start with the brand that fits the problem.",
     "finalSummary": "Whether the need is education, consulting, transformation strategy, or better use of A.I.-enabled time, the work starts with a clear conversation.",
-    "sortOrder": 30
+    "sortOrder": 30,
+    "subtitle": "Human-centered A.I. leverage for time, focus, and intention.",
+    "detailSummary": "Human-centered ideas for using time reclaimed through thoughtful automation.",
+    "detailCards": [
+      {
+        "title": "For",
+        "body": "People and teams seeking more intentional use of time."
+      },
+      {
+        "title": "Offers",
+        "body": "Practical leverage, productivity themes, and workflow guidance."
+      },
+      {
+        "title": "Purpose",
+        "body": "Keep efficiency focused on better living and better work."
+      }
+    ]
   }
 ]

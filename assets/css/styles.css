@@ -2009,6 +2009,7 @@ body:not(:has(section:target)) .brand-page-hero {
 }
 
 /* Shared nav dropdowns */
+/* Dropdown visibility is click/tap controlled by JS, not hover, so menus can close predictably. */
 .nav-dropdown {
   position: relative;
   display: inline-flex;
@@ -2056,9 +2057,13 @@ body:not(:has(section:target)) .brand-page-hero {
   height: 13px;
 }
 
-.nav-dropdown:hover .nav-dropdown-menu,
-.nav-dropdown:focus-within .nav-dropdown-menu {
+.nav-dropdown.is-open .nav-dropdown-menu:not([hidden]) {
   display: grid;
+}
+
+.nav-dropdown-menu[hidden],
+.nav-dropdown.is-closing .nav-dropdown-menu {
+  display: none !important;
 }
 
 .nav-dropdown-menu a {
@@ -2255,4 +2260,21 @@ body {
   .promo-actions .promotion-archive-inline {
     min-height: auto;
   }
+}
+
+/* Active dropdown option — selected catalog item uses the blue pill treatment. */
+.nav-dropdown-menu a.is-selected,
+.nav-dropdown-menu a[aria-current="page"] {
+  border-radius: 999px;
+  background: linear-gradient(135deg, #1f63ff, #123bff);
+  color: #ffffff;
+  box-shadow: 0 8px 20px rgba(18, 59, 255, 0.30);
+}
+
+.nav-dropdown-menu a.is-selected:hover,
+.nav-dropdown-menu a.is-selected:focus-visible,
+.nav-dropdown-menu a[aria-current="page"]:hover,
+.nav-dropdown-menu a[aria-current="page"]:focus-visible {
+  background: linear-gradient(135deg, #2f72ff, #244bff);
+  color: #ffffff;
 }

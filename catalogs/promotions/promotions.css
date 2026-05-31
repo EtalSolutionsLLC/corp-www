@@ -1172,27 +1172,591 @@
   padding-bottom: 0 !important;
 }
 
-/* Promotions should sit directly on the page background, not on a gray catalog slab. */
-#promotions,
-#promotions.section-light,
-#promotions.catalog-home-section {
-  background: #ffffff !important;
-  background-color: #ffffff !important;
-  background-image: none !important;
+/* Catalog UX v2 — Option 5 navigation, position dots, and detail modal.
+   Shared by Promotions and future card-based catalogs. */
+.catalog-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1390;
+  background: rgba(3, 9, 20, 0.52);
+  backdrop-filter: blur(14px) saturate(0.78);
+  -webkit-backdrop-filter: blur(14px) saturate(0.78);
 }
 
-/* Ensure the catalog wrappers do not paint a backing panel. */
-#promotions .catalog-page-layout,
-#promotions .catalog-full-list,
-#promotions .catalog-carousel,
-#promotions .catalog-carousel-track,
-#promotions .catalog-carousel-item {
-  background: transparent !important;
-  background-color: transparent !important;
-  background-image: none !important;
+.catalog-modal-backdrop[hidden] {
+  display: none !important;
 }
 
-/* Remove the wide gray-looking shadow slab around the card. */
-#promotions .catalog-item-panels {
-  box-shadow: none !important;
+body.has-catalog-modal-open {
+  overflow: hidden;
+}
+
+.catalog-position-dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 24px;
+  margin: 8px auto 0;
+  padding: 0 18px;
+}
+
+.catalog-position-dot {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(18, 59, 255, 0.22);
+  cursor: pointer;
+  transition: width 160ms ease, background-color 160ms ease, box-shadow 160ms ease;
+}
+
+.catalog-position-dot:hover,
+.catalog-position-dot:focus-visible {
+  background: rgba(18, 59, 255, 0.58);
+  outline: 2px solid rgba(18, 59, 255, 0.28);
+  outline-offset: 3px;
+}
+
+.catalog-position-dot.is-selected {
+  width: 28px;
+  background: linear-gradient(90deg, var(--catalog-blue), var(--catalog-blue-2));
+  box-shadow: 0 0 0 1px rgba(18, 59, 255, 0.12), 0 4px 14px rgba(18, 59, 255, 0.26);
+}
+
+.catalog-direction-button {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+}
+
+.catalog-details-toggle {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  min-height: 38px;
+  margin-top: auto;
+  padding: 0 16px;
+  border: 1px solid rgba(18, 59, 255, 0.22);
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--catalog-blue), var(--catalog-blue-2));
+  color: #ffffff;
+  font-size: 0.82rem;
+  font-weight: 900;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(18, 59, 255, 0.22);
+}
+
+.catalog-details-toggle:hover,
+.catalog-details-toggle:focus-visible {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 30px rgba(18, 59, 255, 0.30);
+  outline: 2px solid rgba(18, 59, 255, 0.20);
+  outline-offset: 3px;
+}
+
+.catalog-detail-modal[hidden] {
+  display: none !important;
+}
+
+.catalog-detail-modal.is-open {
+  position: fixed;
+  left: var(--catalog-modal-left, 50vw);
+  top: var(--catalog-modal-top, 50dvh);
+  z-index: 1400;
+  display: flex !important;
+  width: min(640px, calc(100vw - 32px));
+  max-height: min(760px, calc(100dvh - var(--header-h, 84px) - var(--footer-h, 56px) - 32px));
+  overflow: auto;
+  transform: translate(-50%, -50%);
+  padding: clamp(20px, 2.8vw, 30px);
+  border: 1px solid rgba(87, 144, 255, 0.58);
+  border-radius: 16px;
+  background:
+    linear-gradient(145deg, rgba(9, 26, 55, 0.99), rgba(5, 14, 31, 0.99)),
+    #071326;
+  color: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 26px 88px rgba(0, 0, 0, 0.56), 0 0 0 1px rgba(255,255,255,0.04) inset;
+}
+
+.catalog-detail-modal .catalog-detail-close {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-end;
+  min-height: 32px;
+  margin: 0 0 12px auto;
+  padding: 0 11px;
+  border: 1px solid rgba(135, 177, 255, 0.52);
+  border-radius: 999px;
+  background: rgba(4, 15, 34, 0.92);
+  color: #ffffff;
+  font-size: 0.76rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.catalog-detail-modal .catalog-detail-close:hover,
+.catalog-detail-modal .catalog-detail-close:focus-visible {
+  background: var(--catalog-blue-2);
+  outline: 2px solid rgba(135, 177, 255, 0.34);
+  outline-offset: 2px;
+}
+
+.catalog-detail-modal .catalog-subtitle,
+.catalog-detail-modal p,
+.catalog-detail-modal li {
+  color: rgba(255, 255, 255, 0.78) !important;
+}
+
+.catalog-detail-modal .catalog-subtitle {
+  color: rgba(255, 255, 255, 0.94) !important;
+}
+
+.catalog-detail-modal .catalog-attribute,
+.catalog-detail-modal .catalog-section-note {
+  background: rgba(255, 255, 255, 0.075);
+  border-color: rgba(135, 177, 255, 0.22);
+}
+
+.catalog-detail-modal .catalog-attribute strong,
+.catalog-detail-modal .catalog-section-note h3 {
+  color: #ffffff;
+}
+
+.catalog-detail-modal .catalog-inline-link {
+  display: inline-flex !important;
+  color: #8db6ff;
+}
+
+.catalog-detail-modal .hero-cta {
+  box-shadow: 0 12px 28px rgba(18, 59, 255, 0.34);
+}
+
+@media (min-width: 981px) {
+  .catalog-home-section .catalog-page-head {
+    max-width: 1280px;
+    min-height: 94px;
+    padding-right: 540px;
+  }
+
+  .catalog-home-section .catalog-carousel,
+  .catalog-page .catalog-carousel {
+    position: relative;
+  }
+
+  .catalog-home-section .catalog-carousel-instructions,
+  .catalog-page .catalog-carousel-instructions {
+    position: absolute;
+    top: -108px;
+    right: max(18px, calc((100% - 1280px) / 2));
+    z-index: 3;
+    width: min(500px, calc(48vw - 24px));
+    min-height: 70px;
+    margin: 0;
+    padding: 12px 16px;
+    border: 1px solid rgba(18, 59, 255, 0.16);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.90);
+    box-shadow: 0 14px 36px rgba(5, 12, 24, 0.10);
+  }
+
+  .catalog-home-section .catalog-carousel-instructions::before,
+  .catalog-page .catalog-carousel-instructions::before {
+    content: "Browse catalog";
+    grid-column: 1 / -1;
+    color: rgba(9, 20, 39, 0.70);
+    font-size: 0.70rem;
+    font-weight: 950;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .catalog-carousel:not(.brand-catalog-carousel) .catalog-carousel-track {
+    gap: 14px;
+    padding: 0 max(18px, calc((100% - 1280px) / 2)) 8px;
+  }
+
+  .catalog-carousel:not(.brand-catalog-carousel) .catalog-carousel-item {
+    flex: 0 0 clamp(300px, 30vw, 382px);
+    min-width: 0;
+    padding: 0;
+  }
+
+  .catalog-carousel:not(.brand-catalog-carousel) .catalog-item-panels {
+    display: block;
+    min-height: 100%;
+    border-radius: 14px;
+  }
+
+  .catalog-carousel:not(.brand-catalog-carousel) .catalog-panel-summary {
+    min-height: 372px;
+    border-right: 0;
+    justify-content: flex-start;
+  }
+
+  .catalog-carousel:not(.brand-catalog-carousel) .catalog-carousel-item.is-selected .catalog-item-panels {
+    border-color: rgba(18, 59, 255, 0.80);
+    box-shadow: 0 0 0 2px rgba(18, 59, 255, 0.18), 0 18px 46px rgba(5, 12, 24, 0.16);
+  }
+}
+
+@media (max-width: 980px) {
+  .catalog-home-section .catalog-page-head {
+    padding-right: 0;
+  }
+
+  .catalog-carousel-instructions {
+    position: static;
+  }
+}
+
+@media (max-width: 760px) {
+  .catalog-carousel:not(.brand-catalog-carousel) .catalog-carousel-item {
+    flex: 0 0 100%;
+    padding: 0;
+    scroll-snap-align: center;
+  }
+
+  .catalog-carousel:not(.brand-catalog-carousel) .catalog-item-panels {
+    display: block;
+    min-height: auto;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    overflow: visible;
+  }
+
+  .catalog-carousel:not(.brand-catalog-carousel) .catalog-panel-summary {
+    min-height: min(620px, calc(100dvh - var(--header-h, 84px) - var(--footer-h, 56px) - 114px));
+    margin: 0 18px;
+    border-right: 1px solid rgba(18, 59, 255, 0.13);
+  }
+
+  .catalog-detail-modal.is-open {
+    top: calc(var(--header-h, 84px) + 14px);
+    left: 16px;
+    right: 16px;
+    width: auto;
+    max-height: calc(100dvh - var(--header-h, 84px) - var(--footer-h, 56px) - 28px);
+    transform: none;
+  }
+
+  .catalog-position-dots {
+    margin-top: 2px;
+  }
+}
+
+/* Catalog affordance guardrail: do not suggest horizontal navigation when
+   every catalog item already fits in the viewport. JS owns the measurement. */
+[data-catalog-nav][hidden],
+[data-catalog-dots][hidden],
+.catalog-carousel.is-static-catalog [data-catalog-nav],
+.catalog-carousel.is-static-catalog [data-catalog-dots] {
+  display: none !important;
+}
+
+
+/* Catalog card refinement — flatter corners and a restrained luminous edge.
+   Light catalog cards now visually relate to the square dark Services tiles. */
+.catalog-item-panels {
+  border-radius: 4px;
+  box-shadow:
+    0 0 0 1px rgba(18, 59, 255, 0.10),
+    0 0 26px rgba(18, 59, 255, 0.11),
+    0 18px 42px rgba(5, 12, 24, 0.12);
+}
+
+.catalog-summary-brand-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 52px;
+  margin-bottom: 12px;
+}
+
+.catalog-summary-brand-header .catalog-badge {
+  margin-bottom: 0;
+}
+
+.catalog-summary-logo {
+  display: block;
+  width: min(42%, 142px);
+  height: 54px;
+  max-height: 54px;
+  flex: 0 0 auto;
+  object-fit: contain;
+  object-position: right center;
+  filter: drop-shadow(0 0 10px rgba(18, 59, 255, 0.18));
+}
+
+@media (min-width: 981px) {
+  .catalog-carousel:not(.brand-catalog-carousel) .catalog-item-panels {
+    border-radius: 4px;
+  }
+}
+
+
+@media (min-width: 981px) {
+  .catalog-carousel:not(.brand-catalog-carousel) .catalog-carousel-item.is-selected .catalog-item-panels {
+    box-shadow:
+      0 0 0 2px rgba(18, 59, 255, 0.18),
+      0 0 28px rgba(18, 59, 255, 0.16),
+      0 18px 46px rgba(5, 12, 24, 0.16);
+  }
+}
+
+/* Catalog modal readability refinement.
+   Details links are intentionally lightweight, luminous text actions rather
+   than pill buttons. Modal copy is larger and the content is deliberately
+   concise so each offer remains easy to scan. */
+.catalog-details-toggle {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: flex-start;
+  width: fit-content;
+  min-height: auto;
+  margin-top: auto;
+  padding: 4px 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #2f6bff;
+  font-size: 0.94rem;
+  font-weight: 900;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  text-shadow: 0 0 14px rgba(18, 59, 255, 0.42);
+  box-shadow: none;
+}
+
+.catalog-details-toggle:hover,
+.catalog-details-toggle:focus-visible {
+  transform: translateX(2px);
+  color: #123bff;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-shadow: 0 0 18px rgba(18, 59, 255, 0.62);
+  box-shadow: none;
+  outline: 2px solid rgba(18, 59, 255, 0.20);
+  outline-offset: 4px;
+}
+
+.catalog-detail-modal.is-open {
+  gap: 14px;
+  width: min(700px, calc(100vw - 32px));
+}
+
+.catalog-detail-modal h3 {
+  margin: 0;
+  font-size: clamp(1.65rem, 3vw, 2.35rem);
+  line-height: 1.04;
+}
+
+.catalog-detail-modal .catalog-subtitle,
+.catalog-detail-modal .catalog-detail-summary,
+.catalog-detail-modal p,
+.catalog-detail-modal li {
+  font-size: clamp(1rem, 1.45vw, 1.12rem);
+  line-height: 1.5;
+}
+
+.catalog-detail-modal .catalog-price {
+  margin: 2px 0 4px;
+  font-size: clamp(1.75rem, 3.4vw, 2.55rem);
+}
+
+.catalog-detail-modal .catalog-price small {
+  font-size: 0.42em;
+}
+
+.catalog-detail-modal .catalog-attribute-grid {
+  gap: 10px;
+}
+
+.catalog-detail-modal .catalog-attribute {
+  padding: 13px 14px;
+}
+
+.catalog-detail-modal .catalog-attribute strong {
+  font-size: 0.98rem;
+}
+
+.catalog-detail-modal .catalog-attribute p {
+  margin-top: 4px;
+  font-size: 0.94rem;
+  line-height: 1.42;
+}
+
+.catalog-detail-logo {
+  display: block;
+  width: min(48%, 220px);
+  max-height: 76px;
+  object-fit: contain;
+  object-position: left center;
+  filter: drop-shadow(0 0 14px rgba(143, 178, 255, 0.30));
+}
+
+@media (max-width: 760px) {
+  .catalog-detail-modal h3 {
+    font-size: clamp(1.55rem, 7vw, 2.1rem);
+  }
+
+  .catalog-detail-modal .catalog-subtitle,
+  .catalog-detail-modal .catalog-detail-summary,
+  .catalog-detail-modal p,
+  .catalog-detail-modal li {
+    font-size: 1rem;
+  }
+}
+
+/* Final modal typography guardrail: the site root uses a compact font scale,
+   so modal copy needs an explicit larger rem size to remain comfortably
+   readable on desktop and mobile. */
+.catalog-detail-modal .catalog-subtitle,
+.catalog-detail-modal .catalog-detail-summary,
+.catalog-detail-modal p,
+.catalog-detail-modal li {
+  font-size: clamp(1.25rem, 1.75vw, 1.42rem) !important;
+  line-height: 1.48 !important;
+}
+
+.catalog-detail-modal .catalog-attribute strong {
+  font-size: 1.08rem !important;
+}
+
+.catalog-detail-modal .catalog-attribute p {
+  font-size: 1.06rem !important;
+  line-height: 1.42 !important;
+}
+
+@media (max-width: 760px) {
+  .catalog-detail-modal .catalog-subtitle,
+  .catalog-detail-modal .catalog-detail-summary,
+  .catalog-detail-modal p,
+  .catalog-detail-modal li {
+    font-size: 1.22rem !important;
+  }
+
+  .catalog-detail-modal .catalog-attribute p {
+    font-size: 1.04rem !important;
+  }
+}
+
+/* Catalog UX v3 — paged catalog surface.
+   Each horizontal page owns exactly three catalog slots. The page, not the
+   individual card, is the scrolling unit. Empty slots remain intentionally
+   blank so the visual rhythm stays stable on the final page. */
+.catalog-carousel-track,
+.catalog-carousel:not(.brand-catalog-carousel) .catalog-carousel-track {
+  gap: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.catalog-carousel-page {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  flex: 0 0 100%;
+  min-width: 100%;
+  padding: 0 max(18px, calc((100% - 1280px) / 2)) 8px;
+  overflow-anchor: none;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+.catalog-carousel-slot {
+  display: flex;
+  min-width: 0;
+}
+
+.catalog-carousel-slot.is-empty {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.catalog-carousel-page .catalog-carousel-item,
+.catalog-carousel:not(.brand-catalog-carousel) .catalog-carousel-page .catalog-carousel-item {
+  flex: 1 1 auto !important;
+  width: 100%;
+  min-width: 0;
+  padding: 0 !important;
+  scroll-snap-align: none !important;
+}
+
+.catalog-carousel-page .catalog-item-panels,
+.catalog-carousel-page .catalog-panel-summary {
+  width: 100%;
+  height: 100%;
+}
+
+/* Keep the compact Option 5 module readable. Page controls are deliberately
+   short so titles never collide inside the right-side desktop module. */
+.catalog-carousel-instructions {
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  column-gap: 10px;
+  row-gap: 7px;
+}
+
+.catalog-carousel-instructions .catalog-scroll-hint {
+  display: inline-flex;
+  grid-column: 2;
+  justify-self: center;
+  color: rgba(9, 20, 39, 0.62);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.catalog-carousel-instructions [data-catalog-newer-slot],
+.catalog-carousel-instructions [data-catalog-previous-slot] {
+  min-width: 0;
+}
+
+.catalog-carousel-instructions .catalog-direction-link,
+.catalog-carousel-instructions .catalog-direction-empty {
+  max-width: 100%;
+  font-size: 0.76rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 760px) {
+  .catalog-carousel-page {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 0 18px 14px;
+  }
+
+  .catalog-carousel-slot.is-empty {
+    display: none;
+  }
+
+  .catalog-carousel-page .catalog-panel-summary,
+  .catalog-carousel:not(.brand-catalog-carousel) .catalog-carousel-page .catalog-panel-summary {
+    min-height: auto;
+    margin: 0;
+  }
+
+  .catalog-carousel-instructions {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  }
+
+  .catalog-carousel-instructions .catalog-direction-link,
+  .catalog-carousel-instructions .catalog-direction-empty {
+    font-size: 0.74rem;
+  }
 }
