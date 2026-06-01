@@ -1,12 +1,19 @@
-Validation results
+Transformation Thread midnight batch validation
+================================================
 
-PASS: pm-setup completed successfully from the website root.
-PASS: node --check assets/js/catalog-carousel.js
-PASS: served assets/js/catalog-carousel.js matched the regenerated file on disk.
-PASS: catalog-carousel.js contains no scrollIntoView calls.
-PASS: catalog-carousel.js contains no window.scrollTo calls.
-PASS: catalog-carousel.js contains no scrollRestoration override.
-PASS: catalog-carousel.js contains no forceSectionTopAlignment helper.
-PASS: catalog-carousel.js contains no repeatSectionAlignment helper.
-PASS: catalogs/brands/brands.css contains no Brands-specific panel:target selector.
-PASS: assets/css/styles.css contains the shared 100vh fallback and 100dvh panel target contract.
+PASS: python3 -m unittest discover -s tests -p 'test_rotate_transformation_thread.py' -v
+  - seven-day cycle features each configured article exactly once
+  - supporting article sequence wraps correctly
+  - midnight execution window accepts only 00:00-00:29 America/Los_Angeles
+  - initial unmarked HTML is safely wrapped with generated-region markers
+  - marked HTML updates idempotently
+
+PASS: bin/rotate-transformation-thread --date 2026-06-01
+PASS: bin/rotate-transformation-thread --date 2026-06-01 --check
+PASS: pm-setup from website root
+PASS: generated Transformation Thread region preserved across pm-setup
+PASS: generated-region start marker count = 1
+PASS: generated-region end marker count = 1
+PASS: JSON validation for source data and generated selection manifest
+PASS: generator executable mode = 755
+PASS: no browser-side Transformation Thread midnight timer or rotation runtime added

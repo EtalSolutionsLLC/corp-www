@@ -1,7 +1,9 @@
-
 {
   "brand": "The Transformation Thread",
   "description": "Native static blog interface data for the Transformation Thread brand page.",
+  "rotation_timezone": "America/Los_Angeles",
+  "rotation_epoch": "2026-06-01",
+  "visible_posts": 3,
   "posts": [
     {
       "title": "What transformation actually asks of a business",
