@@ -124,7 +124,8 @@ section[id] {
   flex-direction: column;
   justify-content: center;
   align-items: stretch;
-  min-height: calc(100svh - var(--header-h) - var(--footer-h));
+  min-height: calc(100vh - var(--header-h) - var(--footer-h));
+  min-height: calc(100dvh - var(--header-h) - var(--footer-h));
   padding-top: 0;
   padding-bottom: 0;
 }

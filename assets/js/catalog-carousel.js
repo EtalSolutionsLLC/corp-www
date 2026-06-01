@@ -1,10 +1,6 @@
 (function () {
   "use strict";
 
-  if (window.history && "scrollRestoration" in window.history) {
-    window.history.scrollRestoration = "manual";
-  }
-
   function htmlEscape(value) {
     return String(value || "")
       .replace(/&/g, "&amp;")
@@ -379,11 +375,6 @@
     panel.setAttribute("aria-hidden", "false");
     if (typeof syncCatalogModalBackdrop === "function") syncCatalogModalBackdrop();
 
-    var section = catalogSectionForOverview(panel);
-    if (section) {
-      section.scrollIntoView({ behavior: instant ? "auto" : "smooth", block: "center" });
-    }
-
     var id = panel.getAttribute("data-catalog-overview-panel") || "";
     if (updateHash && id) {
       updateHashWithoutJump("#" + id);
@@ -402,7 +393,7 @@
     if (section && section.id) {
       var defaultItem = defaultItemForSectionId(section.id);
       if (defaultItem) {
-        activateCatalogTarget({ item: defaultItem, section: section, isSectionDefault: true }, false, true);
+        activateCatalogTarget({ item: defaultItem, section: section, isSectionDefault: true }, false);
       }
       updateHashWithoutJump("#" + section.id);
     }
@@ -412,53 +403,10 @@
     return !!(window.matchMedia && window.matchMedia("(max-width: 760px)").matches);
   }
 
-  function forceSectionTopAlignment(section) {
-    if (!section) return;
-    // Align the catalog section boundary itself. Using a nested heading anchor
-    // made the Brands landing position sensitive to internal padding and layout
-    // changes, which caused it to settle at inconsistent vertical positions.
-    var topAnchor = section;
-    var scrollMarginTop = parseFloat(window.getComputedStyle(section).scrollMarginTop) || 0;
-    var top = window.scrollY + topAnchor.getBoundingClientRect().top - scrollMarginTop;
-    var root = document.documentElement;
-    var body = document.body;
-    var previousRootBehavior = root.style.scrollBehavior;
-    var previousBodyBehavior = body ? body.style.scrollBehavior : "";
-    root.style.scrollBehavior = "auto";
-    if (body) body.style.scrollBehavior = "auto";
-    window.scrollTo(0, Math.max(0, top));
-    root.style.scrollBehavior = previousRootBehavior;
-    if (body) body.style.scrollBehavior = previousBodyBehavior;
-  }
-
-  function repeatSectionAlignment(section, instant, block) {
-    if (!section) return;
-    section.scrollIntoView({ behavior: instant ? "auto" : "smooth", block: block });
-
-    // Catalog sections can change height while logos, dots, and modal controls
-    // initialize. Re-assert top alignment after layout settles so section-level
-    // navigation never lands halfway down the Brands catalog.
-    if (block === "start") {
-      window.requestAnimationFrame(function () {
-        window.setTimeout(function () { forceSectionTopAlignment(section); }, 180);
-        window.setTimeout(function () { forceSectionTopAlignment(section); }, 460);
-      });
-    }
-  }
-
-  function activateCatalogTarget(target, instant, includeSectionScroll) {
+  function activateCatalogTarget(target, instant) {
     if (!target || !target.item) return;
 
     closeOverviewPanels();
-
-    if (includeSectionScroll && target.section) {
-      // Catalog landing pages share one targeting rule: desktop centers the
-      // complete catalog surface; mobile starts at the section heading so the
-      // visitor can read through the cards naturally.
-      var scrollBlock = isMobileViewport() && target.isSectionDefault ? "start" : "center";
-      repeatSectionAlignment(target.section, instant, scrollBlock);
-    }
-
     repeatHorizontalAlignment(target.item, instant);
   }
 
@@ -516,7 +464,7 @@
       return;
     }
 
-    activateCatalogTarget(target, instant, true);
+    activateCatalogTarget(target, instant);
 
   }
 
@@ -916,14 +864,14 @@
       }
 
       if (target && target.item) {
+        // Section-level catalog links use the browser's native hash navigation,
+        // exactly like Home, Services, About, and Contact. The catalog script
+        // owns horizontal carousel state only.
+        if (target.isSectionDefault && !explicitTarget) return;
+
         event.preventDefault();
-
-        var itemCarousel = carouselForItem(target.item);
-        var linkCarousel = link.closest("[data-catalog-carousel]");
-        var shouldScrollSection = itemCarousel !== linkCarousel;
         var hashToSet = explicitTarget || hrefHash;
-
-        activateCatalogTarget(target, false, shouldScrollSection);
+        activateCatalogTarget(target, false);
         updateHashWithoutJump("#" + hashToSet);
       }
     }, true);

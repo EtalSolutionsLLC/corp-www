@@ -1,0 +1,12 @@
+Validation results
+
+PASS: pm-setup completed successfully from the website root.
+PASS: node --check assets/js/catalog-carousel.js
+PASS: served assets/js/catalog-carousel.js matched the regenerated file on disk.
+PASS: catalog-carousel.js contains no scrollIntoView calls.
+PASS: catalog-carousel.js contains no window.scrollTo calls.
+PASS: catalog-carousel.js contains no scrollRestoration override.
+PASS: catalog-carousel.js contains no forceSectionTopAlignment helper.
+PASS: catalog-carousel.js contains no repeatSectionAlignment helper.
+PASS: catalogs/brands/brands.css contains no Brands-specific panel:target selector.
+PASS: assets/css/styles.css contains the shared 100vh fallback and 100dvh panel target contract.
