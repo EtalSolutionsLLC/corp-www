@@ -1,2 +1,2 @@
+assets/css/carousel.css
 assets/js/catalog-carousel.js
-catalogs/brands/brands.css

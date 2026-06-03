@@ -130,6 +130,7 @@
     var safeIndex = Math.max(0, Math.min(Number(pageIndex) || 0, pages.length - 1));
     track.scrollTo({ left: pages[safeIndex].offsetLeft, behavior: instant ? "auto" : "smooth" });
     window.setTimeout(function () {
+      syncCarouselControlPosition(carousel);
       updateCarouselNav(carousel);
       updateCatalogDots(carousel);
     }, instant ? 0 : 180);
@@ -249,6 +250,61 @@
     return bestIndex;
   }
 
+  function ensureCarouselControl(carousel, direction) {
+    if (!carousel) return null;
+    var selector = '[data-catalog-arrow="' + direction + '"]';
+    var control = carousel.querySelector(selector);
+    if (control) return control;
+
+    control = document.createElement("button");
+    control.type = "button";
+    control.className = "catalog-carousel-control catalog-carousel-control-" + direction;
+    control.setAttribute("data-catalog-arrow", direction);
+    control.setAttribute("aria-label", direction === "previous" ? "Previous catalog page" : "Next catalog page");
+    control.innerHTML = direction === "previous"
+      ? '<svg aria-hidden="true" viewBox="0 0 24 24" focusable="false"><path d="M15 6l-6 6 6 6"></path></svg>'
+      : '<svg aria-hidden="true" viewBox="0 0 24 24" focusable="false"><path d="M9 6l6 6-6 6"></path></svg>';
+
+    var track = carousel.querySelector("[data-catalog-track]");
+    if (track) {
+      track.insertAdjacentElement("beforebegin", control);
+    } else {
+      carousel.appendChild(control);
+    }
+
+    return control;
+  }
+
+  function updateCarouselControl(control, pageIndex, enabled, label) {
+    if (!control) return;
+    control.hidden = !enabled;
+    control.disabled = !enabled;
+    control.setAttribute("aria-hidden", enabled ? "false" : "true");
+
+    if (!enabled) {
+      control.removeAttribute("data-catalog-page-target");
+      return;
+    }
+
+    control.setAttribute("data-catalog-page-target", String(pageIndex));
+    control.setAttribute("aria-label", label);
+  }
+
+
+  function syncCarouselControlPosition(carousel) {
+    if (!carousel) return;
+    var track = carousel.querySelector("[data-catalog-track]");
+    if (!track) return;
+
+    var carouselRect = carousel.getBoundingClientRect();
+    var trackRect = track.getBoundingClientRect();
+    var midpoint = (trackRect.top - carouselRect.top) + (trackRect.height / 2);
+
+    if (Number.isFinite(midpoint) && midpoint > 0) {
+      carousel.style.setProperty("--carousel-control-top", midpoint.toFixed(2) + "px");
+    }
+  }
+
   function updateCarouselNav(carousel) {
     if (!carousel) return;
 
@@ -258,19 +314,43 @@
     var previousSlot = carousel.querySelector("[data-catalog-previous-slot]");
     var hint = carousel.querySelector(".catalog-scroll-hint");
     var pages = ensureCatalogPages(carousel);
+    var previousControl = ensureCarouselControl(carousel, "previous");
+    var nextControl = ensureCarouselControl(carousel, "next");
 
-    if (!nav || !track || !newerSlot || !previousSlot || !pages.length) return;
+    if (!nav || !track || !pages.length) return;
+
+    syncCarouselControlPosition(carousel);
 
     var endLabel = nav.getAttribute("data-end-label") || "End of catalog";
     var pageIndex = activePageIndexForTrack(track, pages);
+    var newerLabel = pageDirectionLabel(carousel, "newer");
+    var previousLabel = pageDirectionLabel(carousel, "previous");
 
-    newerSlot.innerHTML = pageIndex > 0
-      ? pageControlHtml(carousel, pageIndex - 1, "newer")
-      : '<span class="catalog-direction-empty"></span>';
+    if (newerSlot) {
+      newerSlot.innerHTML = pageIndex > 0
+        ? pageControlHtml(carousel, pageIndex - 1, "newer")
+        : '<span class="catalog-direction-empty"></span>';
+    }
 
-    previousSlot.innerHTML = pageIndex < pages.length - 1
-      ? pageControlHtml(carousel, pageIndex + 1, "previous")
-      : '<span class="catalog-direction-empty">' + htmlEscape(endLabel) + '</span>';
+    if (previousSlot) {
+      previousSlot.innerHTML = pageIndex < pages.length - 1
+        ? pageControlHtml(carousel, pageIndex + 1, "previous")
+        : '<span class="catalog-direction-empty">' + htmlEscape(endLabel) + '</span>';
+    }
+
+    updateCarouselControl(
+      previousControl,
+      pageIndex - 1,
+      pageIndex > 0,
+      newerLabel + ": page " + String(pageIndex) + " of " + String(pages.length)
+    );
+
+    updateCarouselControl(
+      nextControl,
+      pageIndex + 1,
+      pageIndex < pages.length - 1,
+      previousLabel + ": page " + String(pageIndex + 2) + " of " + String(pages.length)
+    );
 
     if (hint) {
       hint.textContent = "Page " + String(pageIndex + 1) + " of " + String(pages.length);
@@ -760,6 +840,12 @@
         dots.appendChild(button);
       });
     }
+
+    var nav = carousel.querySelector("[data-catalog-nav]");
+    if (nav && dots.parentElement === carousel && nav.nextElementSibling !== dots) {
+      dots.insertAdjacentElement("beforebegin", nav);
+    }
+
     syncCatalogNavigationVisibility(carousel);
     return dots;
   }
@@ -923,11 +1009,13 @@
       track.addEventListener("scroll", function () {
         if (updateTimer) window.clearTimeout(updateTimer);
         updateTimer = window.setTimeout(function () {
+          syncCarouselControlPosition(carousel);
           updateCarouselNav(carousel);
           updateCatalogDots(carousel);
         }, 80);
       }, { passive: true });
 
+      syncCarouselControlPosition(carousel);
       updateCarouselNav(carousel);
       updateCatalogDots(carousel);
       window.requestAnimationFrame(function () {
@@ -956,6 +1044,8 @@
     window.addEventListener("resize", function () {
       if (openCatalogDetailPanel) positionCatalogDetailPanel(openCatalogDetailPanel);
       document.querySelectorAll("[data-catalog-carousel]").forEach(function (carousel) {
+        syncCarouselControlPosition(carousel);
+        updateCarouselNav(carousel);
         updateCatalogDots(carousel);
         syncCatalogNavigationVisibility(carousel);
       });
