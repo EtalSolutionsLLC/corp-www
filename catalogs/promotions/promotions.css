@@ -1594,3 +1594,165 @@ body.has-catalog-modal-open {
 }
 
 /* Shared paged carousel layout moved to assets/css/carousel.css. */
+
+/* Mobile catalog stack + sticky section headers
+   ------------------------------------------------------------
+   Final mobile guardrail: catalog pages use normal vertical cards on
+   phone-width screens. This intentionally wins over older horizontal
+   mobile carousel rules that sized items to 100–200% width. */
+@media (max-width: 760px) {
+  .catalog-page .catalog-page-head,
+  .catalog-home-section .catalog-page-head {
+    position: sticky;
+    top: var(--header-h, var(--header-height, 76px));
+    z-index: 30;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 0 18px !important;
+    padding: 14px 18px 16px !important;
+    border-bottom: 1px solid rgba(9, 20, 39, 0.12);
+    background: rgba(247, 247, 250, 0.96);
+    box-shadow: 0 10px 26px rgba(5, 12, 24, 0.08);
+    text-align: left !important;
+    -webkit-backdrop-filter: blur(14px) saturate(1.08);
+    backdrop-filter: blur(14px) saturate(1.08);
+  }
+
+  .section-dark.catalog-home-section .catalog-page-head,
+  .section-dark .catalog-home-section .catalog-page-head,
+  .on-dark.catalog-home-section .catalog-page-head,
+  [data-theme="dark"] .catalog-home-section .catalog-page-head {
+    border-bottom-color: rgba(255, 255, 255, 0.14);
+    background:
+      linear-gradient(90deg, rgba(4, 10, 20, 0.96) 0%, rgba(5, 13, 26, 0.94) 58%, rgba(10, 28, 58, 0.88) 100%),
+      #091427;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.34);
+  }
+
+  .catalog-page .catalog-page-head .section-kicker,
+  .catalog-home-section .catalog-page-head .section-kicker {
+    margin: 0 0 6px !important;
+  }
+
+  .catalog-page .catalog-page-head h1,
+  .catalog-home-section .catalog-page-head h2 {
+    margin: 0 !important;
+    font-size: clamp(1.45rem, 7.2vw, 2.08rem) !important;
+    line-height: 1.02 !important;
+  }
+
+  .catalog-page .catalog-page-head p,
+  .catalog-home-section .catalog-page-head p {
+    max-width: none !important;
+    margin: 8px 0 0 !important;
+    font-size: 0.92rem !important;
+    line-height: 1.35 !important;
+  }
+
+  .catalog-page-layout,
+  .catalog-home-section .catalog-page-layout {
+    width: 100% !important;
+  }
+
+  .catalog-full-list,
+  .catalog-carousel {
+    overflow: visible !important;
+  }
+
+  .catalog-carousel-track,
+  .catalog-carousel:not(.brand-catalog-carousel) .catalog-carousel-track {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 18px !important;
+    width: 100% !important;
+    overflow: visible !important;
+    overscroll-behavior-x: auto !important;
+    padding: 0 18px 18px !important;
+    scroll-behavior: auto !important;
+    scroll-snap-type: none !important;
+  }
+
+  .catalog-carousel-page,
+  .catalog-carousel:not(.brand-catalog-carousel) .catalog-carousel-page {
+    display: contents !important;
+    min-width: 0 !important;
+    padding: 0 !important;
+    scroll-snap-align: none !important;
+  }
+
+  .catalog-carousel-slot,
+  .catalog-carousel:not(.brand-catalog-carousel) .catalog-carousel-slot {
+    display: block !important;
+    min-width: 0 !important;
+  }
+
+  .catalog-carousel-slot.is-empty {
+    display: none !important;
+  }
+
+  .catalog-carousel-item,
+  .catalog-carousel:not(.brand-catalog-carousel) .catalog-carousel-item {
+    display: block !important;
+    flex: none !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    padding: 0 !important;
+    scroll-snap-align: none !important;
+  }
+
+  .catalog-carousel .catalog-item-panels,
+  .catalog-carousel:not(.brand-catalog-carousel) .catalog-item-panels {
+    display: block !important;
+    width: 100% !important;
+    min-height: auto !important;
+    margin: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    overflow: visible !important;
+  }
+
+  .catalog-carousel .catalog-panel,
+  .catalog-carousel:not(.brand-catalog-carousel) .catalog-panel {
+    min-height: auto !important;
+    margin: 0 !important;
+    padding: 24px !important;
+    border: 1px solid rgba(18, 59, 255, 0.13) !important;
+    border-top: 4px solid var(--catalog-blue-2) !important;
+    border-radius: 0 !important;
+    background: #ffffff !important;
+    box-shadow: 0 16px 42px rgba(5, 12, 24, 0.10) !important;
+  }
+
+  .catalog-carousel .catalog-panel-summary,
+  .catalog-carousel:not(.brand-catalog-carousel) .catalog-panel-summary {
+    display: flex !important;
+    min-height: auto !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    border-right: 1px solid rgba(18, 59, 255, 0.13) !important;
+  }
+
+  .catalog-carousel-item.is-featured .catalog-panel-summary,
+  .catalog-carousel-item.is-featured .catalog-panel {
+    border-color: rgba(0, 255, 178, 0.34) !important;
+    border-top-color: var(--catalog-blue-2) !important;
+  }
+
+  .catalog-carousel .catalog-panel-detail,
+  .catalog-carousel:not(.brand-catalog-carousel) .catalog-panel-detail {
+    display: none !important;
+  }
+
+  .catalog-panel-summary h2 {
+    font-size: clamp(1.85rem, 10.5vw, 2.85rem) !important;
+  }
+
+  .catalog-carousel-control,
+  .catalog-carousel-instructions,
+  .catalog-position-dots,
+  .catalog-slide-nav {
+    display: none !important;
+  }
+}
