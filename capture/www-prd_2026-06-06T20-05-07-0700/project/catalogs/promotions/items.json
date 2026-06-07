@@ -1,0 +1,226 @@
+[
+  {
+    "id": "ai-optimized-sdlc-assessment",
+    "slug": "ai-optimized-sdlc-assessment",
+    "status": "past",
+    "label": "Past Promotion",
+    "title": "A.I.-Optimized SDLC Assessment",
+    "shortTitle": "A.I. SDLC Assessment",
+    "subtitle": "Turn scattered A.I. usage into a governed software delivery process.",
+    "audience": "Software teams",
+    "summary": "A focused assessment and design sprint for software teams that want to use A.I. across the SDLC without losing control of quality, security, or accountability.",
+    "description": [
+      "I evaluate the current delivery process, identify safe A.I. opportunities, define practical guardrails, and provide a short roadmap the team can actually use.",
+      "The goal is faster delivery with stronger process, review, and confidence."
+    ],
+    "price": "$1,200",
+    "priceNote": "fixed price",
+    "primaryAction": {
+      "label": "Book the Sprint",
+      "href": "https://outlook.office.com/bookwithme/user/74526c29d14348708c4b83c724b1bbc3@etal.solutions?anonymous&ismsaljsauthenabled&ep=pcard"
+    },
+    "tags": [
+      "Human-led",
+      "Test-driven",
+      "Governed",
+      "Verified"
+    ],
+    "attributes": [
+      {
+        "title": "12-hour sprint",
+        "body": "Current-state review, opportunity map, guardrails, and roadmap."
+      },
+      {
+        "title": "Practical outputs",
+        "body": "Use-case map, verification gates, and accountability model."
+      },
+      {
+        "title": "Best fit",
+        "body": "Small to mid-sized software teams using or evaluating A.I. tools."
+      },
+      {
+        "title": "Goal",
+        "body": "Faster delivery with stronger process, review, and confidence."
+      }
+    ],
+    "sections": [
+      {
+        "title": "What this covers",
+        "body": "A current-state review of how the team delivers software, where A.I. is already appearing, and where it can safely help."
+      },
+      {
+        "title": "What you receive",
+        "body": "A practical opportunity map, recommended guardrails, verification checkpoints, and a short roadmap for responsible adoption."
+      }
+    ],
+    "sortOrder": 10
+  },
+  {
+    "id": "what-can-ai-do-for-you",
+    "slug": "what-can-ai-do-for-you",
+    "status": "featured",
+    "label": "Featured Promotion",
+    "title": "What Can A.I. Do for You?",
+    "shortTitle": "Everyday A.I. Session",
+    "subtitle": "A friendly, practical A.I. session for everyday people who want useful help without the jargon.",
+    "audience": "General consumers",
+    "summary": "A plain-language A.I. discovery session for people who are curious about A.I. but do not know where to start.",
+    "description": [
+      "I help you find simple ways A.I. can support daily tasks, communication, reminders, photo sharing, planning, writing, organizing, and staying connected with the people who matter.",
+      "This is for people who want useful guidance without jargon, coding, or technical pressure."
+    ],
+    "price": "$149",
+    "priceNote": "fixed price",
+    "primaryAction": {
+      "label": "Book the Session",
+      "href": "https://outlook.office.com/bookwithme/user/74526c29d14348708c4b83c724b1bbc3@etal.solutions?anonymous&ismsaljsauthenabled&ep=pcard"
+    },
+    "tags": [
+      "Everyday A.I.",
+      "Plain-language",
+      "Hands-on",
+      "No tech background needed"
+    ],
+    "attributes": [
+      {
+        "title": "60-minute session",
+        "body": "Friendly walkthrough, real-life examples, and simple next steps."
+      },
+      {
+        "title": "Practical uses",
+        "body": "Messages, reminders, photos, planning, writing, organizing, and tasks."
+      },
+      {
+        "title": "Best fit",
+        "body": "Consumers, families, caregivers, retirees, and non-technical users."
+      },
+      {
+        "title": "Goal",
+        "body": "Leave with a short personal A.I. plan you can actually use."
+      }
+    ],
+    "sections": [
+      {
+        "title": "Bring your real life",
+        "body": "The session starts with the tasks, questions, and frustrations you already have. Then we identify where A.I. can help simply and safely."
+      },
+      {
+        "title": "Inspired by the Series campaign",
+        "body": "This offer continues the same idea: making A.I. make sense for real people by focusing on connection, confidence, and practical everyday usefulness."
+      }
+    ],
+    "sortOrder": 20
+  },
+  {
+    "id": "industry-ai-fusion-assessment",
+    "slug": "industry-ai-fusion-assessment",
+    "status": "past",
+    "label": "Past Promotion",
+    "title": "Industry A.I. Fusion Assessment",
+    "shortTitle": "Industry A.I. Assessment",
+    "subtitle": "Find practical, low-disruption ways to apply A.I. inside a real business operation.",
+    "audience": "Small to mid-sized businesses",
+    "summary": "A practical A.I. assessment for business owners and operators who want to identify useful A.I. opportunities without chasing hype or disrupting the way their teams already work.",
+    "description": [
+      "I review the way the business currently serves customers, manages work, handles staffing pressure, tracks information, and responds to operational friction.",
+      "The result is a short, practical opportunity map showing where A.I. can help first, what should wait, and how to adopt it with the least amount of disruption."
+    ],
+    "price": "$750",
+    "priceNote": "fixed price",
+    "primaryAction": {
+      "label": "Book the Assessment",
+      "href": "https://outlook.office.com/bookwithme/user/74526c29d14348708c4b83c724b1bbc3@etal.solutions?anonymous&ismsaljsauthenabled&ep=pcard"
+    },
+    "tags": [
+      "Industry A.I.",
+      "Practical",
+      "Low-disruption",
+      "Operator-friendly"
+    ],
+    "attributes": [
+      {
+        "title": "Business-use review",
+        "body": "A focused review of customer service, staffing, operations, workflows, and recurring friction."
+      },
+      {
+        "title": "Opportunity map",
+        "body": "Clear recommendations for where A.I. can help now, where it may help later, and what to avoid."
+      },
+      {
+        "title": "Best fit",
+        "body": "Food service, healthcare, hospitality, manufacturing, retail, and service-based businesses."
+      },
+      {
+        "title": "Goal",
+        "body": "Identify practical A.I. use cases that improve responsiveness, accuracy, efficiency, and customer experience."
+      }
+    ],
+    "sections": [
+      {
+        "title": "What this covers",
+        "body": "The assessment looks for practical A.I. opportunities such as customer service automation, predictive staffing, inventory support, scheduling, maintenance alerts, personalization, operational reporting, and workflow simplification."
+      },
+      {
+        "title": "Inspired by the Industry A.I. series",
+        "body": "This promotion grew out of the industry-focused A.I. education series covering food service, healthcare, hospitality, manufacturing, and retail."
+      }
+    ],
+    "sortOrder": 30
+  },
+  {
+    "id": "workflow-friction-review",
+    "slug": "workflow-friction-review",
+    "status": "past",
+    "label": "Past Promotion",
+    "title": "Workflow Friction Review",
+    "shortTitle": "Workflow Friction Review",
+    "subtitle": "Find the repetitive work worth simplifying before adding another tool.",
+    "audience": "Small teams and owner-led businesses",
+    "summary": "A practical review for organizations that want to reduce recurring operational friction with focused automation and clearer workflows.",
+    "description": [
+      "I identify the recurring tasks, handoffs, delays, and information gaps that consume time without adding value.",
+      "The result is a prioritized improvement plan showing which problems can be simplified now, which may benefit from automation later, and which should remain intentionally human-led."
+    ],
+    "price": "$495",
+    "priceNote": "fixed price",
+    "primaryAction": {
+      "label": "Book the Review",
+      "href": "https://outlook.office.com/bookwithme/user/74526c29d14348708c4b83c724b1bbc3@etal.solutions?anonymous&ismsaljsauthenabled&ep=pcard"
+    },
+    "tags": [
+      "Workflow-first",
+      "Low-disruption",
+      "Actionable",
+      "Human-led"
+    ],
+    "attributes": [
+      {
+        "title": "Focused review",
+        "body": "A practical look at repetitive tasks, handoffs, delays, and information gaps."
+      },
+      {
+        "title": "Priority map",
+        "body": "Clear guidance on what to simplify now, what to automate later, and what to leave alone."
+      },
+      {
+        "title": "Best fit",
+        "body": "Small teams and owner-led businesses that want useful improvements without a large transformation program."
+      },
+      {
+        "title": "Goal",
+        "body": "Reduce recurring friction with a short list of practical, maintainable next steps."
+      }
+    ],
+    "sections": [
+      {
+        "title": "What this covers",
+        "body": "The review focuses on work that is repeated often enough to matter: recurring admin, customer follow-up, reporting, scheduling, handoffs, and routine information management."
+      },
+      {
+        "title": "What you receive",
+        "body": "A prioritized friction map and a concise improvement plan organized by effort, value, and implementation risk."
+      }
+    ],
+    "sortOrder": 40
+  }
+]

@@ -1,0 +1,7 @@
+project/index.html
+project/assets/css/styles.css
+project/assets/js/site-experience.js
+project/catalogs/promotions/items.json
+project/partials/footer.html
+project/tests/test_site_experience.py
+project/chg.txt

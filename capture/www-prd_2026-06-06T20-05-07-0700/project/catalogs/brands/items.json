@@ -1,0 +1,195 @@
+[
+  {
+    "id": "simplifai",
+    "slug": "simplifai",
+    "status": "featured",
+    "label": "A.I. Training & Enablement",
+    "shortTitle": "SIMPLIFAI",
+    "title": "Practical A.I. education for everyday work.",
+    "kicker": "A.I. Training & Enablement",
+    "summary": "SIMPLIFAI helps people and smaller businesses use A.I. with confidence through accessible training, plain-language guidance, and practical workflows that reduce friction instead of adding complexity.",
+    "summaryHtml": "<span class=\"brand-word\">SIMPLIF<span class=\"brand-ai\">A.I.</span></span> helps people and smaller businesses use A.I. with confidence through accessible training, plain-language guidance, and practical workflows that reduce friction instead of adding complexity.",
+    "logo": "https://public.etal.solutions/assets/simplifai/logos/SIMPLIFAI-SILVER.png",
+    "logoAlt": "SIMPLIFAI logo",
+    "primaryAction": {
+      "label": "Ask About A.I. Training",
+      "href": "mailto:info@etalsolutions.tech?subject=SIMPLIFAI%20A.I.%20Training%20Inquiry"
+    },
+    "overviewKicker": "Brand Focus",
+    "overviewSummary": "SIMPLIFAI helps people and smaller businesses use A.I. with confidence through accessible training, plain-language guidance, and practical workflows that reduce friction instead of adding complexity.",
+    "overviewCards": [
+      {
+        "title": "Who it helps",
+        "body": "Individuals, teams, and small businesses that want useful A.I. habits without needing to become technical experts."
+      },
+      {
+        "title": "What it offers",
+        "items": [
+          "A.I. basics and confidence building",
+          "Prompting and workflow guidance",
+          "Practical use cases for everyday operations"
+        ]
+      },
+      {
+        "title": "Why it exists",
+        "body": "To make A.I. feel approachable, useful, and safe enough to use in real work."
+      }
+    ],
+    "detailsKicker": "Current Role",
+    "detailsSummary": "Each brand serves a distinct purpose while sharing the same foundation: practical technology, clear thinking, and useful outcomes.",
+    "tags": [
+      "Training brand",
+      "Accessible A.I.",
+      "Business-friendly",
+      "Practical workflows"
+    ],
+    "finalKicker": "Next Step",
+    "finalTitle": "Start with the brand that fits the problem.",
+    "finalSummary": "Whether the need is education, consulting, transformation strategy, or better use of A.I.-enabled time, the work starts with a clear conversation.",
+    "sortOrder": 10,
+    "subtitle": "Accessible A.I. education and enablement for everyday work.",
+    "detailSummary": "Practical A.I. education that helps people use new tools with confidence.",
+    "detailCards": [
+      {
+        "title": "For",
+        "body": "Individuals, teams, and smaller businesses."
+      },
+      {
+        "title": "Offers",
+        "body": "Plain-language training, prompting guidance, and useful workflows."
+      },
+      {
+        "title": "Purpose",
+        "body": "Make A.I. approachable and practical."
+      }
+    ]
+  },
+  {
+    "id": "solutions-et-al",
+    "slug": "solutions-et-al",
+    "status": "active",
+    "label": "Consulting & Practical Delivery",
+    "shortTitle": "Solutions et al",
+    "title": "Focused technology guidance for real operational problems.",
+    "kicker": "Consulting & Practical Delivery",
+    "summary": "Solutions et al is the consulting and delivery brand for organizations that need clear technical direction, practical systems, and implementation support without unnecessary ceremony.",
+    "logo": "https://public.etal.solutions/assets/sea/logos/SEA-OFFICIAL.png",
+    "logoAlt": "Solutions et al logo",
+    "primaryAction": {
+      "label": "Discuss a Project",
+      "href": "mailto:info@etalsolutions.tech?subject=Solutions%20et%20al%20Project%20Inquiry"
+    },
+    "overviewKicker": "Brand Focus",
+    "overviewSummary": "Solutions et al is the consulting and delivery brand for organizations that need clear technical direction, practical systems, and implementation support without unnecessary ceremony.",
+    "overviewCards": [
+      {
+        "title": "Who it helps",
+        "body": "Organizations that need a focused technical partner to clarify options, simplify decisions, and move from idea to working solution."
+      },
+      {
+        "title": "What it offers",
+        "items": [
+          "Technology consulting and solution design",
+          "Web, integration, and workflow projects",
+          "Hands-on implementation and handoff support"
+        ]
+      },
+      {
+        "title": "Why it exists",
+        "body": "To turn business problems into maintainable technology solutions that people can actually use."
+      }
+    ],
+    "detailsKicker": "Current Role",
+    "detailsSummary": "Each brand serves a distinct purpose while sharing the same foundation: practical technology, clear thinking, and useful outcomes.",
+    "tags": [
+      "Consulting brand",
+      "Solution design",
+      "Implementation support",
+      "Clear handoff"
+    ],
+    "finalKicker": "Next Step",
+    "finalTitle": "Start with the brand that fits the problem.",
+    "finalSummary": "Whether the need is education, consulting, transformation strategy, or better use of A.I.-enabled time, the work starts with a clear conversation.",
+    "sortOrder": 20,
+    "subtitle": "Practical consulting, solution design, and implementation support.",
+    "detailSummary": "Focused consulting and delivery support for practical technology decisions.",
+    "detailCards": [
+      {
+        "title": "For",
+        "body": "Organizations that need clear technical direction."
+      },
+      {
+        "title": "Offers",
+        "body": "Solution design, implementation, integration, and handoff."
+      },
+      {
+        "title": "Purpose",
+        "body": "Turn operational problems into maintainable systems."
+      }
+    ]
+  },
+  {
+    "id": "25th-hour",
+    "slug": "25th-hour",
+    "status": "active",
+    "label": "Time, Focus & A.I.-Enabled Leverage",
+    "shortTitle": "25th Hour",
+    "title": "Helping people use reclaimed time with intention.",
+    "kicker": "Time, Focus & A.I.-Enabled Leverage",
+    "summary": "25th Hour focuses on the human side of A.I. adoption: what people do with the time, attention, and creative energy that thoughtful automation can give back.",
+    "logo": "https://public.etal.solutions/assets/25th-hour/logos/25th-hour-OFFICIAL.png",
+    "logoAlt": "25th Hour logo",
+    "primaryAction": {
+      "label": "Start a Conversation",
+      "href": "mailto:info@etalsolutions.tech?subject=25th%20Hour%20Inquiry"
+    },
+    "overviewKicker": "Brand Focus",
+    "overviewSummary": "25th Hour focuses on the human side of A.I. adoption: what people do with the time, attention, and creative energy that thoughtful automation can give back.",
+    "overviewCards": [
+      {
+        "title": "Who it helps",
+        "body": "People and teams interested in using A.I. not just to move faster, but to make better use of their time and attention."
+      },
+      {
+        "title": "What it offers",
+        "items": [
+          "Ideas for practical time leverage",
+          "A.I.-assisted productivity themes",
+          "Guidance for more intentional workflows"
+        ]
+      },
+      {
+        "title": "Why it exists",
+        "body": "To keep the purpose of efficiency human: more space for better thinking, better work, and better living."
+      }
+    ],
+    "detailsKicker": "Current Role",
+    "detailsSummary": "Each brand serves a distinct purpose while sharing the same foundation: practical technology, clear thinking, and useful outcomes.",
+    "tags": [
+      "Developing brand",
+      "A.I. leverage",
+      "Time reclaimed",
+      "Human-centered"
+    ],
+    "finalKicker": "Next Step",
+    "finalTitle": "Start with the brand that fits the problem.",
+    "finalSummary": "Whether the need is education, consulting, transformation strategy, or better use of A.I.-enabled time, the work starts with a clear conversation.",
+    "sortOrder": 30,
+    "subtitle": "Human-centered A.I. leverage for time, focus, and intention.",
+    "detailSummary": "Human-centered ideas for using time reclaimed through thoughtful automation.",
+    "detailCards": [
+      {
+        "title": "For",
+        "body": "People and teams seeking more intentional use of time."
+      },
+      {
+        "title": "Offers",
+        "body": "Practical leverage, productivity themes, and workflow guidance."
+      },
+      {
+        "title": "Purpose",
+        "body": "Keep efficiency focused on better living and better work."
+      }
+    ]
+  }
+]
