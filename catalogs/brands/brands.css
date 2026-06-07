@@ -627,7 +627,7 @@
    and tighten the mobile presentation so the complete story fits without an
    internal scrollbar. */
 .brand-catalog-detail-modal > h3 {
-  display: block;
+  display: none; /*block;*/
 }
 
 .brand-catalog-detail-modal > .catalog-badge,
