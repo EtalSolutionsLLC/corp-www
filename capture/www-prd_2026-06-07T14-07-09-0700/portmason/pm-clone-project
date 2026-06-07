@@ -1,0 +1,72 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [ "$#" -ne 1 ]; then
+  echo "Usage: $0 NEW_FOLDER_NAME" >&2
+  exit 1
+fi
+
+target="$1"
+
+# Create the target directory if it doesn't exist
+mkdir -p "$target"
+
+# Copy everything from current dir to target, excluding ID/timestamp files
+rsync -a \
+  --exclude='.project_uuid' \
+  --exclude='.project_timestamp' \
+  ./ "$target/"
+
+# Generate an epoch timestamp in SECONDS (integer)
+ts=""
+
+# Prefer `date +%s` (works on GNU and BSD/macOS)
+if command -v date >/dev/null 2>&1; then
+  tmp_ts="$(date +%s 2>/dev/null || true)"
+  # Ensure it's all digits
+  case "$tmp_ts" in
+    ''|*[!0-9]*) ;;   # not a pure integer, ignore
+    *) ts="$tmp_ts" ;;
+  esac
+fi
+
+# Fallback: Python
+if [ -z "$ts" ]; then
+  if command -v python3 >/dev/null 2>&1; then
+    ts="$(python3 - <<'PY'
+import time
+print(int(time.time()))
+PY
+)"
+  elif command -v python >/dev/null 2>&1; then
+    ts="$(python - <<'PY'
+import time
+print(int(time.time()))
+PY
+)"
+  else
+    echo "Unable to generate seconds timestamp: need 'date' or Python" >&2
+    exit 1
+  fi
+fi
+
+# Write the new .project_timestamp in the target folder
+printf '%s\n' "$ts" > "$target/.project_timestamp"
+
+env_wildcard="*.env"
+example_name=".env.example"
+example_wildcard="*${example_name}"
+
+env_wildcard="${target%/}/*.env"
+example_name=".env.example"
+example_wildcard="${target%/}/*${example_name}"
+
+if compgen -G "${env_wildcard}" > /dev/null || compgen -G "${example_wildcard}" > /dev/null; then
+    # At least one matching file exists → do nothing
+    :
+else
+    # No *.env and no *.example files exist so we'll copy the default .env.example
+    echo "No env/example files found, priming default..."
+    script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+    cp "${script_dir}/templates/${example_name}" "${target}"
+fi

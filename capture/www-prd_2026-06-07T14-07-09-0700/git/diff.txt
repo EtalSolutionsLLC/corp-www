@@ -1,0 +1,1627 @@
+diff --git a/.github/workflows/rotate-transformation-thread.yml b/.github/workflows/rotate-transformation-thread.yml
+index 5973174..6e1ceff 100644
+--- a/.github/workflows/rotate-transformation-thread.yml
++++ b/.github/workflows/rotate-transformation-thread.yml
+@@ -34,16 +34,22 @@ jobs:
+           fi
+           bin/rotate-transformation-thread "${args[@]}"
+ 
++      - name: Render updated Transformation Thread partial
++        shell: bash
++        run: |
++          PORTMASON_SHARE="$PWD/portmason" SITE_DIR="$PWD" \
++            bash portmason/pm-deploy-static
++
+       - name: Commit changed daily selection
+         shell: bash
+         run: |
+-          if git diff --quiet -- transformation-thread/index.html content/transformation-thread-selection.json; then
++          if git diff --quiet -- partials/transformation-thread.html index.html content/transformation-thread-selection.json; then
+             echo "Transformation Thread selection is already current."
+             exit 0
+           fi
+ 
+           git config user.name "github-actions[bot]"
+           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+-          git add transformation-thread/index.html content/transformation-thread-selection.json
++          git add partials/transformation-thread.html index.html content/transformation-thread-selection.json
+           git commit -m "chore: rotate Transformation Thread articles"
+           git push
+diff --git a/README.md b/README.md
+index 78413e1..703da6b 100644
+--- a/README.md
++++ b/README.md
+@@ -50,8 +50,9 @@ Catalog styling
+ 
+ Rendered routes
+   index.html
+-  transformation-thread/index.html
+   index.html#promotions
++  index.html#blog
++  transformation-thread/index.html  # compatibility redirect to /#blog
+ ```
+ 
+ Keep the distinction clear:
+@@ -376,18 +377,28 @@ catalogs/brands/brands.css
+ 
+ The SPA homepage owns the placement marker only. The catalog renderer owns the brand carousel and the ancillary brand overview. The root `brands/` route folder has been removed.
+ 
+-The Transformation Thread remains outside the Brands catalog as a standalone long-form/blog experience:
++The Transformation Thread remains outside the Brands catalog. Its landing experience is rendered as an SPA panel through the same Portmason partial model used by the rest of the site.
++
++## The Transformation Thread blog interface
++
++The canonical Blog destination is:
+ 
+ ```text
+-transformation-thread/index.html
++/#blog
+ ```
+ 
+-## The Transformation Thread blog interface
+-
+-The Transformation Thread brand page includes a native static blog interface at:
++The structural source is:
+ 
+ ```text
+-transformation-thread/#blog
++partials/transformation-thread.html
++```
++
++The main SPA owns the Portmason render region:
++
++```html
++<!-- PM:TRANSFORMATION-THREAD -->
++...
++<!-- /PM:TRANSFORMATION-THREAD -->
+ ```
+ 
+ Supporting card data lives in:
+@@ -396,7 +407,28 @@ Supporting card data lives in:
+ content/transformation-thread-posts.json
+ ```
+ 
+-The interface is intentionally static and low-conflict. It uses the existing site CSS and does not embed a third-party blog widget.
++Full draft articles live in:
++
++```text
++content/transformation-thread-articles/
++```
++
++The compatibility route remains:
++
++```text
++transformation-thread/index.html
++```
++
++It redirects existing bookmarks to `/#blog`.
++
++To rotate the visible articles manually:
++
++```bash
++bin/rotate-transformation-thread --force
++pm-setup
++```
++
++The generator updates `partials/transformation-thread.html`. `pm-setup` then renders the partial into `index.html`. Do not edit the rendered `PM:TRANSFORMATION-THREAD` block manually.
+ 
+ ## Data vs structural naming
+ 
+diff --git a/assets/css/carousel.css b/assets/css/carousel.css
+index d2d0e00..c637aae 100644
+--- a/assets/css/carousel.css
++++ b/assets/css/carousel.css
+@@ -438,3 +438,35 @@
+     display: none !important;
+   }
+ }
++
++/* Library-free carousel refinement: preserve native horizontal scrolling while
++   making desktop keyboard navigation and touch intent clearer. */
++.catalog-carousel-track {
++  overscroll-behavior-inline: contain;
++  scroll-padding-inline: 18px;
++  touch-action: pan-x pan-y;
++}
++
++.catalog-carousel-track:focus-visible {
++  outline: 3px solid rgba(18, 59, 255, 0.24);
++  outline-offset: 5px;
++}
++
++.catalog-carousel-item,
++.catalog-panel-summary,
++.catalog-panel-detail {
++  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
++}
++
++.catalog-carousel-item:hover .catalog-panel-summary {
++  transform: translateY(-2px);
++  box-shadow: 0 16px 34px rgba(16, 23, 34, 0.08);
++}
++
++@media (prefers-reduced-motion: reduce) {
++  .catalog-carousel-item,
++  .catalog-panel-summary,
++  .catalog-panel-detail {
++    transition: none !important;
++  }
++}
+diff --git a/assets/css/policy-modal-overrides.css b/assets/css/policy-modal-overrides.css
+index 2b3f54e..df7da69 100644
+--- a/assets/css/policy-modal-overrides.css
++++ b/assets/css/policy-modal-overrides.css
+@@ -32,6 +32,7 @@
+   height: auto !important;
+   min-width: 0 !important;
+   max-width: none !important;
++  white-space: nowrap !important;
+   aspect-ratio: auto !important;
+ }
+ 
+diff --git a/assets/css/styles.css b/assets/css/styles.css
+index 40dcd85..1050acd 100644
+--- a/assets/css/styles.css
++++ b/assets/css/styles.css
+@@ -1537,7 +1537,7 @@ body:not(:has(section:target)) .brand-page-hero {
+ }
+ .thread-blog-masthead {
+   display: flex;
+-  min-width: 1180px;
++  min-width: 0;
+   min-height: 600px;
+   height: auto;
+   flex-direction: column;
+@@ -1689,8 +1689,8 @@ body:not(:has(section:target)) .brand-page-hero {
+   text-transform: uppercase;
+ }
+ 
+-.thread-featured-post h2,
+-.thread-post-card h2 {
++.thread-featured-post h3,
++.thread-post-card h3 {
+   margin: 0 0 8px;
+   color: #ffffff;
+   line-height: 1.03;
+@@ -1698,12 +1698,12 @@ body:not(:has(section:target)) .brand-page-hero {
+   text-wrap: balance;
+ }
+ 
+-.thread-featured-post h2 {
++.thread-featured-post h3 {
+   max-width: 18ch;
+   font-size: clamp(2rem, 2.8vw, 3rem);
+ }
+ 
+-.thread-post-card h2 {
++.thread-post-card h3 {
+   font-size: clamp(1.05rem, 1.2vw, 1.28rem);
+ }
+ 
+@@ -2494,3 +2494,224 @@ body {
+     transform: none;
+   }
+ }
++
++/* Corp-site refinement pass: native, library-free enhancements.
++   The existing native :target alignment contract remains authoritative. */
++@view-transition {
++  navigation: auto;
++}
++
++.site-header {
++  view-transition-name: corp-site-header;
++}
++
++.site-footer {
++  view-transition-name: corp-site-footer;
++}
++
++.service-selector-result {
++  view-transition-name: service-selector-result;
++}
++
++::view-transition-old(service-selector-result),
++::view-transition-new(service-selector-result) {
++  animation-duration: 180ms;
++}
++
++/* Primary nav decoration remains visible for the currently targeted section. */
++body:not(:has(section:target)) .nav a[href$="#home"]::after,
++body:has(#home:target) .nav a[href$="#home"]::after,
++body:has(#brands:target) .nav a[href$="#brands"]::after,
++body:has(#services:target) .nav a[href$="#services"]::after,
++body:has(#promotions:target) .nav a[href$="#promotions"]::after,
++body:has(#blog:target) .nav a[href$="#blog"]::after,
++body:has(#about:target) .nav a[href$="#about"]::after,
++body:has(#contact:target) .nav a[href$="#contact"]::after {
++  opacity: 1;
++  transform: scaleX(1);
++}
++
++body:not(:has(section:target)) .nav a[href$="#home"],
++body:has(#home:target) .nav a[href$="#home"],
++body:has(#brands:target) .nav a[href$="#brands"],
++body:has(#services:target) .nav a[href$="#services"],
++body:has(#promotions:target) .nav a[href$="#promotions"],
++body:has(#blog:target) .nav a[href$="#blog"],
++body:has(#about:target) .nav a[href$="#about"],
++body:has(#contact:target) .nav a[href$="#contact"] {
++  color: #b8cdff;
++}
++
++.service-selector {
++  padding: clamp(42px, 6vw, 76px) 0;
++  border-top: 1px solid rgba(16, 23, 34, 0.07);
++  border-bottom: 1px solid rgba(16, 23, 34, 0.08);
++  background:
++    radial-gradient(circle at 88% 16%, rgba(18, 59, 255, 0.08), transparent 0 24%),
++    linear-gradient(135deg, rgba(18, 59, 255, 0.035), transparent 54%),
++    #f7f8fb;
++}
++
++.service-selector-layout {
++  display: grid;
++  grid-template-columns: minmax(0, 0.84fr) minmax(520px, 1.16fr);
++  gap: clamp(28px, 5vw, 72px);
++  align-items: start;
++}
++
++.service-selector-copy h2 {
++  max-width: 660px;
++  margin: 6px 0 0;
++  font-size: clamp(1.9rem, 3.4vw, 3.2rem);
++  line-height: 1;
++  letter-spacing: -0.055em;
++}
++
++.service-selector-copy p {
++  max-width: 62ch;
++  margin: 16px 0 0;
++  color: var(--muted);
++}
++
++.service-selector-panel {
++  display: grid;
++  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
++  gap: 12px;
++  padding: 12px;
++  border: 1px solid rgba(18, 59, 255, 0.13);
++  background: rgba(255, 255, 255, 0.82);
++  box-shadow: 0 18px 42px rgba(16, 23, 34, 0.08);
++}
++
++.service-selector-options {
++  display: grid;
++  gap: 7px;
++}
++
++.service-selector-option {
++  width: 100%;
++  padding: 12px 13px;
++  border: 1px solid rgba(16, 23, 34, 0.08);
++  background: rgba(247, 248, 251, 0.94);
++  color: var(--text);
++  font: inherit;
++  font-size: 0.88rem;
++  font-weight: 800;
++  line-height: 1.24;
++  text-align: left;
++  cursor: pointer;
++  transition: transform 160ms ease, border-color 160ms ease, background-color 160ms ease, color 160ms ease, box-shadow 160ms ease;
++}
++
++.service-selector-option:hover,
++.service-selector-option:focus-visible {
++  transform: translateX(3px);
++  border-color: rgba(18, 59, 255, 0.32);
++  outline: none;
++}
++
++.service-selector-option:focus-visible {
++  box-shadow: 0 0 0 3px rgba(18, 59, 255, 0.16);
++}
++
++.service-selector-option.is-selected {
++  border-color: rgba(18, 59, 255, 0.54);
++  background: linear-gradient(135deg, #1f63ff, #123bff);
++  color: #ffffff;
++  box-shadow: 0 10px 22px rgba(18, 59, 255, 0.20);
++}
++
++.service-selector-result {
++  min-height: 100%;
++  padding: clamp(18px, 3vw, 28px);
++  border: 1px solid rgba(18, 59, 255, 0.14);
++  background:
++    linear-gradient(135deg, rgba(18, 59, 255, 0.11), transparent 54%),
++    #ffffff;
++}
++
++.service-selector-result-kicker {
++  display: block;
++  color: var(--blue-2);
++  font-size: 0.72rem;
++  font-weight: 900;
++  letter-spacing: 0.1em;
++  text-transform: uppercase;
++}
++
++.service-selector-result h3 {
++  margin: 12px 0 0;
++  font-size: clamp(1.32rem, 2vw, 1.78rem);
++  line-height: 1.03;
++  letter-spacing: -0.045em;
++}
++
++.service-selector-result p {
++  margin: 14px 0 0;
++  color: var(--muted);
++}
++
++.service-selector-cta {
++  display: inline-flex;
++  margin-top: 18px;
++}
++
++.cta,
++.hero-cta,
++.catalog-hero-cta,
++.catalog-details-toggle {
++  transition: transform 160ms ease, box-shadow 160ms ease, background-color 160ms ease, border-color 160ms ease, color 160ms ease;
++}
++
++.cta:hover,
++.cta:focus-visible,
++.hero-cta:hover,
++.hero-cta:focus-visible,
++.catalog-hero-cta:hover,
++.catalog-hero-cta:focus-visible,
++.catalog-details-toggle:hover,
++.catalog-details-toggle:focus-visible {
++  transform: translateY(-2px);
++}
++
++.visually-hidden {
++  position: absolute !important;
++  width: 1px !important;
++  height: 1px !important;
++  padding: 0 !important;
++  margin: -1px !important;
++  overflow: hidden !important;
++  clip: rect(0, 0, 0, 0) !important;
++  white-space: nowrap !important;
++  border: 0 !important;
++}
++
++@media (max-width: 1080px) {
++  .service-selector-layout,
++  .service-selector-panel {
++    grid-template-columns: 1fr;
++  }
++}
++
++@media (prefers-reduced-motion: reduce) {
++  .service-selector-option,
++  .cta,
++  .hero-cta,
++  .catalog-hero-cta,
++  .catalog-details-toggle {
++    transition: none !important;
++  }
++}
++
++/* Keep parent catalog navigation decorated while a specific catalog item is targeted. */
++body:has(#promotions [data-catalog-item]:target) .nav a[href$="#promotions"]::after,
++body:has(#brands [data-catalog-item]:target) .nav a[href$="#brands"]::after {
++  opacity: 1;
++  transform: scaleX(1);
++}
++
++body:has(#promotions [data-catalog-item]:target) .nav a[href$="#promotions"],
++body:has(#brands [data-catalog-item]:target) .nav a[href$="#brands"] {
++  color: #b8cdff;
++}
++
+diff --git a/assets/js/visual-polish.js b/assets/js/visual-polish.js
+index e342f84..bf44bb5 100644
+--- a/assets/js/visual-polish.js
++++ b/assets/js/visual-polish.js
+@@ -2,6 +2,7 @@
+   "use strict";
+ 
+   var root = document.documentElement;
++  var reduceMotion = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+   root.classList.add("has-visual-polish");
+ 
+   function formatBytes(bytes) {
+@@ -43,7 +44,7 @@
+     var elements = Array.prototype.slice.call(document.querySelectorAll("[data-reveal]"));
+     if (!elements.length) return;
+ 
+-    if (!("IntersectionObserver" in window)) {
++    if (reduceMotion || !("IntersectionObserver" in window)) {
+       elements.forEach(function (element) { element.classList.add("is-visible"); });
+       return;
+     }
+@@ -61,7 +62,7 @@
+ 
+   function enableKineticWord() {
+     var word = document.querySelector("[data-kinetic-word]");
+-    if (!word || !window.setInterval) return;
++    if (!word || !window.setInterval || reduceMotion) return;
+ 
+     var words = ["light", "clear", "responsive", "maintainable"];
+     var index = 0;
+@@ -76,10 +77,150 @@
+     }, 2600);
+   }
+ 
++  function runViewTransition(update) {
++    if (!reduceMotion && typeof document.startViewTransition === "function") {
++      document.startViewTransition(update);
++      return;
++    }
++    update();
++  }
++
++  function enableServiceSelector() {
++    var selector = document.querySelector("[data-service-selector]");
++    if (!selector) return;
++
++    var title = selector.querySelector("[data-service-result-title]");
++    var copy = selector.querySelector("[data-service-result-copy]");
++    var link = selector.querySelector("[data-service-result-link]");
++    var options = Array.prototype.slice.call(selector.querySelectorAll("[data-service-choice]"));
++    if (!title || !copy || !link || !options.length) return;
++
++    var recommendations = {
++      modernize: {
++        title: "Website and System Modernization",
++        copy: "Start by identifying the friction, weight, and maintenance burden in the current experience, then improve the smallest set of things that will make the largest practical difference.",
++        label: "Discuss modernization",
++        subject: "Website and System Modernization Inquiry"
++      },
++      build: {
++        title: "Focused New Website or Software Delivery",
++        copy: "Start with the outcome, the audience, and the smallest dependable release. We can shape a lean website, workflow, integration, or custom application around the work that actually needs to happen.",
++        label: "Discuss a new build",
++        subject: "New Website or Software Delivery Inquiry"
++      },
++      legacy: {
++        title: "Legacy Technology Support",
++        copy: "Start by stabilizing the technology that still matters, documenting the risks, and identifying the smallest repeatable improvements that keep it dependable without forcing a premature rewrite.",
++        label: "Discuss legacy support",
++        subject: "Legacy Technology Support Inquiry"
++      },
++      ai: {
++        title: "Practical A.I. Enablement",
++        copy: "Start with a real workflow, not a generic tool list. We can identify useful A.I. opportunities, establish safe habits, and build confidence through plain-language guidance and practical implementation.",
++        label: "Discuss practical A.I.",
++        subject: "Practical A.I. Enablement Inquiry"
++      },
++      architecture: {
++        title: "Architecture and Delivery Guidance",
++        copy: "Start by clarifying the decision, the constraints, and the operational reality. We can simplify the options and define a maintainable path forward before complexity becomes the product.",
++        label: "Discuss architecture",
++        subject: "Architecture and Delivery Guidance Inquiry"
++      }
++    };
++
++    function select(choice) {
++      var recommendation = recommendations[choice];
++      if (!recommendation) return;
++
++      options.forEach(function (option) {
++        var selected = option.getAttribute("data-service-choice") === choice;
++        option.classList.toggle("is-selected", selected);
++        option.setAttribute("aria-pressed", selected ? "true" : "false");
++      });
++
++      runViewTransition(function () {
++        title.textContent = recommendation.title;
++        copy.textContent = recommendation.copy;
++        link.textContent = recommendation.label;
++        link.href = "mailto:info@etalsolutions.tech?subject=" + encodeURIComponent(recommendation.subject);
++      });
++    }
++
++    options.forEach(function (option) {
++      option.addEventListener("click", function () {
++        select(option.getAttribute("data-service-choice") || "");
++      });
++    });
++  }
++
++  function catalogPages(track) {
++    return track ? Array.prototype.slice.call(track.querySelectorAll(":scope > [data-catalog-page]")) : [];
++  }
++
++  function activeCatalogPageIndex(track, pages) {
++    if (!track || !pages.length) return 0;
++    var left = track.scrollLeft;
++    var bestIndex = 0;
++    var bestDistance = Infinity;
++
++    pages.forEach(function (page, index) {
++      var distance = Math.abs(page.offsetLeft - left);
++      if (distance < bestDistance) {
++        bestDistance = distance;
++        bestIndex = index;
++      }
++    });
++
++    return bestIndex;
++  }
++
++  function enableCarouselKeyboardRefinement() {
++    document.querySelectorAll("[data-catalog-carousel]").forEach(function (carousel) {
++      var track = carousel.querySelector("[data-catalog-track]");
++      if (!track || track.hasAttribute("data-keyboard-refined")) return;
++
++      track.setAttribute("data-keyboard-refined", "");
++      track.setAttribute("tabindex", "0");
++      track.setAttribute("role", "region");
++      track.setAttribute("aria-roledescription", "carousel");
++      track.setAttribute("aria-label", "Catalog cards. Use left and right arrow keys to move between pages.");
++
++      var status = document.createElement("p");
++      status.className = "catalog-keyboard-status visually-hidden";
++      status.setAttribute("aria-live", "polite");
++      carousel.appendChild(status);
++
++      track.addEventListener("keydown", function (event) {
++        if (event.target !== track || (window.matchMedia && window.matchMedia("(max-width: 760px)").matches)) return;
++        var pages = catalogPages(track);
++        if (pages.length < 2) return;
++
++        var current = activeCatalogPageIndex(track, pages);
++        var target = current;
++        if (event.key === "ArrowLeft") target = Math.max(0, current - 1);
++        if (event.key === "ArrowRight") target = Math.min(pages.length - 1, current + 1);
++        if (event.key === "Home") target = 0;
++        if (event.key === "End") target = pages.length - 1;
++        if (target === current && event.key !== "Home" && event.key !== "End") return;
++        if (["ArrowLeft", "ArrowRight", "Home", "End"].indexOf(event.key) === -1) return;
++
++        event.preventDefault();
++        track.scrollTo({ left: pages[target].offsetLeft, behavior: reduceMotion ? "auto" : "smooth" });
++        status.textContent = "Catalog page " + String(target + 1) + " of " + String(pages.length);
++      });
++    });
++  }
++
+   window.addEventListener("scroll", updateHeader, { passive: true });
+   window.addEventListener("load", function () {
+     updateHeader();
+     updatePerformanceProof();
++    window.setTimeout(updatePerformanceProof, 700);
++  });
++
++  document.addEventListener("DOMContentLoaded", function () {
++    enableServiceSelector();
++    enableCarouselKeyboardRefinement();
+   });
+ 
+   updateHeader();
+diff --git a/capture/www-prd_2026-06-06T17-48-36-0700/project/transformation-thread/index.html b/capture/www-prd_2026-06-06T17-48-36-0700/project/transformation-thread/index.html
+index dd22118..e637dff 100644
+--- a/capture/www-prd_2026-06-06T17-48-36-0700/project/transformation-thread/index.html
++++ b/capture/www-prd_2026-06-06T17-48-36-0700/project/transformation-thread/index.html
+@@ -51,19 +51,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+     <a class="brand" href="/#home">ET AL SOLUTIONS LLC</a>
+     <nav class="nav" aria-label="Primary">
+       <a href="/#home">Home</a>
+-<!--<div class="nav-dropdown">
+-        <a class="nav-dropdown-trigger" href="/#brands" aria-haspopup="true">Brands</a>
+-        <div class="nav-dropdown-menu" aria-label="Brand pages">
+-          <a href="/#brands" data-catalog-target="simplifai">SIMPLIFAI</a>
+-          <a href="/#brands" data-catalog-target="solutions-et-al">Solutions et al</a>
+-          <a href="/#brands" data-catalog-target="25th-hour">25th Hour</a>
+-          <a href="/#brands">All Brands</a>
+-        </div>
+-      </div>-->
+-      <a href="/#brands">Brands</a>
+       <a href="/#services">Services</a>
++      <a href="/#brands">Brands</a>
+       <a href="/#promotions">Promotions</a>
+-      <a href="/transformation-thread/">Blog</a>
++      <a href="/#blog">Blog</a>
+       <a href="/#about">About</a>
+       <a href="/#contact">Contact</a>
+     </nav>
+diff --git a/capture/www-prd_2026-06-06T19-05-59-0700/project/transformation-thread/index.html b/capture/www-prd_2026-06-06T19-05-59-0700/project/transformation-thread/index.html
+index dd22118..e637dff 100644
+--- a/capture/www-prd_2026-06-06T19-05-59-0700/project/transformation-thread/index.html
++++ b/capture/www-prd_2026-06-06T19-05-59-0700/project/transformation-thread/index.html
+@@ -51,19 +51,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+     <a class="brand" href="/#home">ET AL SOLUTIONS LLC</a>
+     <nav class="nav" aria-label="Primary">
+       <a href="/#home">Home</a>
+-<!--<div class="nav-dropdown">
+-        <a class="nav-dropdown-trigger" href="/#brands" aria-haspopup="true">Brands</a>
+-        <div class="nav-dropdown-menu" aria-label="Brand pages">
+-          <a href="/#brands" data-catalog-target="simplifai">SIMPLIFAI</a>
+-          <a href="/#brands" data-catalog-target="solutions-et-al">Solutions et al</a>
+-          <a href="/#brands" data-catalog-target="25th-hour">25th Hour</a>
+-          <a href="/#brands">All Brands</a>
+-        </div>
+-      </div>-->
+-      <a href="/#brands">Brands</a>
+       <a href="/#services">Services</a>
++      <a href="/#brands">Brands</a>
+       <a href="/#promotions">Promotions</a>
+-      <a href="/transformation-thread/">Blog</a>
++      <a href="/#blog">Blog</a>
+       <a href="/#about">About</a>
+       <a href="/#contact">Contact</a>
+     </nav>
+diff --git a/capture/www-prd_2026-06-06T19-45-46-0700/project/transformation-thread/index.html b/capture/www-prd_2026-06-06T19-45-46-0700/project/transformation-thread/index.html
+index dd22118..e637dff 100644
+--- a/capture/www-prd_2026-06-06T19-45-46-0700/project/transformation-thread/index.html
++++ b/capture/www-prd_2026-06-06T19-45-46-0700/project/transformation-thread/index.html
+@@ -51,19 +51,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+     <a class="brand" href="/#home">ET AL SOLUTIONS LLC</a>
+     <nav class="nav" aria-label="Primary">
+       <a href="/#home">Home</a>
+-<!--<div class="nav-dropdown">
+-        <a class="nav-dropdown-trigger" href="/#brands" aria-haspopup="true">Brands</a>
+-        <div class="nav-dropdown-menu" aria-label="Brand pages">
+-          <a href="/#brands" data-catalog-target="simplifai">SIMPLIFAI</a>
+-          <a href="/#brands" data-catalog-target="solutions-et-al">Solutions et al</a>
+-          <a href="/#brands" data-catalog-target="25th-hour">25th Hour</a>
+-          <a href="/#brands">All Brands</a>
+-        </div>
+-      </div>-->
+-      <a href="/#brands">Brands</a>
+       <a href="/#services">Services</a>
++      <a href="/#brands">Brands</a>
+       <a href="/#promotions">Promotions</a>
+-      <a href="/transformation-thread/">Blog</a>
++      <a href="/#blog">Blog</a>
+       <a href="/#about">About</a>
+       <a href="/#contact">Contact</a>
+     </nav>
+diff --git a/capture/www-prd_2026-06-06T20-05-07-0700/project/transformation-thread/index.html b/capture/www-prd_2026-06-06T20-05-07-0700/project/transformation-thread/index.html
+index dd22118..e637dff 100644
+--- a/capture/www-prd_2026-06-06T20-05-07-0700/project/transformation-thread/index.html
++++ b/capture/www-prd_2026-06-06T20-05-07-0700/project/transformation-thread/index.html
+@@ -51,19 +51,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+     <a class="brand" href="/#home">ET AL SOLUTIONS LLC</a>
+     <nav class="nav" aria-label="Primary">
+       <a href="/#home">Home</a>
+-<!--<div class="nav-dropdown">
+-        <a class="nav-dropdown-trigger" href="/#brands" aria-haspopup="true">Brands</a>
+-        <div class="nav-dropdown-menu" aria-label="Brand pages">
+-          <a href="/#brands" data-catalog-target="simplifai">SIMPLIFAI</a>
+-          <a href="/#brands" data-catalog-target="solutions-et-al">Solutions et al</a>
+-          <a href="/#brands" data-catalog-target="25th-hour">25th Hour</a>
+-          <a href="/#brands">All Brands</a>
+-        </div>
+-      </div>-->
+-      <a href="/#brands">Brands</a>
+       <a href="/#services">Services</a>
++      <a href="/#brands">Brands</a>
+       <a href="/#promotions">Promotions</a>
+-      <a href="/transformation-thread/">Blog</a>
++      <a href="/#blog">Blog</a>
+       <a href="/#about">About</a>
+       <a href="/#contact">Contact</a>
+     </nav>
+diff --git a/capture/www-prd_2026-06-06T20-31-20-0700/project/transformation-thread/index.html b/capture/www-prd_2026-06-06T20-31-20-0700/project/transformation-thread/index.html
+index dd22118..e637dff 100644
+--- a/capture/www-prd_2026-06-06T20-31-20-0700/project/transformation-thread/index.html
++++ b/capture/www-prd_2026-06-06T20-31-20-0700/project/transformation-thread/index.html
+@@ -51,19 +51,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+     <a class="brand" href="/#home">ET AL SOLUTIONS LLC</a>
+     <nav class="nav" aria-label="Primary">
+       <a href="/#home">Home</a>
+-<!--<div class="nav-dropdown">
+-        <a class="nav-dropdown-trigger" href="/#brands" aria-haspopup="true">Brands</a>
+-        <div class="nav-dropdown-menu" aria-label="Brand pages">
+-          <a href="/#brands" data-catalog-target="simplifai">SIMPLIFAI</a>
+-          <a href="/#brands" data-catalog-target="solutions-et-al">Solutions et al</a>
+-          <a href="/#brands" data-catalog-target="25th-hour">25th Hour</a>
+-          <a href="/#brands">All Brands</a>
+-        </div>
+-      </div>-->
+-      <a href="/#brands">Brands</a>
+       <a href="/#services">Services</a>
++      <a href="/#brands">Brands</a>
+       <a href="/#promotions">Promotions</a>
+-      <a href="/transformation-thread/">Blog</a>
++      <a href="/#blog">Blog</a>
+       <a href="/#about">About</a>
+       <a href="/#contact">Contact</a>
+     </nav>
+diff --git a/chg.txt b/chg.txt
+index e083947..5cfe886 100644
+--- a/chg.txt
++++ b/chg.txt
+@@ -1,3 +1,20 @@
++project/index.html
++project/transformation-thread/index.html
++project/partials/header.html
++project/partials/brand-header.html
++project/partials/promotion-header.html
++project/partials/transformation-thread.html
++project/assets/css/styles.css
+ project/assets/css/policy-modal-overrides.css
+-project/tests/test_policy_modal_close_position.py
++project/content/transformation-thread-posts.json
++project/content/transformation-thread-selection.json
++project/content/transformation-thread-articles/speed-is-not-a-technical-detail.md
++project/content/transformation-thread-articles/modernization-does-not-always-mean-replacement.md
++project/bin/rotate-transformation-thread
++project/.github/workflows/rotate-transformation-thread.yml
++project/README.md
++project/tests/test_blog_nav_decoration.py
++project/tests/test_corp_site_refinement.py
++project/tests/test_policy_modal_close_style.py
++project/tests/test_spa_blog_partial.py
+ project/chg.txt
+diff --git a/content/transformation-thread-posts.json b/content/transformation-thread-posts.json
+index 3e8f6b7..12e9142 100644
+--- a/content/transformation-thread-posts.json
++++ b/content/transformation-thread-posts.json
+@@ -37,7 +37,7 @@
+       "title": "Experience should not expire",
+       "category": "Workforce Transformation",
+       "status": "Draft",
+-      "summary": "A practical look at how hiring systems, workplace assumptions, and automated screening can undervalue older workers—and why transformation should preserve experience instead of filtering it out.",
++      "summary": "A practical look at how hiring systems, workplace assumptions, and automated screening can undervalue older workers\u2014and why transformation should preserve experience instead of filtering it out.",
+       "url": "mailto:info@etalsolutions.tech?subject=Experience%20should%20not%20expire"
+     },
+     {
+@@ -53,6 +53,20 @@
+       "status": "Draft",
+       "summary": "A reminder that the safest transformation plans do not begin with speed; they begin with ownership, review paths, exception handling, and clear decisions about where human judgment must remain in the loop.",
+       "url": "mailto:info@etalsolutions.tech?subject=Automation%20needs%20accountability%20before%20scale"
++    },
++    {
++      "title": "Speed Is Not a Technical Detail",
++      "category": "Website Modernization",
++      "status": "Draft",
++      "summary": "A fast website is not merely an engineering achievement. It is part of the experience, and often the first thing a visitor notices.",
++      "url": "mailto:info@etalsolutions.tech?subject=Speed%20Is%20Not%20a%20Technical%20Detail"
++    },
++    {
++      "title": "Modernization Does Not Always Mean Replacement",
++      "category": "Systems Thinking",
++      "status": "Draft",
++      "summary": "The first question in a modernization effort should not be what to replace. It should be what the current system knows, what it still does well, and where the friction actually lives.",
++      "url": "mailto:info@etalsolutions.tech?subject=Modernization%20Does%20Not%20Always%20Mean%20Replacement"
+     }
+   ]
+ }
+diff --git a/content/transformation-thread-selection.json b/content/transformation-thread-selection.json
+index e123325..83b5f23 100644
+--- a/content/transformation-thread-selection.json
++++ b/content/transformation-thread-selection.json
+@@ -1,30 +1,30 @@
+ {
+   "generated_by": "bin/rotate-transformation-thread",
+-  "selection_date": "2026-06-01",
++  "selection_date": "2026-06-07",
+   "rotation_timezone": "America/Los_Angeles",
+-  "start_index": 0,
+-  "source_sha256": "1cbe135148e4a2b3a58b616d86e4c1bf4be5fb8c7157869a40dcb0252675fbee",
++  "start_index": 6,
++  "source_sha256": "16bc5ade3a40bda78f9c00746359e3360da5b34cf3e7bf7a600b501aec757734",
+   "visible_posts": [
+     {
+-      "title": "What transformation actually asks of a business",
+-      "category": "Transformation Strategy",
+-      "status": "Featured",
+-      "summary": "Transformation is a practical sequence of choices about what to simplify, what to preserve, and where technology can reduce friction without creating new confusion.",
+-      "url": "mailto:info@etalsolutions.tech?subject=Transformation%20Thread%20Featured%20Article"
++      "title": "Automation needs accountability before scale",
++      "category": "A.I. Governance",
++      "status": "Draft",
++      "summary": "A reminder that the safest transformation plans do not begin with speed; they begin with ownership, review paths, exception handling, and clear decisions about where human judgment must remain in the loop.",
++      "url": "mailto:info@etalsolutions.tech?subject=Automation%20needs%20accountability%20before%20scale"
+     },
+     {
+-      "title": "Start with the work, not the tool",
+-      "category": "A.I. Adoption",
++      "title": "Speed Is Not a Technical Detail",
++      "category": "Website Modernization",
+       "status": "Draft",
+-      "summary": "Durable A.I. adoption begins with workflows, decisions, and pain points before selecting platforms.",
+-      "url": "mailto:info@etalsolutions.tech?subject=Start%20with%20the%20work%20article"
++      "summary": "A fast website is not merely an engineering achievement. It is part of the experience, and often the first thing a visitor notices.",
++      "url": "mailto:info@etalsolutions.tech?subject=Speed%20Is%20Not%20a%20Technical%20Detail"
+     },
+     {
+-      "title": "The smallest useful transformation plan",
+-      "category": "Operating Model",
++      "title": "Modernization Does Not Always Mean Replacement",
++      "category": "Systems Thinking",
+       "status": "Draft",
+-      "summary": "A simple planning pattern for moving from vague improvement goals to manageable technology-enabled changes.",
+-      "url": "mailto:info@etalsolutions.tech?subject=Smallest%20useful%20transformation%20plan"
++      "summary": "The first question in a modernization effort should not be what to replace. It should be what the current system knows, what it still does well, and where the friction actually lives.",
++      "url": "mailto:info@etalsolutions.tech?subject=Modernization%20Does%20Not%20Always%20Mean%20Replacement"
+     }
+   ]
+ }
+diff --git a/index.html b/index.html
+index dfc801b..5a2bc8b 100644
+--- a/index.html
++++ b/index.html
+@@ -53,19 +53,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+     <a class="brand" href="/#home">ET AL SOLUTIONS LLC</a>
+     <nav class="nav" aria-label="Primary">
+       <a href="/#home">Home</a>
+-<!--<div class="nav-dropdown">
+-        <a class="nav-dropdown-trigger" href="/#brands" aria-haspopup="true">Brands</a>
+-        <div class="nav-dropdown-menu" aria-label="Brand pages">
+-          <a href="/#brands" data-catalog-target="simplifai">SIMPLIFAI</a>
+-          <a href="/#brands" data-catalog-target="solutions-et-al">Solutions et al</a>
+-          <a href="/#brands" data-catalog-target="25th-hour">25th Hour</a>
+-          <a href="/#brands">All Brands</a>
+-        </div>
+-      </div>-->
+-      <a href="/#brands">Brands</a>
+       <a href="/#services">Services</a>
++      <a href="/#brands">Brands</a>
+       <a href="/#promotions">Promotions</a>
+-      <a href="/transformation-thread/">Blog</a>
++      <a href="/#blog">Blog</a>
+       <a href="/#about">About</a>
+       <a href="/#contact">Contact</a>
+     </nav>
+@@ -151,36 +142,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+         </div>
+       </section>
+ 
+-      <section class="section-light panel" id="about">
+-        <div class="container about-layout">
+-          <div class="section-copy">
+-            <span class="section-kicker light">Accessible Innovation</span>
+-            <h2>Your Partner in Practical Technology</h2>
+-            <p>
+-              Et al Solutions LLC helps smaller organizations use technology with the same clarity and discipline larger companies rely on, without adding unnecessary complexity.
+-            </p>
+-            <p>
+-              The work is intentionally straightforward: understand the business problem, choose the smallest reliable solution, and build a foundation that can grow when the business is ready.
+-            </p>
+-          </div>
+-
+-          <div class="about-cards">
+-            <article class="about-card" data-reveal>
+-              <strong>Experience where it matters most</strong>
+-              <p>Decades of technology experience across software, systems, and business operations, focused on solutions that are useful in the real world.</p>
+-            </article>
+-            <article class="about-card" data-reveal>
+-              <strong>Cutting-edge A.I. with a proven-tech mindset</strong>
+-              <p>Modern tools are paired with dependable implementation so businesses can move forward without taking on unnecessary risk.</p>
+-            </article>
+-            <article class="about-card" data-reveal>
+-              <strong>Enterprise thinking sized for smaller businesses</strong>
+-              <p>The goal is not to make things more complex. The goal is clear structure, smart tools, and repeatable systems that support growth.</p>
+-            </article>
+-          </div>
+-        </div>
+-      </section>
+-
+       <section class="section-dark panel" id="services">
+         <p class="mobile-swipe-hint" aria-hidden="true" data-swipe-hint data-forward-text="Swipe sideways for service details" data-back-text="Swipe left for service summary">Swipe sideways for service details <span>→</span></p>
+         <div class="container services-band" data-swipe-region>
+@@ -233,6 +194,197 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+         </div>
+       </section>
+ 
++      <section class="service-selector" aria-labelledby="service-selector-title" data-service-selector>
++        <div class="container service-selector-layout">
++          <div class="service-selector-copy">
++            <span class="section-kicker light">Find the Right Starting Point</span>
++            <h2 id="service-selector-title">What would you like technology to make easier?</h2>
++            <p>Choose the closest fit. We will point you toward a practical first conversation rather than a one-size-fits-all package.</p>
++          </div>
++
++          <div class="service-selector-panel">
++            <div class="service-selector-options" role="group" aria-label="Choose the type of help you need">
++              <button class="service-selector-option is-selected" type="button" data-service-choice="modernize" aria-pressed="true">Modernize an existing website or system</button>
++              <button class="service-selector-option" type="button" data-service-choice="build" aria-pressed="false">Build something new</button>
++              <button class="service-selector-option" type="button" data-service-choice="legacy" aria-pressed="false">Keep important older technology reliable</button>
++              <button class="service-selector-option" type="button" data-service-choice="ai" aria-pressed="false">Use A.I. in a practical way</button>
++              <button class="service-selector-option" type="button" data-service-choice="architecture" aria-pressed="false">Simplify a complicated technology decision</button>
++            </div>
++
++            <article class="service-selector-result" aria-live="polite" data-service-result>
++              <span class="service-selector-result-kicker">Recommended starting point</span>
++              <h3 data-service-result-title>Website and System Modernization</h3>
++              <p data-service-result-copy>Start by identifying the friction, weight, and maintenance burden in the current experience, then improve the smallest set of things that will make the largest practical difference.</p>
++              <a class="cta service-selector-cta" href="mailto:info@etalsolutions.tech?subject=Website%20and%20System%20Modernization%20Inquiry" data-service-result-link>Discuss modernization</a>
++            </article>
++          </div>
++        </div>
++      </section>
++
++      <section class="section-dark panel catalog-home-section brand-catalog-section" id="brands" aria-labelledby="brands-title">
++        <div class="container catalog-page-layout">
++          <section class="catalog-page-head" id="brands-top" aria-labelledby="brands-title">
++            <span class="section-kicker light">Brands</span>
++            <h2 id="brands-title">Focused brands, one strong foundation.</h2>
++            <p>Explore the core brand identities in the Et al Solutions LLC portfolio. The Transformation Thread remains a separate article and thought-leadership experience.</p>
++          </section>
++
++          <div class="catalog-full-list" id="brand-identities" aria-label="Brand identities">
++<!-- PM:CATALOG-BRANDS-FULL-LIST -->
++      <section class="catalog-carousel" aria-label="Catalog carousel" data-catalog-carousel data-catalog-default="simplifai">
++
++        <div class="catalog-carousel-instructions" data-catalog-nav data-newer-label="Previous brand" data-previous-label="Next brand" data-end-label="End of brands" data-detail-label="Details" data-summary-label="Summary">
++
++          <span class="catalog-scroll-hint">Scroll sideways through brand identities.</span>
++
++          <span data-catalog-newer-slot><span class="catalog-direction-empty"></span></span>
++
++          <span data-catalog-previous-slot><a class="catalog-direction-link" href="#solutions-et-al">Next brand: <strong>Solutions et al</strong> <span>→</span></a></span>
++
++        </div>
++
++        <div class="catalog-carousel-track" data-catalog-track>
++
++      <section class="catalog-carousel-item is-featured" data-catalog-item data-catalog-slug="simplifai" data-catalog-title="SIMPLIFAI">
++        <div class="catalog-item-panels">
++          <article class="catalog-card catalog-panel catalog-panel-summary is-featured" aria-label="Practical A.I. education for everyday work. summary">
++            <div class="catalog-summary-brand-header">
++              <span class="catalog-badge">A.I. Training &amp; Enablement</span>
++              <img class="catalog-summary-logo" src="https://public.etal.solutions/assets/simplifai/logos/SIMPLIFAI-SILVER.png" alt="SIMPLIFAI logo" />
++            </div>
++            <h2>Practical A.I. education for everyday work.</h2>
++            <p class="catalog-subtitle">Accessible A.I. education and enablement for everyday work.</p>
++            <p>SIMPLIFAI helps people and smaller businesses use A.I. with confidence through accessible training, plain-language guidance, and practical workflows that reduce friction instead of adding complexity.</p>
++            <ul class="catalog-tag-list" aria-label="Tags">
++              <li>Training brand</li>
++              <li>Accessible A.I.</li>
++              <li>Business-friendly</li>
++              <li>Practical workflows</li>
++            </ul>
++          </article>
++          <aside class="catalog-detail-panel catalog-panel catalog-panel-detail" id="simplifai-details" aria-label="Practical A.I. education for everyday work. details">
++            <span class="catalog-badge">A.I. Training &amp; Enablement</span>
++            <h3>SIMPLIFAI</h3>
++            <p class="catalog-subtitle">Accessible A.I. education and enablement for everyday work.</p>
++            <img class="catalog-detail-logo" src="https://public.etal.solutions/assets/simplifai/logos/SIMPLIFAI-SILVER.png" alt="SIMPLIFAI logo" />
++            <p class="catalog-detail-summary">Practical A.I. education that helps people use new tools with confidence.</p>
++            <div class="catalog-attribute-grid">
++              <div class="catalog-attribute">
++                <strong>For</strong>
++                <p>Individuals, teams, and smaller businesses.</p>
++              </div>
++              <div class="catalog-attribute">
++                <strong>Offers</strong>
++                <p>Plain-language training, prompting guidance, and useful workflows.</p>
++              </div>
++              <div class="catalog-attribute">
++                <strong>Purpose</strong>
++                <p>Make A.I. approachable and practical.</p>
++              </div>
++            </div>
++            <div class="catalog-actions">
++              <a class="hero-cta" href="mailto:info@etalsolutions.tech?subject=SIMPLIFAI%20A.I.%20Training%20Inquiry">Ask About A.I. Training</a>
++            </div>
++          </aside>
++        </div>
++      </section>
++
++      <section class="catalog-carousel-item" data-catalog-item data-catalog-slug="solutions-et-al" data-catalog-title="Solutions et al">
++        <div class="catalog-item-panels">
++          <article class="catalog-card catalog-panel catalog-panel-summary" aria-label="Focused technology guidance for real operational problems. summary">
++            <div class="catalog-summary-brand-header">
++              <span class="catalog-badge">Consulting &amp; Practical Delivery</span>
++              <img class="catalog-summary-logo" src="https://public.etal.solutions/assets/sea/logos/SEA-OFFICIAL.png" alt="Solutions et al logo" />
++            </div>
++            <h2>Focused technology guidance for real operational problems.</h2>
++            <p class="catalog-subtitle">Practical consulting, solution design, and implementation support.</p>
++            <p>Solutions et al is the consulting and delivery brand for organizations that need clear technical direction, practical systems, and implementation support without unnecessary ceremony.</p>
++            <ul class="catalog-tag-list" aria-label="Tags">
++              <li>Consulting brand</li>
++              <li>Solution design</li>
++              <li>Implementation support</li>
++              <li>Clear handoff</li>
++            </ul>
++          </article>
++          <aside class="catalog-detail-panel catalog-panel catalog-panel-detail" id="solutions-et-al-details" aria-label="Focused technology guidance for real operational problems. details">
++            <span class="catalog-badge">Consulting &amp; Practical Delivery</span>
++            <h3>Solutions et al</h3>
++            <p class="catalog-subtitle">Practical consulting, solution design, and implementation support.</p>
++            <img class="catalog-detail-logo" src="https://public.etal.solutions/assets/sea/logos/SEA-OFFICIAL.png" alt="Solutions et al logo" />
++            <p class="catalog-detail-summary">Focused consulting and delivery support for practical technology decisions.</p>
++            <div class="catalog-attribute-grid">
++              <div class="catalog-attribute">
++                <strong>For</strong>
++                <p>Organizations that need clear technical direction.</p>
++              </div>
++              <div class="catalog-attribute">
++                <strong>Offers</strong>
++                <p>Solution design, implementation, integration, and handoff.</p>
++              </div>
++              <div class="catalog-attribute">
++                <strong>Purpose</strong>
++                <p>Turn operational problems into maintainable systems.</p>
++              </div>
++            </div>
++            <div class="catalog-actions">
++              <a class="hero-cta" href="mailto:info@etalsolutions.tech?subject=Solutions%20et%20al%20Project%20Inquiry">Discuss a Project</a>
++            </div>
++          </aside>
++        </div>
++      </section>
++
++      <section class="catalog-carousel-item" data-catalog-item data-catalog-slug="25th-hour" data-catalog-title="25th Hour">
++        <div class="catalog-item-panels">
++          <article class="catalog-card catalog-panel catalog-panel-summary" aria-label="Helping people use reclaimed time with intention. summary">
++            <div class="catalog-summary-brand-header">
++              <span class="catalog-badge">Time, Focus &amp; A.I.-Enabled Leverage</span>
++              <img class="catalog-summary-logo" src="https://public.etal.solutions/assets/25th-hour/logos/25th-hour-OFFICIAL.png" alt="25th Hour logo" />
++            </div>
++            <h2>Helping people use reclaimed time with intention.</h2>
++            <p class="catalog-subtitle">Human-centered A.I. leverage for time, focus, and intention.</p>
++            <p>25th Hour focuses on the human side of A.I. adoption: what people do with the time, attention, and creative energy that thoughtful automation can give back.</p>
++            <ul class="catalog-tag-list" aria-label="Tags">
++              <li>Developing brand</li>
++              <li>A.I. leverage</li>
++              <li>Time reclaimed</li>
++              <li>Human-centered</li>
++            </ul>
++          </article>
++          <aside class="catalog-detail-panel catalog-panel catalog-panel-detail" id="25th-hour-details" aria-label="Helping people use reclaimed time with intention. details">
++            <span class="catalog-badge">Time, Focus &amp; A.I.-Enabled Leverage</span>
++            <h3>25th Hour</h3>
++            <p class="catalog-subtitle">Human-centered A.I. leverage for time, focus, and intention.</p>
++            <img class="catalog-detail-logo" src="https://public.etal.solutions/assets/25th-hour/logos/25th-hour-OFFICIAL.png" alt="25th Hour logo" />
++            <p class="catalog-detail-summary">Human-centered ideas for using time reclaimed through thoughtful automation.</p>
++            <div class="catalog-attribute-grid">
++              <div class="catalog-attribute">
++                <strong>For</strong>
++                <p>People and teams seeking more intentional use of time.</p>
++              </div>
++              <div class="catalog-attribute">
++                <strong>Offers</strong>
++                <p>Practical leverage, productivity themes, and workflow guidance.</p>
++              </div>
++              <div class="catalog-attribute">
++                <strong>Purpose</strong>
++                <p>Keep efficiency focused on better living and better work.</p>
++              </div>
++            </div>
++            <div class="catalog-actions">
++              <a class="hero-cta" href="mailto:info@etalsolutions.tech?subject=25th%20Hour%20Inquiry">Start a Conversation</a>
++            </div>
++          </aside>
++        </div>
++      </section>
++
++        </div>
++
++      </section>
++<!-- /PM:CATALOG-BRANDS-FULL-LIST -->
++          </div>
++        </div>
++      </section>
++
+       <section class="section-light panel catalog-home-section" id="promotions" aria-labelledby="catalog-page-title">
+         <div class="container catalog-page-layout">
+           <section class="catalog-page-head" id="promotions-top" aria-labelledby="catalog-page-title">
+@@ -449,166 +601,96 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+         </div>
+       </section>
+ 
+-      <section class="section-dark panel catalog-home-section brand-catalog-section" id="brands" aria-labelledby="brands-title">
+-        <div class="container catalog-page-layout">
+-          <section class="catalog-page-head" id="brands-top" aria-labelledby="brands-title">
+-            <span class="section-kicker light">Brands</span>
+-            <h2 id="brands-title">Focused brands, one strong foundation.</h2>
+-            <p>Explore the core brand identities in the Et al Solutions LLC portfolio. The Transformation Thread remains a separate article and thought-leadership experience.</p>
+-          </section>
+-
+-          <div class="catalog-full-list" id="brand-identities" aria-label="Brand identities">
+-<!-- PM:CATALOG-BRANDS-FULL-LIST -->
+-      <section class="catalog-carousel" aria-label="Catalog carousel" data-catalog-carousel data-catalog-default="simplifai">
+-
+-        <div class="catalog-carousel-instructions" data-catalog-nav data-newer-label="Previous brand" data-previous-label="Next brand" data-end-label="End of brands" data-detail-label="Details" data-summary-label="Summary">
+-
+-          <span class="catalog-scroll-hint">Scroll sideways through brand identities.</span>
+-
+-          <span data-catalog-newer-slot><span class="catalog-direction-empty"></span></span>
+-
+-          <span data-catalog-previous-slot><a class="catalog-direction-link" href="#solutions-et-al">Next brand: <strong>Solutions et al</strong> <span>→</span></a></span>
++<!-- PM:TRANSFORMATION-THREAD -->
++<section class="thread-blog panel" id="blog" aria-labelledby="thread-blog-title">
+ 
++    <div class="container">
++      <div class="thread-blog-showcase">
++        <div class="thread-blog-masthead">
++          <div class="thread-blog-logo-wrap" aria-label="The Transformation Thread">
++            <img class="thread-blog-logo" src="https://public.etal.solutions/assets/the-transformation-thread/logos/the-transformation-thread-OFFICIAL.png" alt="" aria-hidden="true" />
++          </div>
++          <span class="thread-blog-kicker">Field Notes</span>
++          <h2 id="thread-blog-title" class="thread-blog-title">
++            <span>Strategy,</span>
++            <span>systems,</span>
++            <span>people,</span>
++            <span>A.I.</span>
++          </h2>
++          <p class="thread-blog-summary">Short field notes from The Transformation Thread on practical change and useful technology.</p>
++          <div class="thread-blog-actions">
++            <a class="hero-cta secondary" href="mailto:info@etalsolutions.tech?subject=The%20Transformation%20Thread%20Article%20Idea">Suggest a Topic</a>
++          </div>
+         </div>
+ 
+-        <div class="catalog-carousel-track" data-catalog-track>
+-
+-      <section class="catalog-carousel-item is-featured" data-catalog-item data-catalog-slug="simplifai" data-catalog-title="SIMPLIFAI">
+-        <div class="catalog-item-panels">
+-          <article class="catalog-card catalog-panel catalog-panel-summary is-featured" aria-label="Practical A.I. education for everyday work. summary">
+-            <div class="catalog-summary-brand-header">
+-              <span class="catalog-badge">A.I. Training &amp; Enablement</span>
+-              <img class="catalog-summary-logo" src="https://public.etal.solutions/assets/simplifai/logos/SIMPLIFAI-SILVER.png" alt="SIMPLIFAI logo" />
++        <!-- TT:DAILY-ROTATION:START -->
++        <!-- Generated by bin/rotate-transformation-thread for 2026-06-07 (America/Los_Angeles). -->
++        <div class="thread-post-layout" aria-label="Transformation Thread article list">
++          <article class="thread-featured-post" aria-label="Featured article">
++            <div class="thread-post-meta">
++              <span>Featured</span>
++              <span>A.I. Governance</span>
+             </div>
+-            <h2>Practical A.I. education for everyday work.</h2>
+-            <p class="catalog-subtitle">Accessible A.I. education and enablement for everyday work.</p>
+-            <p>SIMPLIFAI helps people and smaller businesses use A.I. with confidence through accessible training, plain-language guidance, and practical workflows that reduce friction instead of adding complexity.</p>
+-            <ul class="catalog-tag-list" aria-label="Tags">
+-              <li>Training brand</li>
+-              <li>Accessible A.I.</li>
+-              <li>Business-friendly</li>
+-              <li>Practical workflows</li>
+-            </ul>
++            <h3>Automation needs accountability before scale</h3>
++            <p>A reminder that the safest transformation plans do not begin with speed; they begin with ownership, review paths, exception handling, and clear decisions about where human judgment must remain in the loop.</p>
++            <a class="thread-post-link" href="mailto:info@etalsolutions.tech?subject=Automation%20needs%20accountability%20before%20scale">Request this article →</a>
+           </article>
+-          <aside class="catalog-detail-panel catalog-panel catalog-panel-detail" id="simplifai-details" aria-label="Practical A.I. education for everyday work. details">
+-            <span class="catalog-badge">A.I. Training &amp; Enablement</span>
+-            <h3>SIMPLIFAI</h3>
+-            <p class="catalog-subtitle">Accessible A.I. education and enablement for everyday work.</p>
+-            <img class="catalog-detail-logo" src="https://public.etal.solutions/assets/simplifai/logos/SIMPLIFAI-SILVER.png" alt="SIMPLIFAI logo" />
+-            <p class="catalog-detail-summary">Practical A.I. education that helps people use new tools with confidence.</p>
+-            <div class="catalog-attribute-grid">
+-              <div class="catalog-attribute">
+-                <strong>For</strong>
+-                <p>Individuals, teams, and smaller businesses.</p>
+-              </div>
+-              <div class="catalog-attribute">
+-                <strong>Offers</strong>
+-                <p>Plain-language training, prompting guidance, and useful workflows.</p>
+-              </div>
+-              <div class="catalog-attribute">
+-                <strong>Purpose</strong>
+-                <p>Make A.I. approachable and practical.</p>
+-              </div>
+-            </div>
+-            <div class="catalog-actions">
+-              <a class="hero-cta" href="mailto:info@etalsolutions.tech?subject=SIMPLIFAI%20A.I.%20Training%20Inquiry">Ask About A.I. Training</a>
+-            </div>
+-          </aside>
+-        </div>
+-      </section>
+ 
+-      <section class="catalog-carousel-item" data-catalog-item data-catalog-slug="solutions-et-al" data-catalog-title="Solutions et al">
+-        <div class="catalog-item-panels">
+-          <article class="catalog-card catalog-panel catalog-panel-summary" aria-label="Focused technology guidance for real operational problems. summary">
+-            <div class="catalog-summary-brand-header">
+-              <span class="catalog-badge">Consulting &amp; Practical Delivery</span>
+-              <img class="catalog-summary-logo" src="https://public.etal.solutions/assets/sea/logos/SEA-OFFICIAL.png" alt="Solutions et al logo" />
+-            </div>
+-            <h2>Focused technology guidance for real operational problems.</h2>
+-            <p class="catalog-subtitle">Practical consulting, solution design, and implementation support.</p>
+-            <p>Solutions et al is the consulting and delivery brand for organizations that need clear technical direction, practical systems, and implementation support without unnecessary ceremony.</p>
+-            <ul class="catalog-tag-list" aria-label="Tags">
+-              <li>Consulting brand</li>
+-              <li>Solution design</li>
+-              <li>Implementation support</li>
+-              <li>Clear handoff</li>
+-            </ul>
+-          </article>
+-          <aside class="catalog-detail-panel catalog-panel catalog-panel-detail" id="solutions-et-al-details" aria-label="Focused technology guidance for real operational problems. details">
+-            <span class="catalog-badge">Consulting &amp; Practical Delivery</span>
+-            <h3>Solutions et al</h3>
+-            <p class="catalog-subtitle">Practical consulting, solution design, and implementation support.</p>
+-            <img class="catalog-detail-logo" src="https://public.etal.solutions/assets/sea/logos/SEA-OFFICIAL.png" alt="Solutions et al logo" />
+-            <p class="catalog-detail-summary">Focused consulting and delivery support for practical technology decisions.</p>
+-            <div class="catalog-attribute-grid">
+-              <div class="catalog-attribute">
+-                <strong>For</strong>
+-                <p>Organizations that need clear technical direction.</p>
+-              </div>
+-              <div class="catalog-attribute">
+-                <strong>Offers</strong>
+-                <p>Solution design, implementation, integration, and handoff.</p>
+-              </div>
+-              <div class="catalog-attribute">
+-                <strong>Purpose</strong>
+-                <p>Turn operational problems into maintainable systems.</p>
++          <div class="thread-post-grid">
++            <article class="thread-post-card" data-post-category="Website Modernization">
++              <div class="thread-post-meta">
++                <span>Website Modernization</span>
++                <span>Draft</span>
+               </div>
+-            </div>
+-            <div class="catalog-actions">
+-              <a class="hero-cta" href="mailto:info@etalsolutions.tech?subject=Solutions%20et%20al%20Project%20Inquiry">Discuss a Project</a>
+-            </div>
+-          </aside>
+-        </div>
+-      </section>
++              <h3>Speed Is Not a Technical Detail</h3>
++              <p>A fast website is not merely an engineering achievement. It is part of the experience, and often the first thing a visitor notices.</p>
++              <a class="thread-post-link" href="mailto:info@etalsolutions.tech?subject=Speed%20Is%20Not%20a%20Technical%20Detail">Request article →</a>
++            </article>
+ 
+-      <section class="catalog-carousel-item" data-catalog-item data-catalog-slug="25th-hour" data-catalog-title="25th Hour">
+-        <div class="catalog-item-panels">
+-          <article class="catalog-card catalog-panel catalog-panel-summary" aria-label="Helping people use reclaimed time with intention. summary">
+-            <div class="catalog-summary-brand-header">
+-              <span class="catalog-badge">Time, Focus &amp; A.I.-Enabled Leverage</span>
+-              <img class="catalog-summary-logo" src="https://public.etal.solutions/assets/25th-hour/logos/25th-hour-OFFICIAL.png" alt="25th Hour logo" />
+-            </div>
+-            <h2>Helping people use reclaimed time with intention.</h2>
+-            <p class="catalog-subtitle">Human-centered A.I. leverage for time, focus, and intention.</p>
+-            <p>25th Hour focuses on the human side of A.I. adoption: what people do with the time, attention, and creative energy that thoughtful automation can give back.</p>
+-            <ul class="catalog-tag-list" aria-label="Tags">
+-              <li>Developing brand</li>
+-              <li>A.I. leverage</li>
+-              <li>Time reclaimed</li>
+-              <li>Human-centered</li>
+-            </ul>
+-          </article>
+-          <aside class="catalog-detail-panel catalog-panel catalog-panel-detail" id="25th-hour-details" aria-label="Helping people use reclaimed time with intention. details">
+-            <span class="catalog-badge">Time, Focus &amp; A.I.-Enabled Leverage</span>
+-            <h3>25th Hour</h3>
+-            <p class="catalog-subtitle">Human-centered A.I. leverage for time, focus, and intention.</p>
+-            <img class="catalog-detail-logo" src="https://public.etal.solutions/assets/25th-hour/logos/25th-hour-OFFICIAL.png" alt="25th Hour logo" />
+-            <p class="catalog-detail-summary">Human-centered ideas for using time reclaimed through thoughtful automation.</p>
+-            <div class="catalog-attribute-grid">
+-              <div class="catalog-attribute">
+-                <strong>For</strong>
+-                <p>People and teams seeking more intentional use of time.</p>
+-              </div>
+-              <div class="catalog-attribute">
+-                <strong>Offers</strong>
+-                <p>Practical leverage, productivity themes, and workflow guidance.</p>
++            <article class="thread-post-card" data-post-category="Systems Thinking">
++              <div class="thread-post-meta">
++                <span>Systems Thinking</span>
++                <span>Draft</span>
+               </div>
+-              <div class="catalog-attribute">
+-                <strong>Purpose</strong>
+-                <p>Keep efficiency focused on better living and better work.</p>
+-              </div>
+-            </div>
+-            <div class="catalog-actions">
+-              <a class="hero-cta" href="mailto:info@etalsolutions.tech?subject=25th%20Hour%20Inquiry">Start a Conversation</a>
+-            </div>
+-          </aside>
+-        </div>
+-      </section>
++              <h3>Modernization Does Not Always Mean Replacement</h3>
++              <p>The first question in a modernization effort should not be what to replace. It should be what the current system knows, what it still does well, and where the friction actually lives.</p>
++              <a class="thread-post-link" href="mailto:info@etalsolutions.tech?subject=Modernization%20Does%20Not%20Always%20Mean%20Replacement">Request article →</a>
++            </article>
+ 
++          </div>
+         </div>
++<!-- TT:DAILY-ROTATION:END -->
++      </div>
++    </div>
++  </section>
++<!-- /PM:TRANSFORMATION-THREAD -->
+ 
+-      </section>
+-<!-- /PM:CATALOG-BRANDS-FULL-LIST -->
++      <section class="section-light panel" id="about">
++        <div class="container about-layout">
++          <div class="section-copy">
++            <span class="section-kicker light">Accessible Innovation</span>
++            <h2>Your Partner in Practical Technology</h2>
++            <p>
++              Et al Solutions LLC helps smaller organizations use technology with the same clarity and discipline larger companies rely on, without adding unnecessary complexity.
++            </p>
++            <p>
++              The work is intentionally straightforward: understand the business problem, choose the smallest reliable solution, and build a foundation that can grow when the business is ready.
++            </p>
++          </div>
++
++          <div class="about-cards">
++            <article class="about-card" data-reveal>
++              <strong>Experience where it matters most</strong>
++              <p>Decades of technology experience across software, systems, and business operations, focused on solutions that are useful in the real world.</p>
++            </article>
++            <article class="about-card" data-reveal>
++              <strong>Cutting-edge A.I. with a proven-tech mindset</strong>
++              <p>Modern tools are paired with dependable implementation so businesses can move forward without taking on unnecessary risk.</p>
++            </article>
++            <article class="about-card" data-reveal>
++              <strong>Enterprise thinking sized for smaller businesses</strong>
++              <p>The goal is not to make things more complex. The goal is clear structure, smart tools, and repeatable systems that support growth.</p>
++            </article>
+           </div>
+         </div>
+       </section>
+diff --git a/partials/brand-header.html b/partials/brand-header.html
+index 97e9291..89954fa 100644
+--- a/partials/brand-header.html
++++ b/partials/brand-header.html
+@@ -3,19 +3,10 @@
+     <a class="brand" href="/#home">ET AL SOLUTIONS LLC</a>
+     <nav class="nav" aria-label="Primary">
+       <a href="/#home">Home</a>
+-<!--<div class="nav-dropdown">
+-        <a class="nav-dropdown-trigger" href="/#brands" aria-haspopup="true">Brands</a>
+-        <div class="nav-dropdown-menu" aria-label="Brand pages">
+-          <a href="/#brands" data-catalog-target="simplifai">SIMPLIFAI</a>
+-          <a href="/#brands" data-catalog-target="solutions-et-al">Solutions et al</a>
+-          <a href="/#brands" data-catalog-target="25th-hour">25th Hour</a>
+-          <a href="/#brands">All Brands</a>
+-        </div>
+-      </div>-->
+-      <a href="/#brands">Brands</a>
+       <a href="/#services">Services</a>
++      <a href="/#brands">Brands</a>
+       <a href="/#promotions">Promotions</a>
+-      <a href="/transformation-thread/">Blog</a>
++      <a href="/#blog">Blog</a>
+       <a href="/#about">About</a>
+       <a href="/#contact">Contact</a>
+     </nav>
+diff --git a/partials/header.html b/partials/header.html
+index 97e9291..89954fa 100644
+--- a/partials/header.html
++++ b/partials/header.html
+@@ -3,19 +3,10 @@
+     <a class="brand" href="/#home">ET AL SOLUTIONS LLC</a>
+     <nav class="nav" aria-label="Primary">
+       <a href="/#home">Home</a>
+-<!--<div class="nav-dropdown">
+-        <a class="nav-dropdown-trigger" href="/#brands" aria-haspopup="true">Brands</a>
+-        <div class="nav-dropdown-menu" aria-label="Brand pages">
+-          <a href="/#brands" data-catalog-target="simplifai">SIMPLIFAI</a>
+-          <a href="/#brands" data-catalog-target="solutions-et-al">Solutions et al</a>
+-          <a href="/#brands" data-catalog-target="25th-hour">25th Hour</a>
+-          <a href="/#brands">All Brands</a>
+-        </div>
+-      </div>-->
+-      <a href="/#brands">Brands</a>
+       <a href="/#services">Services</a>
++      <a href="/#brands">Brands</a>
+       <a href="/#promotions">Promotions</a>
+-      <a href="/transformation-thread/">Blog</a>
++      <a href="/#blog">Blog</a>
+       <a href="/#about">About</a>
+       <a href="/#contact">Contact</a>
+     </nav>
+diff --git a/partials/promotion-header.html b/partials/promotion-header.html
+index 97e9291..89954fa 100644
+--- a/partials/promotion-header.html
++++ b/partials/promotion-header.html
+@@ -3,19 +3,10 @@
+     <a class="brand" href="/#home">ET AL SOLUTIONS LLC</a>
+     <nav class="nav" aria-label="Primary">
+       <a href="/#home">Home</a>
+-<!--<div class="nav-dropdown">
+-        <a class="nav-dropdown-trigger" href="/#brands" aria-haspopup="true">Brands</a>
+-        <div class="nav-dropdown-menu" aria-label="Brand pages">
+-          <a href="/#brands" data-catalog-target="simplifai">SIMPLIFAI</a>
+-          <a href="/#brands" data-catalog-target="solutions-et-al">Solutions et al</a>
+-          <a href="/#brands" data-catalog-target="25th-hour">25th Hour</a>
+-          <a href="/#brands">All Brands</a>
+-        </div>
+-      </div>-->
+-      <a href="/#brands">Brands</a>
+       <a href="/#services">Services</a>
++      <a href="/#brands">Brands</a>
+       <a href="/#promotions">Promotions</a>
+-      <a href="/transformation-thread/">Blog</a>
++      <a href="/#blog">Blog</a>
+       <a href="/#about">About</a>
+       <a href="/#contact">Contact</a>
+     </nav>
+diff --git a/tests/test_policy_modal_close_style.py b/tests/test_policy_modal_close_style.py
+index b05a872..c205ecc 100644
+--- a/tests/test_policy_modal_close_style.py
++++ b/tests/test_policy_modal_close_style.py
+@@ -16,10 +16,13 @@ class PolicyModalCloseStyleTests(unittest.TestCase):
+         self.assertIn("aspect-ratio: auto !important;", css)
+         self.assertIn("white-space: nowrap !important;", css)
+ 
+-    def test_enhancer_observes_dynamically_created_modal_controls(self):
++    def test_enhancer_observes_inserted_modal_controls_without_attribute_loop(self):
+         js = (ROOT / "assets/js/policy-modal-close.js").read_text(encoding="utf-8")
+         self.assertIn("new MutationObserver", js)
+-        self.assertIn('attributeFilter: ["class", "aria-label", "title", "data-policy-modal-close"]', js)
++        self.assertIn("childList: true", js)
++        self.assertIn("subtree: true", js)
++        self.assertNotIn("attributes: true", js)
++        self.assertNotIn("attributeFilter", js)
+ 
+ if __name__ == "__main__":
+     unittest.main()
+diff --git a/transformation-thread/index.html b/transformation-thread/index.html
+index dd22118..79fec5b 100644
+--- a/transformation-thread/index.html
++++ b/transformation-thread/index.html
+@@ -1,164 +1,16 @@
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+-<!-- PM:TRACKING-CONSENT-PART1 -->
+-  <!-- Cookie consent defaults must load before Google Tag Manager. -->
+-  <script>
+-    window.dataLayer = window.dataLayer || [];
+-    function gtag(){dataLayer.push(arguments);}
+-    gtag('consent', 'default', {
+-      ad_storage: 'denied',
+-      ad_user_data: 'denied',
+-      ad_personalization: 'denied',
+-      analytics_storage: 'denied',
+-      functionality_storage: 'granted',
+-      personalization_storage: 'denied',
+-      security_storage: 'granted',
+-      wait_for_update: 500
+-    });
+-  </script>
+-
+-<!-- Google Tag Manager -->
+-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+-})(window,document,'script','dataLayer','{{GTM_CONTAINER_ID}}');</script>
+-<!-- End Google Tag Manager -->
+-<!-- /PM:TRACKING-CONSENT-PART1 -->
+-
+   <meta charset="UTF-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
++  <meta http-equiv="refresh" content="0; url=/#blog" />
++  <link rel="canonical" href="/#blog" />
+   <title>The Transformation Thread | Et al Solutions LLC</title>
+-  <meta name="description" content="The Transformation Thread shares field notes on transformation, A.I. adoption, systems thinking, and useful change." />
+-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orestbida/cookieconsent@3.1.0/dist/cookieconsent.css" />
+-  <link rel="stylesheet" href="/assets/css/styles.css" />
+-  <link rel="stylesheet" href="/assets/css/cookie-consent-overrides.css" />
++  <script>
++    window.location.replace("/#blog");
++  </script>
+ </head>
+-<body data-brand-name="Blog">
+-<!-- PM:TRACKING-CONSENT-PART2 -->
+-<!-- Google Tag Manager (noscript) -->
+-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{GTM_CONTAINER_ID}}"
+-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+-    <!-- End Google Tag Manager (noscript) -->
+-    
+-<!-- /PM:TRACKING-CONSENT-PART2 -->
+-<div class="page-shell">
+-<!-- PM:HEADER -->
+-<header class="site-header">
+-  <div class="container">
+-    <a class="brand" href="/#home">ET AL SOLUTIONS LLC</a>
+-    <nav class="nav" aria-label="Primary">
+-      <a href="/#home">Home</a>
+-<!--<div class="nav-dropdown">
+-        <a class="nav-dropdown-trigger" href="/#brands" aria-haspopup="true">Brands</a>
+-        <div class="nav-dropdown-menu" aria-label="Brand pages">
+-          <a href="/#brands" data-catalog-target="simplifai">SIMPLIFAI</a>
+-          <a href="/#brands" data-catalog-target="solutions-et-al">Solutions et al</a>
+-          <a href="/#brands" data-catalog-target="25th-hour">25th Hour</a>
+-          <a href="/#brands">All Brands</a>
+-        </div>
+-      </div>-->
+-      <a href="/#brands">Brands</a>
+-      <a href="/#services">Services</a>
+-      <a href="/#promotions">Promotions</a>
+-      <a href="/transformation-thread/">Blog</a>
+-      <a href="/#about">About</a>
+-      <a href="/#contact">Contact</a>
+-    </nav>
+-  </div>
+-</header>
+-<!-- /PM:HEADER -->
+-
+-<main>
+-  <section class="thread-blog panel" id="top" aria-labelledby="thread-blog-title">
+-
+-    <div class="container">
+-      <div class="thread-blog-showcase">
+-        <div class="thread-blog-masthead">
+-          <div class="thread-blog-logo-wrap" aria-label="The Transformation Thread">
+-            <img class="thread-blog-logo" src="https://public.etal.solutions/assets/the-transformation-thread/logos/the-transformation-thread-OFFICIAL.png" alt="" aria-hidden="true" />
+-          </div>
+-          <span class="thread-blog-kicker">Field Notes</span>
+-          <h1 id="thread-blog-title" class="thread-blog-title">
+-            <span>Strategy,</span>
+-            <span>systems,</span>
+-            <span>people,</span>
+-            <span>A.I.</span>
+-          </h1>
+-          <p class="thread-blog-summary">Short field notes from The Transformation Thread on practical change and useful technology.</p>
+-          <div class="thread-blog-actions">
+-            <a class="hero-cta secondary" href="mailto:info@etalsolutions.tech?subject=The%20Transformation%20Thread%20Article%20Idea">Suggest a Topic</a>
+-          </div>
+-        </div>
+-
+-        <!-- TT:DAILY-ROTATION:START -->
+-        <!-- Generated by bin/rotate-transformation-thread for 2026-06-01 (America/Los_Angeles). -->
+-        <div class="thread-post-layout" aria-label="Transformation Thread article list">
+-          <article class="thread-featured-post" aria-label="Featured article">
+-            <div class="thread-post-meta">
+-              <span>Featured</span>
+-              <span>Transformation Strategy</span>
+-            </div>
+-            <h2>What transformation actually asks of a business</h2>
+-            <p>Transformation is a practical sequence of choices about what to simplify, what to preserve, and where technology can reduce friction without creating new confusion.</p>
+-            <a class="thread-post-link" href="mailto:info@etalsolutions.tech?subject=Transformation%20Thread%20Featured%20Article">Request this article →</a>
+-          </article>
+-
+-          <div class="thread-post-grid">
+-            <article class="thread-post-card" data-post-category="A.I. Adoption">
+-              <div class="thread-post-meta">
+-                <span>A.I. Adoption</span>
+-                <span>Draft</span>
+-              </div>
+-              <h2>Start with the work, not the tool</h2>
+-              <p>Durable A.I. adoption begins with workflows, decisions, and pain points before selecting platforms.</p>
+-              <a class="thread-post-link" href="mailto:info@etalsolutions.tech?subject=Start%20with%20the%20work%20article">Request article →</a>
+-            </article>
+-
+-            <article class="thread-post-card" data-post-category="Operating Model">
+-              <div class="thread-post-meta">
+-                <span>Operating Model</span>
+-                <span>Draft</span>
+-              </div>
+-              <h2>The smallest useful transformation plan</h2>
+-              <p>A simple planning pattern for moving from vague improvement goals to manageable technology-enabled changes.</p>
+-              <a class="thread-post-link" href="mailto:info@etalsolutions.tech?subject=Smallest%20useful%20transformation%20plan">Request article →</a>
+-            </article>
+-          </div>
+-        </div>
+-<!-- TT:DAILY-ROTATION:END -->
+-      </div>
+-    </div>
+-  </section>
+-</main>
+-
+-<!-- PM:FOOTER -->
+-<footer class="site-footer">
+-  <div class="container">
+-    <div class="footer-legal">
+-      <span>© 2026 Et al Solutions LLC.</span>
+-      <span class="footer-separator" aria-hidden="true">·</span>
+-
+-      <a
+-        href="https://public.etal.solutions/docs/et-al-solutions-llc/et-al-solutions-llc-privacy-policy.html"
+-        data-policy-modal
+-      >Privacy Policy</a>
+-
+-      <span class="footer-separator" aria-hidden="true">·</span>
+-      <a href="#cookie-preferences" id="cookie-preferences-link" data-cookie-preferences data-cc="show-preferencesModal">Cookie preferences</a>
+-    </div>
+-  </div>
+-</footer>
+-
+-<link rel="stylesheet" href="https://public.etal.solutions/assets/css/policy-modal.css">
+-<link rel="stylesheet" href="/assets/css/policy-modal-overrides.css">
+-<script src="https://public.etal.solutions/assets/js/policy-modal.js" defer></script>
+-<script src="/assets/js/policy-modal-close.js" defer></script>
+-<!-- /PM:FOOTER -->
+-</div>
+-  <script src="https://cdn.jsdelivr.net/gh/orestbida/cookieconsent@3.1.0/dist/cookieconsent.umd.js"></script>
+-  <script src="../assets/js/cookie-consent.js"></script>
++<body>
++  <p>The Transformation Thread now lives on the main site. <a href="/#blog">Continue to Blog</a>.</p>
+ </body>
+ </html>

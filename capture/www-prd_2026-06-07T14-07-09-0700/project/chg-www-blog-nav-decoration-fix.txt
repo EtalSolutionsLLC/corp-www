@@ -1,0 +1,3 @@
+project/assets/css/styles.css
+project/tests/test_blog_nav_decoration.py
+project/chg.txt

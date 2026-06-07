@@ -1,0 +1,4 @@
+project/assets/js/policy-modal-close.js
+project/assets/css/policy-modal-overrides.css
+project/tests/test_policy_modal_close_style.py
+project/chg.txt

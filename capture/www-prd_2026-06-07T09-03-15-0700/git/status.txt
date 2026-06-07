@@ -1,0 +1,11 @@
+ M assets/css/carousel.css
+ M assets/css/styles.css
+ M assets/js/visual-polish.js
+ M chg.txt
+ M index.html
+?? capture/www-prd_2026-06-07T09-03-15-0700/
+?? chg-www-framework-free-refinement.txt
+?? chg-www-framework-free-refinement.txt:Zone.Identifier
+?? tests/test_corp_site_refinement.py
+?? www-prd_2026-06-07_framework-free-refinement.tar.gz
+?? www-prd_2026-06-07_framework-free-refinement.tar.gz:Zone.Identifier

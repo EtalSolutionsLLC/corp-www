@@ -1,0 +1,159 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+: "${CUR_SCRIPT:=$(basename "${BASH_SOURCE[0]:-${0:-}}")}"
+export CUR_SCRIPT
+: "${PORTMASON_SHARE:="$(cd -- "$(dirname -- "${BASH_SOURCE[0]:-${0:-}}")" && pwd -P)"}"
+. "${PORTMASON_SHARE}/pm-helpers" "$@"
+
+deploy_images() {
+    local compose_file="${1:-docker-compose.yml}"
+
+    env_init_set DOCKER_BUILDKIT "${DOCKER_BUILDKIT:-0}"
+    env_init_set COMPOSE_DOCKER_CLI_BUILD "${COMPOSE_DOCKER_CLI_BUILD:-0}"
+
+    . "$SCRIPT_DIR/build-images"
+
+    log "Resolving source images from ${compose_file}..."
+
+    if [[ -z "${PROJECT_SERVICES:-}" ]]; then
+        export PROJECT_SERVICES="$(
+            pm-util-render-env "${compose_file}" \
+            | yq -o=json '
+                (.services // {})
+                | to_entries
+                | map(select(.value.image))
+                | map({"service": .key, "image": .value.image})
+                ' -
+            )"
+    fi
+
+    while IFS=$'\t' read -r svc img; do
+        [[ "${svc}" == "db" ]] || { deploy_image "${svc}" "${img}"; log "deployed image:${img} for service:${svc} "; }
+    done < <(echo "$PROJECT_SERVICES" | jq -r '.[] | "\(.service)\t\(.image)"')
+
+    return 0
+}
+
+deploy_image() {
+    local svc="${1:?svc required}"
+    local src_image="${2:?src_image required}"
+
+    local service_name="${svc}" #"${STACK}-${CM_ENV}-${svc}"
+
+    if [[ -n "${src_image:-}" ]]; then
+        log "Deploying source image '$src_image' for service '$svc' from docker-compose …"
+
+#        docker image inspect "$src_image" >/dev/null 2>&1 \
+#            || docker pull "$src_image" \
+#            || docker build -t "$src_image" .
+
+        local tag
+        tag="$(date -u +%Y%m%d-%H%M%S)"
+
+        local target_image="${REGION}-docker.pkg.dev/${DEPLOYMENT_ID}/${AR_REPO}/${service_name}"
+        local tagged_image="${target_image}:${tag}"
+
+        log "Tagging image ${tagged_image}..."
+        docker tag "${src_image}" "${tagged_image}"
+
+        log "Pushing image to repository …"
+        docker push --quiet "${tagged_image}" >/dev/null 2>&1 || die "docker push failed for ${tagged_image}"
+
+        log "Deploying ${tagged_image}"
+        ensure_deployment "$tagged_image" "$service_name" "service"
+    fi
+}
+
+ensure_deployment() {
+  local img="$1"
+  local name="$2"
+  local type="${3:-service}" # allowed: service, job
+
+  local -a gcp_env_flags=()
+  readarray -d '' -t gcp_env_flags < <(
+    env_kv_for_injection | env_injection_args__gcp
+  )
+
+  if [[ "$type" == "service" ]]; then
+    log "Deploying Cloud Run Service '$name'"
+
+    local -a cmd=(
+      gcloud run deploy "$name"
+        --image "$img"
+        --platform managed
+        --region "$REGION"
+        --allow-unauthenticated
+        #--port "$PORT"
+        --startup-probe "httpGet.path=/health,initialDelaySeconds=30,periodSeconds=10,timeoutSeconds=10,failureThreshold=30"
+      "${gcp_env_flags[@]}"
+    )
+
+    log_cmd "${cmd[@]}"
+    "${cmd[@]}" >/dev/null
+
+    log "== DONE. Deployed service $name"
+    log "Open the printed URL above. Full log at: ${LOG_FILE}"
+    return 0
+  fi
+
+  if [[ "$type" == "job" ]]; then
+    log "Ensuring/Updating Cloud Run Job '$name'"
+
+    local action="update"
+    if ! gcloud run jobs describe "$name" --region "$REGION" >/dev/null 2>&1; then
+      action="create"
+    fi
+
+    local -a cmd=(
+      gcloud run jobs "$action" "$name"
+      --region "$REGION"
+      --image "$img"
+      "${gcp_env_flags[@]}"
+    )
+
+    log_cmd "${cmd[@]}"
+    "${cmd[@]}" >/dev/null
+
+    if [[ -n "${SCHED_SA:-}" ]]; then
+      local -a bind_cmd=(
+        gcloud run jobs add-iam-policy-binding "$name"
+        --region "$REGION"
+        --member "serviceAccount:${SCHED_SA}"
+        --role "roles/run.developer"
+      )
+
+      log_cmd "${bind_cmd[@]}"
+      "${bind_cmd[@]}" >/dev/null || true
+    fi
+
+    log "== DONE. Ensured job $name"
+    log "Full log at: ${LOG_FILE}"
+    return 0
+  fi
+
+  die "ensure_deployment: invalid type '$type' (expected service|job)"
+}
+
+main() {
+    log "== ${CUR_SCRIPT} start =="
+    log "stack: ${STACK}"
+    log "GCS project: ${DEPLOYMENT_ID}"
+    log "region: ${REGION}"
+    log "log: ${LOG_FILE}"
+    log
+
+    : "${GCLOUD_PROJECT_INFO_JSON:="$(gcloud projects describe "${DEPLOYMENT_ID}" --format=json 2>/dev/null || echo '{}')"}"
+    export GCLOUD_PROJECT_INFO_JSON
+
+    if [[ -z "${GCLOUD_PROJECT_INFO_JSON:-}" || "${GCLOUD_PROJECT_INFO_JSON}" == "{}" ]]; then
+        "${PORTMASON_SHARE}/pm-provision-$ADAPTER_CODE" "$@"
+    else
+        gcloud config set project "${DEPLOYMENT_ID}"
+        log "Using project ${DEPLOYMENT_ID} that was created previously"
+    fi
+
+    deploy_images
+}
+
+main "$@"

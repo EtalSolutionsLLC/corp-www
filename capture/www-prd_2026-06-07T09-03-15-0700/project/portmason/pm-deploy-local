@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+#. "/usr/local/bin/sys-cd-project-root"
+
+: "${CUR_SCRIPT:=$(basename "${BASH_SOURCE[0]:-${0:-}}")}"
+export CUR_SCRIPT
+
+main() {
+    : "${PORTMASON_SHARE:="$(cd -- "$(dirname -- "${BASH_SOURCE[0]:-${0:-}}")" && pwd -P)"}"
+    . "${PORTMASON_SHARE}/pm-helpers" "$@"
+
+    # Compose file set (include override only if it exists)
+    compose=(docker compose -f docker-compose.yml)
+
+    override_compose="docker-compose.override.yml"
+    [[ -f "$override_compose" ]] && compose+=(-f "${override_compose}")
+
+    log "Starting container(s)..."
+    "${compose[@]}" up -d
+
+    log "Up. SITE_URL: ${SITE_URL:-}"
+}
+
+main "$@"
