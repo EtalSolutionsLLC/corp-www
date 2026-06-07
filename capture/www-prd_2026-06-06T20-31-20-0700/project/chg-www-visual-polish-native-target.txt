@@ -1,0 +1,8 @@
+# Corp-site polish rebuild with native target navigation preserved
+project/index.html
+project/assets/css/styles.css
+project/assets/js/visual-polish.js
+project/catalogs/promotions/items.json
+project/partials/footer.html
+project/tests/test_visual_polish.py
+project/chg.txt

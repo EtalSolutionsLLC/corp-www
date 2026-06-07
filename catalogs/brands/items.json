@@ -13,7 +13,8 @@
     "logoAlt": "SIMPLIFAI logo",
     "primaryAction": {
       "label": "Ask About A.I. Training",
-      "href": "mailto:info@etalsolutions.tech?subject=SIMPLIFAI%20A.I.%20Training%20Inquiry"
+      "href": "mailto:info@etalsolutions.tech?subject=SIMPLIFAI%20A.I.%20Training%20Inquiry",
+      "openInNewTab": false
     },
     "overviewKicker": "Brand Focus",
     "overviewSummary": "SIMPLIFAI helps people and smaller businesses use A.I. with confidence through accessible training, plain-language guidance, and practical workflows that reduce friction instead of adding complexity.",
@@ -77,7 +78,8 @@
     "logoAlt": "Solutions et al logo",
     "primaryAction": {
       "label": "Discuss a Project",
-      "href": "mailto:info@etalsolutions.tech?subject=Solutions%20et%20al%20Project%20Inquiry"
+      "href": "mailto:info@etalsolutions.tech?subject=Solutions%20et%20al%20Project%20Inquiry",
+      "openInNewTab": false
     },
     "overviewKicker": "Brand Focus",
     "overviewSummary": "Solutions et al is the consulting and delivery brand for organizations that need clear technical direction, practical systems, and implementation support without unnecessary ceremony.",
@@ -141,7 +143,8 @@
     "logoAlt": "25th Hour logo",
     "primaryAction": {
       "label": "Start a Conversation",
-      "href": "mailto:info@etalsolutions.tech?subject=25th%20Hour%20Inquiry"
+      "href": "mailto:info@etalsolutions.tech?subject=25th%20Hour%20Inquiry",
+      "openInNewTab": false
     },
     "overviewKicker": "Brand Focus",
     "overviewSummary": "25th Hour focuses on the human side of A.I. adoption: what people do with the time, attention, and creative energy that thoughtful automation can give back.",

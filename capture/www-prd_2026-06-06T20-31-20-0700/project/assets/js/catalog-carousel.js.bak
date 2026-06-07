@@ -1,0 +1,68 @@
+(function () {
+  "use strict";
+
+  function getHeaderOffset() {
+    var header = document.querySelector(".site-header");
+    return header ? header.getBoundingClientRect().height : 76;
+  }
+
+  function centerCarousel(carousel, instant) {
+    if (!carousel) return;
+    var rect = carousel.getBoundingClientRect();
+    var top = window.scrollY + rect.top - Math.max(8, (window.innerHeight - rect.height) / 2);
+    top = Math.max(0, top - Math.min(24, getHeaderOffset() * 0.25));
+    window.scrollTo({ top: top, behavior: instant ? "auto" : "smooth" });
+  }
+
+  function scrollToItem(item, instant) {
+    if (!item) return;
+    var carousel = item.closest("[data-catalog-carousel]");
+    var track = carousel ? carousel.querySelector("[data-catalog-track]") : null;
+    if (!track) return;
+
+    track.scrollTo({ left: item.offsetLeft, behavior: instant ? "auto" : "smooth" });
+    centerCarousel(carousel, instant);
+    item.classList.add("is-targeted");
+    window.setTimeout(function () {
+      item.classList.remove("is-targeted");
+    }, 1200);
+  }
+
+  function findCatalogItemFromHash() {
+    if (!window.location.hash) return null;
+    var id = window.location.hash.slice(1);
+    if (!id) return null;
+    var item = document.getElementById(id);
+    return item && item.hasAttribute("data-catalog-item") ? item : null;
+  }
+
+  function handleHash(instant) {
+    var item = findCatalogItemFromHash();
+    if (!item) return;
+    window.setTimeout(function () {
+      scrollToItem(item, instant);
+    }, instant ? 0 : 60);
+  }
+
+  function wireCatalogLinks() {
+    document.querySelectorAll('a[href^="#"]').forEach(function (link) {
+      link.addEventListener("click", function () {
+        var id = link.getAttribute("href").slice(1);
+        var item = document.getElementById(id);
+        if (item && item.hasAttribute("data-catalog-item")) {
+          window.setTimeout(function () {
+            scrollToItem(item, false);
+          }, 0);
+        }
+      });
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    wireCatalogLinks();
+    handleHash(true);
+    window.addEventListener("hashchange", function () {
+      handleHash(false);
+    });
+  });
+}());
