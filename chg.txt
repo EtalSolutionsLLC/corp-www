@@ -1,3 +1,0 @@
-project/assets/css/styles.css
-project/tests/test_header_viewport.py
-project/chg.txt
