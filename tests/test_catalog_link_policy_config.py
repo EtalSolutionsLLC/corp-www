@@ -25,7 +25,10 @@ class CatalogLinkPolicyConfigTests(unittest.TestCase):
 
     def test_rendered_promotion_links_include_safe_new_tab_attributes(self):
         html = (ROOT / 'index.html').read_text(encoding='utf-8')
-        self.assertEqual(html.count('target="_blank" rel="noopener noreferrer"'), 4)
+        start = html.index('id="promotions"')
+        end = html.index('id="blog"', start)
+        promotions_html = html[start:end]
+        self.assertEqual(promotions_html.count('target="_blank" rel="noopener noreferrer"'), 4)
 
     def test_footer_loads_privacy_close_button_override_after_shared_modal(self):
         footer = (ROOT / 'partials' / 'footer.html').read_text(encoding='utf-8')

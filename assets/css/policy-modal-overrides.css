@@ -1,44 +1,35 @@
 .policy-modal-close-enhanced {
-  display: inline-flex !important;
-  align-items: center;
-  justify-content: center;
-  min-height: 32px;
-  margin: 0 !important;
-  padding: 0 11px;
-  border: 1px solid rgba(135, 177, 255, 0.52);
-  border-radius: 999px;
-  background: rgba(4, 15, 34, 0.92);
-  color: #ffffff;
-  font-size: 0.76rem;
-  font-weight: 900;
-  cursor: pointer;
-
-  /*
-   * The shared policy modal originally positions an icon-style X at the
-   * upper-left. Keep the shared Close × pill styling, but explicitly move the
-   * enhanced control to the upper-right corner.
-   */
   position: absolute !important;
   top: 12px !important;
   right: 12px !important;
   bottom: auto !important;
   left: auto !important;
   z-index: 3 !important;
-
-  /*
-   * Clear any icon-button dimensions inherited from the remote modal CSS.
-   */
-  width: auto !important;
-  height: auto !important;
-  min-width: 0 !important;
-  max-width: none !important;
+  display: grid !important;
+  width: 32px !important;
+  min-width: 32px !important;
+  max-width: 32px !important;
+  height: 32px !important;
+  min-height: 32px !important;
+  max-height: 32px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  place-items: center !important;
+  border: 1px solid rgba(135, 177, 255, 0.52);
+  border-radius: 50% !important;
+  background: rgba(4, 15, 34, 0.92);
+  color: #ffffff;
+  font-size: 1.18rem;
+  font-weight: 700;
+  line-height: 1;
   white-space: nowrap !important;
-  aspect-ratio: auto !important;
+  aspect-ratio: 1 / 1 !important;
+  cursor: pointer;
 }
 
 .policy-modal-close-enhanced:hover,
 .policy-modal-close-enhanced:focus-visible {
   background: #123bff;
-  outline: 2px solid rgba(135, 177, 255, 0.34);
-  outline-offset: 2px;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(18, 59, 255, 0.22);
 }

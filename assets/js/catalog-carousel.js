@@ -17,6 +17,26 @@
     return String(value || "").replace(/[^a-zA-Z0-9_-]/g, "\\$&");
   }
 
+
+  function normalizeModalCloseControl(control) {
+    if (!control || !control.classList) return;
+    control.classList.add("modal-close-circle");
+    if (control.matches("[data-catalog-overview-close]")) {
+      control.setAttribute("aria-label", "Close overview");
+    } else if (control.matches("[data-catalog-detail-close]")) {
+      control.setAttribute("aria-label", "Close details");
+    }
+    control.textContent = "×";
+  }
+
+  function normalizeCatalogModalCloseControls(scope) {
+    var root = scope && scope.querySelectorAll ? scope : document;
+    if (root.matches && root.matches("[data-catalog-detail-close], [data-catalog-overview-close]")) {
+      normalizeModalCloseControl(root);
+    }
+    root.querySelectorAll("[data-catalog-detail-close], [data-catalog-overview-close]").forEach(normalizeModalCloseControl);
+  }
+
   function catalogItems(carousel) {
     return Array.prototype.slice.call(carousel.querySelectorAll("[data-catalog-item]"));
   }
@@ -460,6 +480,7 @@
       updateHashWithoutJump("#" + id);
     }
 
+    normalizeCatalogModalCloseControls(panel);
     var closeButton = panel.querySelector("[data-catalog-overview-close]");
     if (closeButton) {
       window.setTimeout(function () { closeButton.focus({ preventScroll: true }); }, 50);
@@ -778,13 +799,14 @@
 
       if (!detail.querySelector("[data-catalog-detail-close]")) {
         var closeButton = document.createElement("button");
-        closeButton.className = "catalog-detail-close";
+        closeButton.className = "catalog-detail-close modal-close-circle";
         closeButton.type = "button";
         closeButton.setAttribute("data-catalog-detail-close", "");
         closeButton.setAttribute("aria-label", "Close details");
-        closeButton.textContent = "Close ×";
+        closeButton.textContent = "×";
         detail.insertBefore(closeButton, detail.firstChild);
       }
+      normalizeCatalogModalCloseControls(detail);
 
       if (!summary.querySelector("[data-catalog-detail-open]")) {
         var openButton = document.createElement("button");
@@ -1026,6 +1048,7 @@
 
   document.addEventListener("DOMContentLoaded", function () {
     ensureCatalogModalBackdrop();
+    normalizeCatalogModalCloseControls(document);
     document.querySelectorAll("[data-catalog-carousel]").forEach(function (carousel) {
       ensureCatalogPages(carousel);
     });

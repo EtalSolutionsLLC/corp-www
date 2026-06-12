@@ -1,0 +1,8 @@
+/portmason/
+/capture/
+/archive/
+/*.tar.gz
+*:Zone.Identifier
+/chg.txt
+/.env.restore
+*.bak

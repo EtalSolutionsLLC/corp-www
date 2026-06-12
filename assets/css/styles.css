@@ -70,12 +70,11 @@ img { max-width: 100%; display: block; }
 }
 
 .site-header .container {
-  width: min(calc(100% - (var(--inner-gutter) * 2)), var(--inner-max));
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: clamp(24px, 2.4vw, 40px);
+  gap: clamp(24px, 3vw, 48px);
 }
 
 .brand {
@@ -410,6 +409,34 @@ body:not(:has(section:target)) .brand-page-hero {
 
 .section-light {
   background: #f7f7fa;
+}
+
+/* Light-band Services overrides: preserve the same content model while the
+   menu-aligned SPA rhythm alternates dark and light sections. */
+.section-light .services-stack,
+.section-light .service-line span,
+.section-light .step strong {
+  color: var(--text);
+}
+
+.section-light .section-kicker {
+  color: var(--blue-2);
+}
+
+.section-light .service-icon {
+  border-color: rgba(18, 59, 255, 0.30);
+  background: rgba(18, 59, 255, 0.055);
+  color: var(--blue-2);
+}
+
+.section-light .step {
+  border-color: rgba(16, 23, 34, 0.10);
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: 0 14px 34px rgba(16, 23, 34, 0.06);
+}
+
+.section-light .step p {
+  color: var(--muted);
 }
 
 .section-dark {
@@ -2296,8 +2323,7 @@ body {
 
 .site-header.is-scrolled {
   background: linear-gradient(90deg, rgba(7, 16, 31, 0.98) 0%, rgba(5, 12, 24, 0.98) 45%, rgba(9, 20, 39, 0.98) 100%);
-  border-bottom-color: transparent;
-  box-shadow: 0 12px 28px rgba(5, 12, 24, 0.18);
+  box-shadow: 0 16px 38px rgba(5, 12, 24, 0.28);
 }
 
 .nav a {
@@ -2715,3 +2741,218 @@ body:has(#brands [data-catalog-item]:target) .nav a[href$="#brands"] {
   color: #b8cdff;
 }
 
+
+
+/* Explore insertion: true alternating section rhythm and laptop-fold hero fit. */
+body:has(#explore:target) .nav a[href$="#explore"]::after {
+  opacity: 1;
+  transform: scaleX(1);
+}
+body:has(#explore:target) .nav a[href$="#explore"] { color: #b8cdff; }
+
+/* The catalog component styles were originally written for the prior band order.
+   These overrides make each catalog readable in its new alternating context. */
+.brand-catalog-section.section-light { background: #f4f6fb; color: var(--text); }
+.brand-catalog-section.section-light .catalog-page-head p { color: var(--muted); }
+.section-dark.catalog-home-section { background: linear-gradient(135deg, #08152a, #050c18 72%); color: #ffffff; }
+.section-dark.catalog-home-section .catalog-page-head p { color: rgba(255,255,255,0.74); }
+.section-dark.catalog-home-section .catalog-carousel-instructions,
+.section-dark.catalog-home-section .catalog-scroll-hint { color: rgba(255,255,255,0.64); }
+.section-dark.catalog-home-section .catalog-position-dot { background: rgba(255,255,255,0.26); }
+.section-dark.catalog-home-section .catalog-position-dot.is-selected { background: linear-gradient(90deg, #8db6ff, #315cff); }
+
+.thread-blog[data-theme="light"] { color: var(--text); background: linear-gradient(135deg, #f6f8fc, #eef3fb); }
+.thread-blog[data-theme="light"] .thread-blog-showcase { background: rgba(255,255,255,0.86); border-color: rgba(18,59,255,0.14); box-shadow: 0 22px 60px rgba(16,23,34,0.10); }
+.thread-blog[data-theme="light"] .thread-blog-title,
+.thread-blog[data-theme="light"] .thread-featured-post h3,
+.thread-blog[data-theme="light"] .thread-post-card h3 { color: var(--text); }
+.thread-blog[data-theme="light"] .thread-blog-summary,
+.thread-blog[data-theme="light"] .thread-featured-post p,
+.thread-blog[data-theme="light"] .thread-post-card p { color: var(--muted); }
+.thread-blog[data-theme="light"] .thread-featured-post,
+.thread-blog[data-theme="light"] .thread-post-card { background: #ffffff; border-color: rgba(18,59,255,0.13); }
+
+@media (min-width: 900px) and (max-height: 880px) {
+  body:not(:has(section:target)) #home { padding-top: 24px; padding-bottom: 24px; }
+  .hero .container { gap: 18px clamp(28px, 5vw, 72px); grid-template-columns: minmax(0,1fr) minmax(285px, 338px); }
+  .hero-copy { padding-top: 0; }
+  .hero-kicker { margin-bottom: 11px; }
+  .hero h1 { font-size: clamp(2.75rem, 4.7vw, 4.5rem); }
+  .catalog-hero-card { padding: 18px; }
+  .catalog-hero-card p { margin-top: 11px; font-size: 0.92rem; line-height: 1.34; }
+  .catalog-hero-meta { margin-top: 12px; padding: 9px 0; }
+  .catalog-hero-cta { min-height: 42px; margin-top: 14px; }
+  .hero-support { padding-top: 0; }
+  .hero-sub { max-width: 980px; font-size: 1rem; line-height: 1.34; }
+  .hero-actions { margin-top: 16px; }
+  .hero-cta { min-height: 46px; padding-inline: 20px; }
+  .hero-trust { margin-top: 14px; gap: 8px 16px; }
+  .hero-motion-line { margin-top: 12px; }
+  .quick-summary { margin-top: 10px; }
+}
+/* Menu-aligned band contract and Transformation Thread editorial rail */
+:root {
+  --corp-light-band: #f7f7fa;
+  --corp-dark-band:
+    linear-gradient(90deg, rgba(4,10,20,0.98) 0%, rgba(5,13,26,0.94) 58%, rgba(10,28,58,0.80) 100%),
+    linear-gradient(180deg, #091427 0%, #07111f 100%);
+}
+
+/* Make the visible SPA rhythm explicit. Individual sections may add one
+   signature treatment, but the base band always follows menu order. */
+#services[data-theme="light"],
+#brands[data-theme="light"],
+#blog[data-theme="light"],
+#contact[data-theme="light"] {
+  color: var(--text);
+}
+
+#services[data-theme="light"],
+#blog[data-theme="light"],
+#contact[data-theme="light"] {
+  background: var(--corp-light-band);
+}
+
+#home[data-theme="dark"],
+#explore[data-theme="dark"],
+#promotions[data-theme="dark"],
+#about[data-theme="dark"] {
+  color: var(--white);
+}
+
+#about[data-theme="dark"] {
+  background: var(--corp-dark-band);
+}
+
+/* The Transformation Thread identity is a single orange editorial rail.
+   It is deliberately theme-neutral so the Blog band can switch between
+   light and dark without redesigning the component. */
+.thread-blog {
+  --thread-accent: #f27907;
+  --thread-rail: rgba(242, 121, 7, 0.92);
+  --thread-rail-glow: rgba(242, 121, 7, 0.22);
+}
+
+.thread-blog[data-theme="light"] {
+  --thread-surface: rgba(255, 255, 255, 0.92);
+  --thread-surface-soft: rgba(255, 255, 255, 0.74);
+  --thread-card: #ffffff;
+  --thread-featured:
+    linear-gradient(135deg, rgba(242, 121, 7, 0.045), rgba(18, 59, 255, 0.055)),
+    #ffffff;
+  --thread-border: rgba(18, 59, 255, 0.14);
+  --thread-ink: var(--text);
+  --thread-muted: var(--muted);
+  --thread-chip-bg: rgba(242, 121, 7, 0.07);
+  --thread-chip-border: rgba(242, 121, 7, 0.24);
+  --thread-chip-ink: #8b4808;
+  --thread-shadow: 0 22px 60px rgba(16, 23, 34, 0.10);
+  background: var(--corp-light-band);
+  color: var(--thread-ink);
+}
+
+.thread-blog[data-theme="dark"] {
+  --thread-surface: rgba(10, 16, 29, 0.78);
+  --thread-surface-soft: rgba(8, 13, 24, 0.36);
+  --thread-card: rgba(12, 19, 32, 0.82);
+  --thread-featured:
+    linear-gradient(135deg, rgba(242, 121, 7, 0.11), rgba(18, 59, 255, 0.16)),
+    rgba(16, 22, 40, 0.80);
+  --thread-border: rgba(255, 255, 255, 0.14);
+  --thread-ink: #ffffff;
+  --thread-muted: rgba(255, 255, 255, 0.76);
+  --thread-chip-bg: rgba(242, 121, 7, 0.12);
+  --thread-chip-border: rgba(242, 121, 7, 0.34);
+  --thread-chip-ink: #ffc286;
+  --thread-shadow: 0 30px 90px rgba(0, 0, 0, 0.35);
+  background: var(--corp-dark-band);
+  color: var(--thread-ink);
+}
+
+.thread-blog-showcase {
+  border: 1px solid var(--thread-border);
+  background: var(--thread-surface);
+  box-shadow: var(--thread-shadow);
+}
+
+.thread-blog[data-theme="light"] .thread-blog-masthead,
+.thread-blog[data-theme="dark"] .thread-blog-masthead {
+  position: relative;
+  border-left: 0;
+  background: transparent;
+}
+
+.thread-blog-masthead::before {
+  content: "";
+  position: absolute;
+  top: 20px;
+  bottom: 24px;
+  left: 13px;
+  width: 3px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--thread-rail), rgba(242, 121, 7, 0.24));
+  box-shadow: 0 0 18px var(--thread-rail-glow);
+  pointer-events: none;
+}
+
+.thread-blog-masthead::after {
+  content: "";
+  position: absolute;
+  top: 24px;
+  bottom: 28px;
+  left: 9px;
+  width: 11px;
+  background: radial-gradient(circle, var(--thread-accent) 0 3px, transparent 3.6px) center top / 11px 64px repeat-y;
+  pointer-events: none;
+}
+
+.thread-blog[data-theme="light"] .thread-blog-title,
+.thread-blog[data-theme="light"] .thread-featured-post h3,
+.thread-blog[data-theme="light"] .thread-post-card h3,
+.thread-blog[data-theme="dark"] .thread-blog-title,
+.thread-blog[data-theme="dark"] .thread-featured-post h3,
+.thread-blog[data-theme="dark"] .thread-post-card h3 {
+  color: var(--thread-ink);
+}
+
+.thread-blog[data-theme="light"] .thread-blog-summary,
+.thread-blog[data-theme="light"] .thread-featured-post p,
+.thread-blog[data-theme="light"] .thread-post-card p,
+.thread-blog[data-theme="dark"] .thread-blog-summary,
+.thread-blog[data-theme="dark"] .thread-featured-post p,
+.thread-blog[data-theme="dark"] .thread-post-card p {
+  color: var(--thread-muted);
+}
+
+.thread-blog .thread-featured-post,
+.thread-blog .thread-post-card {
+  border-color: var(--thread-border);
+  color: var(--thread-ink);
+}
+
+.thread-blog .thread-featured-post {
+  background: var(--thread-featured);
+}
+
+.thread-blog .thread-post-card {
+  background: var(--thread-card);
+}
+
+.thread-blog .thread-post-meta span {
+  border-color: var(--thread-chip-border);
+  background: var(--thread-chip-bg);
+  color: var(--thread-chip-ink);
+}
+
+.thread-blog[data-theme="light"] .thread-post-link {
+  color: var(--text);
+}
+
+.thread-blog[data-theme="dark"] .thread-post-link {
+  color: #ffffff;
+}
+
+.thread-blog .thread-post-link:hover,
+.thread-blog .thread-post-link:focus-visible {
+  color: var(--thread-accent);
+}

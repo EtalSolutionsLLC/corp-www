@@ -1,30 +1,46 @@
 {
   "generated_by": "bin/rotate-transformation-thread",
-  "selection_date": "2026-06-07",
+  "selection_date": "2026-06-11",
   "rotation_timezone": "America/Los_Angeles",
-  "start_index": 6,
-  "source_sha256": "16bc5ade3a40bda78f9c00746359e3360da5b34cf3e7bf7a600b501aec757734",
+  "active_slot": 4,
+  "week_of_month": 2,
+  "source_sha256": "de895030f8ce5fbcddf25336f58c4116d49bb3157e3cb9afb289a16d742d4fda",
   "visible_posts": [
     {
-      "title": "Automation needs accountability before scale",
-      "category": "A.I. Governance",
-      "status": "Draft",
-      "summary": "A reminder that the safest transformation plans do not begin with speed; they begin with ownership, review paths, exception handling, and clear decisions about where human judgment must remain in the loop.",
-      "url": "mailto:info@etalsolutions.tech?subject=Automation%20needs%20accountability%20before%20scale"
-    },
-    {
-      "title": "Speed Is Not a Technical Detail",
-      "category": "Website Modernization",
-      "status": "Draft",
-      "summary": "A fast website is not merely an engineering achievement. It is part of the experience, and often the first thing a visitor notices.",
-      "url": "mailto:info@etalsolutions.tech?subject=Speed%20Is%20Not%20a%20Technical%20Detail"
-    },
-    {
-      "title": "Modernization Does Not Always Mean Replacement",
+      "id": 4,
+      "slot": 4,
       "category": "Systems Thinking",
       "status": "Draft",
-      "summary": "The first question in a modernization effort should not be what to replace. It should be what the current system knows, what it still does well, and where the friction actually lives.",
-      "url": "mailto:info@etalsolutions.tech?subject=Modernization%20Does%20Not%20Always%20Mean%20Replacement"
+      "title_md": "/content/transformation-thread/posts/004/title.md",
+      "excerpt_md": "/content/transformation-thread/posts/004/excerpt.md",
+      "full_article_md": "/content/transformation-thread/posts/004/full-article.md",
+      "title": "Legacy systems are often carrying business memory",
+      "excerpt": "A perspective piece on treating older systems as operational knowledge, not just technical debt.",
+      "url": "mailto:info@etalsolutions.tech?subject=Transformation%20Thread%20article%20request%20%5BTT-004%5D&body=Please%20send%20Transformation%20Thread%20article%20TT-004%3A%20Legacy%20systems%20are%20often%20carrying%20business%20memory"
+    },
+    {
+      "id": 5,
+      "slot": 5,
+      "category": "Workforce Transformation",
+      "status": "Draft",
+      "title_md": "/content/transformation-thread/posts/005/title.md",
+      "excerpt_md": "/content/transformation-thread/posts/005/excerpt.md",
+      "full_article_md": "/content/transformation-thread/posts/005/full-article.md",
+      "title": "Experience should not expire",
+      "excerpt": "A practical look at how hiring systems, workplace assumptions, and automated screening can undervalue older workers—and why transformation should preserve experience instead of filtering it out.",
+      "url": "mailto:info@etalsolutions.tech?subject=Transformation%20Thread%20article%20request%20%5BTT-005%5D&body=Please%20send%20Transformation%20Thread%20article%20TT-005%3A%20Experience%20should%20not%20expire"
+    },
+    {
+      "id": 6,
+      "slot": 6,
+      "category": "A.I. Risk",
+      "status": "Draft",
+      "title_md": "/content/transformation-thread/posts/006/title.md",
+      "excerpt_md": "/content/transformation-thread/posts/006/excerpt.md",
+      "full_article_md": "/content/transformation-thread/posts/006/full-article.md",
+      "title": "Is it too late for a Skynet scenario?",
+      "excerpt": "A grounded reflection on whether A.I. has already become too embedded to control, and why the real risk may be less about machines waking up and more about people surrendering judgment too casually.",
+      "url": "mailto:info@etalsolutions.tech?subject=Transformation%20Thread%20article%20request%20%5BTT-006%5D&body=Please%20send%20Transformation%20Thread%20article%20TT-006%3A%20Is%20it%20too%20late%20for%20a%20Skynet%20scenario%3F"
     }
   ]
 }

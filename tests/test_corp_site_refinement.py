@@ -6,6 +6,8 @@ INDEX = (ROOT / "index.html").read_text(encoding="utf-8")
 CSS = (ROOT / "assets/css/styles.css").read_text(encoding="utf-8")
 CAROUSEL_CSS = (ROOT / "assets/css/carousel.css").read_text(encoding="utf-8")
 JS = (ROOT / "assets/js/visual-polish.js").read_text(encoding="utf-8")
+EXPLORE_JS = (ROOT / "assets/js/explore-decision-tree.js").read_text(encoding="utf-8")
+TREE = (ROOT / "content/explore-decision-tree.json").read_text(encoding="utf-8")
 
 NATIVE_TARGET_BLOCK = """section[id] {
   scroll-margin-top: calc(var(--header-h)); /* + 12px);(*/
@@ -36,12 +38,14 @@ class CorpSiteRefinementTests(unittest.TestCase):
         self.assertIn(NATIVE_TARGET_BLOCK, CSS)
 
     def test_guided_service_selector_exists(self) -> None:
-        self.assertIn('data-service-selector', INDEX)
-        self.assertIn('data-service-choice="modernize"', INDEX)
-        self.assertIn('data-service-choice="legacy"', INDEX)
-        self.assertIn('data-service-choice="ai"', INDEX)
-        self.assertIn('data-service-result-title', INDEX)
-        self.assertIn('enableServiceSelector', JS)
+        self.assertIn('data-explore-root', INDEX)
+        self.assertIn('content/explore-decision-tree.json', INDEX)
+        self.assertIn('"pressure"', TREE)
+        self.assertIn('"constraint"', TREE)
+        self.assertIn('"exposure"', TREE)
+        self.assertIn('"move"', TREE)
+        self.assertIn('data-explore-result-title', INDEX)
+        self.assertIn('renderQuestion', EXPLORE_JS)
 
     def test_visual_polish_does_not_take_over_anchor_navigation(self) -> None:
         forbidden = [
@@ -68,10 +72,12 @@ class CorpSiteRefinementTests(unittest.TestCase):
         self.assertIn('body:has(#blog:target) .nav a[href$="#blog"]::after', CSS)
         self.assertIn('body:has(#brands [data-catalog-item]:target) .nav a[href$="#brands"]::after', CSS)
 
-    def test_native_view_transition_polish_is_declared(self) -> None:
+    def test_native_view_transition_polish_is_declared_without_controller_dependency(self) -> None:
         self.assertIn('@view-transition', CSS)
         self.assertIn('navigation: auto;', CSS)
-        self.assertIn('document.startViewTransition', JS)
+        self.assertNotIn('document.startViewTransition', EXPLORE_JS)
+        self.assertIn('setTrail', EXPLORE_JS)
+        self.assertIn('setHidden(result, false)', EXPLORE_JS)
 
     def test_carousel_keyboard_refinement_is_native_and_accessible(self) -> None:
         self.assertIn('enableCarouselKeyboardRefinement', JS)

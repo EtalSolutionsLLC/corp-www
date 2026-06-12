@@ -401,13 +401,33 @@ The main SPA owns the Portmason render region:
 <!-- /PM:TRANSFORMATION-THREAD -->
 ```
 
-Supporting card data lives in:
+Transformation Thread identity, rotation metadata, and Markdown references live in:
 
 ```text
 content/transformation-thread-posts.json
 ```
 
-Full draft articles live in:
+Each post has a permanent numeric `id`, a repeating editorial `slot` from `1` through `7`, and three Markdown references:
+
+```text
+title_md
+excerpt_md
+full_article_md
+```
+
+The corresponding editorial files live under a zero-padded permanent-id directory:
+
+```text
+content/transformation-thread/posts/008/title.md
+content/transformation-thread/posts/008/excerpt.md
+content/transformation-thread/posts/008/full-article.md
+```
+
+The Blog panel renders only `title.md` and `excerpt.md`. The complete `full-article.md` is fetched and safely rendered only after a visitor requests the article. Raw HTML is not interpreted by the browser renderer.
+
+Daily rotation preserves the wide featured card over two supporting cards. The current ISO weekday chooses the starting slot (`Monday = 1` through `Sunday = 7`). The first eligible post becomes featured; the next two become supporting cards. When a slot cannot fill all three positions, the generator continues into following slots and wraps after `7`. When a slot contains more than three posts, week-of-month groups of three rotate through that slot while preserving source order.
+
+Full draft article source files may also live in:
 
 ```text
 content/transformation-thread-articles/
@@ -481,3 +501,52 @@ Run Portmason:
 ```bash
 ./portmason/pm-setup
 ```
+
+## Explore decision tree
+
+The corp-site Explore panel is a first-class SPA section at:
+
+```text
+/#explore
+```
+
+Its Portmason-managed structural source is:
+
+```text
+partials/explore.html
+```
+
+The main SPA owns the render region:
+
+```html
+<!-- PM:EXPLORE -->
+...
+<!-- /PM:EXPLORE -->
+```
+
+The two-level conditional tree data lives in:
+
+```text
+content/explore-decision-tree.json
+```
+
+The native browser controller lives in:
+
+```text
+assets/js/explore-decision-tree.js
+```
+
+The shared action-anchor design system and Explore-specific presentation live in:
+
+```text
+assets/css/action-system.css
+assets/css/explore.css
+```
+
+Do not hand-edit the rendered `PM:EXPLORE` block in `index.html`. Update the partial or JSON source, then run:
+
+```bash
+pm-setup
+```
+
+The performance counter is intentionally browser-observed and lives inside Explore. It does not claim a Lighthouse or Core Web Vitals score.

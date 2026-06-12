@@ -12,18 +12,19 @@
     return (bytes / (1024 * 1024)).toFixed(1) + " MB";
   }
 
-  function observedSize(entry) {
-    return entry.transferSize || entry.encodedBodySize || 0;
+  function transferredSize(entry) {
+    return Number(entry && entry.transferSize) || 0;
   }
 
   function updatePerformanceProof() {
     var proof = document.querySelector("[data-performance-proof]");
     if (!proof || !window.performance || typeof window.performance.getEntriesByType !== "function") return;
 
+    var navigation = window.performance.getEntriesByType("navigation");
     var resources = window.performance.getEntriesByType("resource");
-    var total = resources.reduce(function (sum, entry) { return sum + observedSize(entry); }, 0);
+    var total = navigation.concat(resources).reduce(function (sum, entry) { return sum + transferredSize(entry); }, 0);
     var scripts = resources.filter(function (entry) { return entry.initiatorType === "script"; });
-    var scriptTotal = scripts.reduce(function (sum, entry) { return sum + observedSize(entry); }, 0);
+    var scriptTotal = scripts.reduce(function (sum, entry) { return sum + transferredSize(entry); }, 0);
 
     var transfer = proof.querySelector("[data-performance-transfer]");
     var javascript = proof.querySelector("[data-performance-js]");
@@ -75,82 +76,6 @@
         word.classList.remove("is-changing");
       }, 170);
     }, 2600);
-  }
-
-  function runViewTransition(update) {
-    if (!reduceMotion && typeof document.startViewTransition === "function") {
-      document.startViewTransition(update);
-      return;
-    }
-    update();
-  }
-
-  function enableServiceSelector() {
-    var selector = document.querySelector("[data-service-selector]");
-    if (!selector) return;
-
-    var title = selector.querySelector("[data-service-result-title]");
-    var copy = selector.querySelector("[data-service-result-copy]");
-    var link = selector.querySelector("[data-service-result-link]");
-    var options = Array.prototype.slice.call(selector.querySelectorAll("[data-service-choice]"));
-    if (!title || !copy || !link || !options.length) return;
-
-    var recommendations = {
-      modernize: {
-        title: "Website and System Modernization",
-        copy: "Start by identifying the friction, weight, and maintenance burden in the current experience, then improve the smallest set of things that will make the largest practical difference.",
-        label: "Discuss modernization",
-        subject: "Website and System Modernization Inquiry"
-      },
-      build: {
-        title: "Focused New Website or Software Delivery",
-        copy: "Start with the outcome, the audience, and the smallest dependable release. We can shape a lean website, workflow, integration, or custom application around the work that actually needs to happen.",
-        label: "Discuss a new build",
-        subject: "New Website or Software Delivery Inquiry"
-      },
-      legacy: {
-        title: "Legacy Technology Support",
-        copy: "Start by stabilizing the technology that still matters, documenting the risks, and identifying the smallest repeatable improvements that keep it dependable without forcing a premature rewrite.",
-        label: "Discuss legacy support",
-        subject: "Legacy Technology Support Inquiry"
-      },
-      ai: {
-        title: "Practical A.I. Enablement",
-        copy: "Start with a real workflow, not a generic tool list. We can identify useful A.I. opportunities, establish safe habits, and build confidence through plain-language guidance and practical implementation.",
-        label: "Discuss practical A.I.",
-        subject: "Practical A.I. Enablement Inquiry"
-      },
-      architecture: {
-        title: "Architecture and Delivery Guidance",
-        copy: "Start by clarifying the decision, the constraints, and the operational reality. We can simplify the options and define a maintainable path forward before complexity becomes the product.",
-        label: "Discuss architecture",
-        subject: "Architecture and Delivery Guidance Inquiry"
-      }
-    };
-
-    function select(choice) {
-      var recommendation = recommendations[choice];
-      if (!recommendation) return;
-
-      options.forEach(function (option) {
-        var selected = option.getAttribute("data-service-choice") === choice;
-        option.classList.toggle("is-selected", selected);
-        option.setAttribute("aria-pressed", selected ? "true" : "false");
-      });
-
-      runViewTransition(function () {
-        title.textContent = recommendation.title;
-        copy.textContent = recommendation.copy;
-        link.textContent = recommendation.label;
-        link.href = "mailto:info@etalsolutions.tech?subject=" + encodeURIComponent(recommendation.subject);
-      });
-    }
-
-    options.forEach(function (option) {
-      option.addEventListener("click", function () {
-        select(option.getAttribute("data-service-choice") || "");
-      });
-    });
   }
 
   function catalogPages(track) {
@@ -219,7 +144,6 @@
   });
 
   document.addEventListener("DOMContentLoaded", function () {
-    enableServiceSelector();
     enableCarouselKeyboardRefinement();
   });
 

@@ -60,14 +60,14 @@
      * observer from re-entering enhance() when the class or aria-label changes.
      */
     element.setAttribute(enhancedAttribute, "");
-    element.classList.add("catalog-detail-close", enhancedClass);
+    element.classList.add("modal-close-circle", enhancedClass);
 
     if (element.getAttribute("aria-label") !== "Close privacy policy") {
       element.setAttribute("aria-label", "Close privacy policy");
     }
 
-    if (element.textContent !== "Close ×") {
-      element.textContent = "Close ×";
+    if (element.textContent !== "×") {
+      element.textContent = "×";
     }
   }
 

@@ -36,6 +36,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <link rel="stylesheet" href="catalogs/promotions/promotions.css" />
     <link rel="stylesheet" href="catalogs/brands/brands.css" />
     <link rel="stylesheet" href="assets/css/carousel.css" />
+    <link rel="stylesheet" href="assets/css/action-system.css" />
+    <link rel="stylesheet" href="assets/css/explore.css" />
+    <link rel="stylesheet" href="assets/css/theme-rhythm.css" />
     <link rel="stylesheet" href="assets/css/cookie-consent-overrides.css" />
 </head>
 <body>
@@ -54,6 +57,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <nav class="nav" aria-label="Primary">
       <a href="/#home">Home</a>
       <a href="/#services">Services</a>
+      <a href="/#explore">Explore</a>
       <a href="/#brands">Brands</a>
       <a href="/#promotions">Promotions</a>
       <a href="/#blog">Blog</a>
@@ -66,7 +70,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 
     <main>
-      <section class="hero panel" id="home">
+      <section class="hero panel" id="home" data-theme="dark">
         <div class="container">
           <div class="hero-copy">
             <p class="hero-kicker">Et al Solutions LLC</p>
@@ -82,26 +86,24 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               <span>Price: <strong>$149</strong></span>
             </div>
             <p>A friendly, practical A.I. session for everyday people who want useful help without the jargon.</p>
-            <a class="catalog-hero-cta" href="/#promotions" data-catalog-detail-open="what-can-ai-do-for-you-details">View Details</a>
+            <a class="catalog-hero-cta action action-primary" href="/#promotions" data-catalog-detail-open="what-can-ai-do-for-you-details">View Details</a>
           </aside>
 <!-- /PM:CATALOG-PROMOTIONS-HERO-TEASER -->
 
           <div class="hero-support">
             <p class="hero-sub">
-              We help small businesses grow with practical A.I., custom software, and digital strategies that simplify operations, improve efficiency, and drive measurable results. From A.I.-powered automation and workflow optimization to custom web applications and clear, actionable guidance, we deliver solutions designed to solve real challenges and support long-term success in today’s fast-moving digital landscape.
+              We help small businesses grow with lighter technology: practical A.I., dependable software, and clear guidance without unnecessary weight.
             </p>
 
             <div class="hero-actions">
-              <a class="hero-cta" href="#contact">Get in Touch</a>
-              <a class="hero-cta secondary" href="#services">Explore Services</a>
+              <a class="hero-cta action action-primary" href="#explore">Start with Your Problem</a>
+              <a class="hero-cta secondary action action-secondary" href="#services">Explore Services</a>
             </div>
 
             <ul class="hero-trust">
               <li>Practical A.I.</li>
               <li>Custom software</li>
-              <li>Clear, business-friendly guidance</li>
-              <li>Measurable results</li>
-              <li>Built for growth</li>
+              <li>Clear guidance</li>
             </ul>
 
             <p class="hero-motion-line" aria-live="polite">
@@ -118,31 +120,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </div>
       </section>
 
-      <section class="performance-proof" aria-labelledby="performance-proof-title">
-        <div class="container performance-proof-layout">
-          <div class="performance-proof-copy">
-            <span class="section-kicker light">Built to Stay Light</span>
-            <h2 id="performance-proof-title">A polished experience does not require a heavy one.</h2>
-            <p>The page reports the resources this browser can observe after load. The counter is intentionally small, honest, and optional.</p>
-          </div>
-          <dl class="performance-proof-grid" aria-label="Observed page performance measurements" data-performance-proof>
-            <div>
-              <dt>Observed transfer</dt>
-              <dd data-performance-transfer>Measuring…</dd>
-            </div>
-            <div>
-              <dt>Observed JavaScript</dt>
-              <dd data-performance-js>Measuring…</dd>
-            </div>
-            <div>
-              <dt>Loaded resources</dt>
-              <dd data-performance-resources>Measuring…</dd>
-            </div>
-          </dl>
-        </div>
-      </section>
-
-      <section class="section-dark panel" id="services">
+      <section class="section-light panel" id="services" data-theme="light">
         <p class="mobile-swipe-hint" aria-hidden="true" data-swipe-hint data-forward-text="Swipe sideways for service details" data-back-text="Swipe left for service summary">Swipe sideways for service details <span>→</span></p>
         <div class="container services-band" data-swipe-region>
           <div class="services-stack">
@@ -194,34 +172,188 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </div>
       </section>
 
-      <section class="service-selector" aria-labelledby="service-selector-title" data-service-selector>
-        <div class="container service-selector-layout">
-          <div class="service-selector-copy">
-            <span class="section-kicker light">Find the Right Starting Point</span>
-            <h2 id="service-selector-title">What would you like technology to make easier?</h2>
-            <p>Choose the closest fit. We will point you toward a practical first conversation rather than a one-size-fits-all package.</p>
-          </div>
+<!-- PM:EXPLORE -->
+<section class="section-dark panel explore-section" id="explore" data-theme="dark" aria-labelledby="explore-title" data-explore-root data-explore-stage="pressure" data-explore-source="content/explore-decision-tree.json">
+  <div class="container explore-section-layout">
+    <header class="explore-intro">
+      <div class="explore-title-row">
+        <span class="section-kicker light">Explore</span>
+        <span class="explore-title-divider" aria-hidden="true"></span>
+        <h2 id="explore-title">Start with the problem.</h2>
+      </div>
+    </header>
 
-          <div class="service-selector-panel">
-            <div class="service-selector-options" role="group" aria-label="Choose the type of help you need">
-              <button class="service-selector-option is-selected" type="button" data-service-choice="modernize" aria-pressed="true">Modernize an existing website or system</button>
-              <button class="service-selector-option" type="button" data-service-choice="build" aria-pressed="false">Build something new</button>
-              <button class="service-selector-option" type="button" data-service-choice="legacy" aria-pressed="false">Keep important older technology reliable</button>
-              <button class="service-selector-option" type="button" data-service-choice="ai" aria-pressed="false">Use A.I. in a practical way</button>
-              <button class="service-selector-option" type="button" data-service-choice="architecture" aria-pressed="false">Simplify a complicated technology decision</button>
-            </div>
+    <div class="explore-tool-stack">
+      <section class="explore-path-card explore-tool explore-tool-guided" aria-labelledby="explore-question-title" data-explore-guide>
+      <span class="explore-material-label explore-material-label-guided">
+        <span>Guided path</span>
+        <button class="explore-mesh-help" type="button" data-explore-mesh-help aria-haspopup="dialog" aria-controls="explore-mesh-modal" aria-label="Learn how this guided path works">?</button>
+      </span>
+      <span class="explore-guide-texture" aria-hidden="true"></span>
+      <div class="explore-guide-head">
+        <div>
+          <p class="explore-guide-copy">Answer four practical questions. Your choices stay in this browser and shape a clear starting point at the end.</p>
+        </div>
+      </div>
 
-            <article class="service-selector-result" aria-live="polite" data-service-result>
-              <span class="service-selector-result-kicker">Recommended starting point</span>
-              <h3 data-service-result-title>Website and System Modernization</h3>
-              <p data-service-result-copy>Start by identifying the friction, weight, and maintenance burden in the current experience, then improve the smallest set of things that will make the largest practical difference.</p>
-              <a class="cta service-selector-cta" href="mailto:info@etalsolutions.tech?subject=Website%20and%20System%20Modernization%20Inquiry" data-service-result-link>Discuss modernization</a>
-            </article>
+      <ol class="explore-thread explore-mesh-trail" aria-label="Guided path progress" data-explore-trail>
+        <li class="is-current" data-explore-trail-step="pressure">
+          <button class="explore-thread-action" type="button" data-explore-jump-to="pressure" disabled>
+            <span class="explore-thread-node" aria-hidden="true">1</span>
+            <span>What changed</span>
+          </button>
+        </li>
+        <li data-explore-trail-step="constraint">
+          <button class="explore-thread-action" type="button" data-explore-jump-to="constraint" disabled>
+            <span class="explore-thread-node" aria-hidden="true">2</span>
+            <span>What is in the way</span>
+          </button>
+        </li>
+        <li data-explore-trail-step="exposure">
+          <button class="explore-thread-action" type="button" data-explore-jump-to="exposure" disabled>
+            <span class="explore-thread-node" aria-hidden="true">3</span>
+            <span>Where it hurts</span>
+          </button>
+        </li>
+        <li data-explore-trail-step="move">
+          <button class="explore-thread-action" type="button" data-explore-jump-to="move" disabled>
+            <span class="explore-thread-node" aria-hidden="true">4</span>
+            <span>First step</span>
+          </button>
+        </li>
+        <li data-explore-trail-step="brief">
+          <button class="explore-thread-action" type="button" data-explore-jump-to="brief" disabled>
+            <span class="explore-thread-node" aria-hidden="true">✓</span>
+            <span>Summary</span>
+          </button>
+        </li>
+      </ol>
+
+      <div class="explore-mesh-board" data-explore-question-body>
+        <div class="explore-question-body explore-decision-card">
+          <p class="explore-eyebrow" data-explore-eyebrow>Card 1 of 4 · What changed</p>
+          <h3 id="explore-question-title" data-explore-prompt>What is making this conversation necessary now?</h3>
+          <div class="explore-options explore-mesh-options" role="group" aria-label="Choose the closest answer" data-explore-options>
+            <p class="explore-loading">Loading your choices…</p>
           </div>
         </div>
+
+        <aside class="explore-route-panel" aria-label="Your answers">
+          <span class="explore-panel-label">Your answers</span>
+          <ol class="explore-route-list" data-explore-route-list>
+            <li>No answer yet.</li>
+          </ol>
+          <p class="explore-route-note" data-explore-signal-note>Your choices stay anonymous in this browser. You can review and change them at any time.</p>
+        </aside>
+      </div>
+
+      <section class="explore-result explore-guidance-brief" aria-live="polite" aria-labelledby="explore-result-title" data-explore-result hidden>
+        <span class="explore-panel-label">Suggested next step</span>
+        <h3 id="explore-result-title" data-explore-result-title>Your answers will lead to a practical starting point.</h3>
+        <p data-explore-result-summary>Answer the four questions to see a suggested first step.</p>
+
+        <div class="explore-brief-grid">
+          <article>
+            <h4>What this suggests</h4>
+            <p data-explore-result-insight></p>
+          </article>
+          <article>
+            <h4>Why this matters now</h4>
+            <p data-explore-result-why></p>
+          </article>
+          <article>
+            <h4>A sensible first move</h4>
+            <p data-explore-result-move></p>
+          </article>
+          <div class="explore-first-look" data-explore-first-look hidden>
+            <h4>What we would examine first</h4>
+            <ul data-explore-first-look-list></ul>
+          </div>
+        </div>
+
+        <div class="explore-route-summary">
+          <span class="explore-panel-label">Your answers</span>
+          <p data-explore-route-summary></p>
+          <p class="explore-local-weight" data-explore-local-weight></p>
+        </div>
+
       </section>
 
-      <section class="section-dark panel catalog-home-section brand-catalog-section" id="brands" aria-labelledby="brands-title">
+      <div class="explore-guide-actions">
+        <div class="explore-tertiary-actions" aria-label="Guided path controls">
+          <button class="action action-tertiary" type="button" data-explore-back hidden>← Back</button>
+          <button class="action action-tertiary" type="button" data-explore-reset hidden>↺ Start over</button>
+        </div>
+        <a class="action action-primary explore-conversation-action" href="mailto:info@etalsolutions.tech?subject=Technology%20Inquiry" data-explore-result-link hidden>Start a conversation <span aria-hidden="true">→</span></a>
+      </div>
+
+
+      <dialog class="explore-mesh-modal" id="explore-mesh-modal" data-explore-mesh-modal aria-labelledby="explore-mesh-modal-title">
+        <div class="explore-mesh-modal-shell">
+          <button class="explore-mesh-modal-close modal-close-circle" type="button" data-explore-mesh-modal-close aria-label="Close guided-path explanation">×</button>
+          <span class="explore-panel-label">Guided path</span>
+          <h3 id="explore-mesh-modal-title">A clear way to think through a complex problem.</h3>
+          <p>This tool asks four practical questions and turns your answers into a suggested starting point.</p>
+          <p>Your choices stay visible, reversible, and local to this browser. Nothing is submitted unless you decide to start a conversation.</p>
+        </div>
+      </dialog>
+
+      <noscript><p class="explore-noscript">JavaScript is optional. You can still <a class="action-link" href="mailto:info@etalsolutions.tech?subject=Technology%20Inquiry">start a conversation</a> and tell us what is getting in the way.</p></noscript>
+      </section>
+
+      <section class="explore-performance-tool explore-tool" aria-label="Live page-size tools">
+        <span class="explore-material-label explore-material-label-performance">A quick size check</span>
+        <aside class="explore-proof-strip" aria-labelledby="explore-proof-title">
+      <div class="explore-proof-copy">
+        <h3 id="explore-proof-title">Built to stay light.</h3>
+        <p><strong>What this shows:</strong> This is how much data your browser can see being downloaded when you opened this site just now.</p>
+        <p><strong>Why it matters:</strong> Every extra byte has to travel across the network and be handled by your device. Smaller pages usually mean less waiting.</p>
+      </div>
+      <dl class="performance-proof-grid explore-proof-grid" aria-label="What your browser downloaded when this page opened" data-performance-proof>
+        <div><dt>Data downloaded</dt><dd data-performance-transfer>Measuring…</dd></div>
+        <div><dt>JavaScript downloaded</dt><dd data-performance-js>Measuring…</dd></div>
+        <div><dt>Files loaded</dt><dd data-performance-resources>Measuring…</dd></div>
+      </dl>
+        </aside>
+
+        <section class="site-size-compare" aria-labelledby="site-size-compare-title" data-site-size-compare data-site-size-self-url="https://www.etal.solutions/" data-site-size-config-url="config.generated.json">
+      <div class="site-size-compare-intro">
+        <span class="explore-panel-label">Compare your homepage</span>
+        <h3 id="site-size-compare-title">See the difference for yourself.</h3>
+        <p>Enter your homepage address. Google PageSpeed will run the same desktop page-size check for your site and ours, side by side. Nothing is stored.</p>
+      </div>
+
+      <form class="site-size-form" data-site-size-form>
+        <label for="site-size-url">Your homepage address</label>
+        <div class="site-size-form-row">
+          <input id="site-size-url" name="url" type="text" inputmode="url" autocomplete="url" placeholder="your-site.com" required data-site-size-url>
+          <button class="action action-primary" type="submit" data-site-size-submit>Check my site <span aria-hidden="true">→</span></button>
+        </div>
+      </form>
+
+      <p class="site-size-status" aria-live="polite" data-site-size-status></p>
+
+      <section class="site-size-result" aria-live="polite" data-site-size-result hidden>
+        <span class="explore-panel-label">Your two-page comparison</span>
+        <h4>Google PageSpeed checked both homepages using the same desktop test.</h4>
+        <dl class="site-size-result-grid">
+          <div><dt>Your homepage</dt><dd data-site-size-theirs>—</dd></div>
+          <div><dt>This homepage</dt><dd data-site-size-ours>—</dd></div>
+          <div><dt>Typical desktop homepage</dt><dd>2.86 MB</dd></div>
+        </dl>
+        <p class="site-size-result-summary" data-site-size-summary></p>
+        <p class="site-size-result-context" data-site-size-context></p>
+        <p class="site-size-result-note">This is a practical page-size comparison, not a full performance audit. Results can vary as page content changes.</p>
+        <p class="site-size-result-source">Typical-homepage benchmark: <a href="https://almanac.httparchive.org/en/2025/page-weight" target="_blank" rel="noopener noreferrer">HTTP Archive, 2025 Web Almanac</a>.</p>
+      </section>
+        </section>
+      </section>
+    </div>
+  </div>
+</section>
+<!-- /PM:EXPLORE -->
+
+      <section class="section-light panel catalog-home-section brand-catalog-section" id="brands" data-theme="light" aria-labelledby="brands-title">
         <div class="container catalog-page-layout">
           <section class="catalog-page-head" id="brands-top" aria-labelledby="brands-title">
             <span class="section-kicker light">Brands</span>
@@ -385,7 +517,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </div>
       </section>
 
-      <section class="section-light panel catalog-home-section" id="promotions" aria-labelledby="catalog-page-title">
+      <section class="section-dark panel catalog-home-section" id="promotions" data-theme="dark" aria-labelledby="catalog-page-title">
         <div class="container catalog-page-layout">
           <section class="catalog-page-head" id="promotions-top" aria-labelledby="catalog-page-title">
             <span class="section-kicker light">Promotions</span>
@@ -602,7 +734,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       </section>
 
 <!-- PM:TRANSFORMATION-THREAD -->
-<section class="thread-blog panel" id="blog" aria-labelledby="thread-blog-title">
+<section class="thread-blog panel" id="blog" data-theme="light" aria-labelledby="thread-blog-title" data-thread-blog data-thread-source="/content/transformation-thread-posts.json">
 
     <div class="container">
       <div class="thread-blog-showcase">
@@ -619,53 +751,63 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           </h2>
           <p class="thread-blog-summary">Short field notes from The Transformation Thread on practical change and useful technology.</p>
           <div class="thread-blog-actions">
-            <a class="hero-cta secondary" href="mailto:info@etalsolutions.tech?subject=The%20Transformation%20Thread%20Article%20Idea">Suggest a Topic</a>
+            <a class="hero-cta secondary action action-secondary" href="mailto:info@etalsolutions.tech?subject=The%20Transformation%20Thread%20Article%20Idea">Suggest a Topic</a>
           </div>
         </div>
 
         <!-- TT:DAILY-ROTATION:START -->
-        <!-- Generated by bin/rotate-transformation-thread for 2026-06-07 (America/Los_Angeles). -->
+        <!-- Generated by bin/rotate-transformation-thread for 2026-06-11 (America/Los_Angeles); weekday slot 4; month week 2. -->
         <div class="thread-post-layout" aria-label="Transformation Thread article list">
-          <article class="thread-featured-post" aria-label="Featured article">
+          <article class="thread-featured-post" aria-label="Featured article" data-thread-post-id="4" data-thread-slot="4">
             <div class="thread-post-meta">
               <span>Featured</span>
-              <span>A.I. Governance</span>
+              <span>Systems Thinking</span>
             </div>
-            <h3>Automation needs accountability before scale</h3>
-            <p>A reminder that the safest transformation plans do not begin with speed; they begin with ownership, review paths, exception handling, and clear decisions about where human judgment must remain in the loop.</p>
-            <a class="thread-post-link" href="mailto:info@etalsolutions.tech?subject=Automation%20needs%20accountability%20before%20scale">Request this article →</a>
+            <h3>Legacy systems are often carrying business memory</h3>
+            <p>A perspective piece on treating older systems as operational knowledge, not just technical debt.</p>
+            <a class="thread-post-link" href="mailto:info@etalsolutions.tech?subject=Transformation%20Thread%20article%20request%20%5BTT-004%5D&amp;body=Please%20send%20Transformation%20Thread%20article%20TT-004%3A%20Legacy%20systems%20are%20often%20carrying%20business%20memory" data-thread-request-post-id="4">Request this article →</a>
           </article>
 
           <div class="thread-post-grid">
-            <article class="thread-post-card" data-post-category="Website Modernization">
+            <article class="thread-post-card" data-post-category="Workforce Transformation" data-thread-post-id="5" data-thread-slot="5">
               <div class="thread-post-meta">
-                <span>Website Modernization</span>
+                <span>Workforce Transformation</span>
                 <span>Draft</span>
               </div>
-              <h3>Speed Is Not a Technical Detail</h3>
-              <p>A fast website is not merely an engineering achievement. It is part of the experience, and often the first thing a visitor notices.</p>
-              <a class="thread-post-link" href="mailto:info@etalsolutions.tech?subject=Speed%20Is%20Not%20a%20Technical%20Detail">Request article →</a>
+              <h3>Experience should not expire</h3>
+              <p>A practical look at how hiring systems, workplace assumptions, and automated screening can undervalue older workers—and why transformation should preserve experience instead of filtering it out.</p>
+              <a class="thread-post-link" href="mailto:info@etalsolutions.tech?subject=Transformation%20Thread%20article%20request%20%5BTT-005%5D&amp;body=Please%20send%20Transformation%20Thread%20article%20TT-005%3A%20Experience%20should%20not%20expire" data-thread-request-post-id="5">Request article →</a>
             </article>
 
-            <article class="thread-post-card" data-post-category="Systems Thinking">
+            <article class="thread-post-card" data-post-category="A.I. Risk" data-thread-post-id="6" data-thread-slot="6">
               <div class="thread-post-meta">
-                <span>Systems Thinking</span>
+                <span>A.I. Risk</span>
                 <span>Draft</span>
               </div>
-              <h3>Modernization Does Not Always Mean Replacement</h3>
-              <p>The first question in a modernization effort should not be what to replace. It should be what the current system knows, what it still does well, and where the friction actually lives.</p>
-              <a class="thread-post-link" href="mailto:info@etalsolutions.tech?subject=Modernization%20Does%20Not%20Always%20Mean%20Replacement">Request article →</a>
+              <h3>Is it too late for a Skynet scenario?</h3>
+              <p>A grounded reflection on whether A.I. has already become too embedded to control, and why the real risk may be less about machines waking up and more about people surrendering judgment too casually.</p>
+              <a class="thread-post-link" href="mailto:info@etalsolutions.tech?subject=Transformation%20Thread%20article%20request%20%5BTT-006%5D&amp;body=Please%20send%20Transformation%20Thread%20article%20TT-006%3A%20Is%20it%20too%20late%20for%20a%20Skynet%20scenario%3F" data-thread-request-post-id="6">Request article →</a>
             </article>
 
           </div>
         </div>
 <!-- TT:DAILY-ROTATION:END -->
+
+        <dialog class="thread-article-modal" data-thread-article-modal aria-labelledby="thread-article-modal-title">
+          <div class="thread-article-modal-shell">
+            <button class="thread-article-modal-close modal-close-circle" type="button" data-thread-article-close aria-label="Close article">×</button>
+            <span class="thread-blog-kicker">The Transformation Thread</span>
+            <p class="thread-article-modal-meta" data-thread-article-meta></p>
+            <h3 id="thread-article-modal-title" data-thread-article-title></h3>
+            <div class="thread-article-modal-body" data-thread-article-body></div>
+          </div>
+        </dialog>
       </div>
     </div>
   </section>
 <!-- /PM:TRANSFORMATION-THREAD -->
 
-      <section class="section-light panel" id="about">
+      <section class="section-dark panel" id="about" data-theme="dark">
         <div class="container about-layout">
           <div class="section-copy">
             <span class="section-kicker light">Accessible Innovation</span>
@@ -695,7 +837,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </div>
       </section>
 
-      <section class="section-light panel" id="contact">
+      <section class="section-light panel" id="contact" data-theme="light">
         <div class="container founder-band">
           <div class="founder-copy">
             <span class="section-kicker light">How We Work</span>
@@ -714,7 +856,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               <span>Durable before trendy</span>
             </div>
 
-            <a class="cta" href="mailto:info@etalsolutions.tech?subject=Inquiry%20from%20Et%20al%20Solutions%20website">Get in Touch</a>
+            <a class="cta action action-primary" href="mailto:info@etalsolutions.tech?subject=Inquiry%20from%20Et%20al%20Solutions%20website">Get in Touch</a>
           </div>
 
           <aside class="contact-card" data-reveal>
@@ -753,14 +895,19 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 <link rel="stylesheet" href="https://public.etal.solutions/assets/css/policy-modal.css">
 <link rel="stylesheet" href="/assets/css/policy-modal-overrides.css">
+<link rel="stylesheet" href="/assets/css/modal-close-system.css">
+<link rel="stylesheet" href="/assets/css/transformation-thread.css">
 <script src="https://public.etal.solutions/assets/js/policy-modal.js" defer></script>
 <script src="/assets/js/policy-modal-close.js" defer></script>
+<script src="/assets/js/transformation-thread.js" defer></script>
 <!-- /PM:FOOTER -->
   </div>
 <script src="https://cdn.jsdelivr.net/gh/orestbida/cookieconsent@3.1.0/dist/cookieconsent.umd.js"></script>
 <script src="assets/js/cookie-consent.js"></script>
 
 <script src="assets/js/catalog-carousel.js" defer></script>
+<script src="assets/js/explore-decision-tree.js" defer></script>
+<script src="assets/js/site-size-compare.js" defer></script>
 <script src="assets/js/visual-polish.js" defer></script>
 </body>
 </html>

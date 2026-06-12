@@ -1,0 +1,55 @@
+name: Rotate Transformation Thread articles
+
+on:
+  workflow_dispatch:
+  schedule:
+    # GitHub Actions cron is UTC. Running at both offsets covers Pacific
+    # daylight and standard time. The generator exits unless local time is
+    # between 00:00 and 00:29 America/Los_Angeles.
+    - cron: "5 7,8 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: rotate-transformation-thread
+  cancel-in-progress: false
+
+jobs:
+  rotate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the website repository
+        uses: actions/checkout@v4
+
+      - name: Verify generator tests
+        run: python3 -m unittest discover -s tests -p 'test_rotate_transformation_thread.py'
+
+      - name: Materialize today's article selection
+        shell: bash
+        run: |
+          args=()
+          if [[ "${{ github.event_name }}" == "schedule" ]]; then
+            args+=(--require-local-midnight-window)
+          fi
+          bin/rotate-transformation-thread "${args[@]}"
+
+      - name: Render updated Transformation Thread partial
+        shell: bash
+        run: |
+          PORTMASON_SHARE="$PWD/portmason" SITE_DIR="$PWD" \
+            bash portmason/pm-deploy-static
+
+      - name: Commit changed daily selection
+        shell: bash
+        run: |
+          if git diff --quiet -- partials/transformation-thread.html index.html content/transformation-thread-selection.json; then
+            echo "Transformation Thread selection is already current."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add partials/transformation-thread.html index.html content/transformation-thread-selection.json
+          git commit -m "chore: rotate Transformation Thread articles"
+          git push

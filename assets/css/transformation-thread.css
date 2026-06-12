@@ -1,0 +1,66 @@
+/* Transformation Thread full-article request delivery */
+.thread-article-modal { width:min(860px,calc(100vw - 32px)); max-height:min(860px,calc(100vh - 32px)); padding:0; border:1px solid rgba(242,121,7,.32); background:#fff; color:#091427; box-shadow:0 30px 100px rgba(2,7,16,.38); }
+.thread-article-modal::backdrop { background:rgba(2,7,16,.72); backdrop-filter:blur(4px); }
+.thread-article-modal-shell { position:relative; padding:32px; }
+.thread-article-modal-close { position:absolute!important; top:14px!important; right:14px!important; }
+.thread-article-modal-meta { margin:10px 48px 0 0; color:#8b4808; font-size:.72rem; font-weight:900; letter-spacing:.12em; text-transform:uppercase; }
+.thread-article-modal h3 { max-width:720px; margin:12px 48px 0 0; color:#091427; font-size:clamp(1.7rem,3vw,2.5rem); }
+.thread-article-modal-body { margin-top:22px; color:rgba(9,20,39,.78); font-size:.98rem; line-height:1.72; }
+.thread-article-modal-body p,.thread-article-modal-body h4 { max-width:74ch; margin:0 auto 16px; }
+.thread-article-modal-body h4 { margin-top:24px; color:#123bff; font-size:1rem; letter-spacing:.04em; text-transform:uppercase; }
+@media(max-width:640px){.thread-article-modal-shell{padding:24px 20px}.thread-article-modal h3{font-size:1.62rem}.thread-article-modal-body{font-size:.92rem}}
+
+/* Markdown-backed full-article structures */
+.thread-article-modal-body h5,
+.thread-article-modal-body ul,
+.thread-article-modal-body ol,
+.thread-article-modal-body blockquote,
+.thread-article-modal-body pre,
+.thread-article-modal-body hr {
+  max-width: 74ch;
+  margin: 0 auto 16px;
+}
+
+.thread-article-modal-body h5 {
+  margin-top: 20px;
+  color: #123bff;
+  font-size: .94rem;
+}
+
+.thread-article-modal-body ul,
+.thread-article-modal-body ol {
+  padding-left: 22px;
+}
+
+.thread-article-modal-body li + li {
+  margin-top: 7px;
+}
+
+.thread-article-modal-body blockquote {
+  padding: 12px 16px;
+  border-left: 3px solid #f27907;
+  background: rgba(242,121,7,.06);
+  color: rgba(9,20,39,.72);
+}
+
+.thread-article-modal-body pre {
+  overflow-x: auto;
+  padding: 14px;
+  border: 1px solid rgba(18,59,255,.14);
+  background: #f4f7ff;
+}
+
+.thread-article-modal-body code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: .88em;
+}
+
+.thread-article-modal-body a {
+  color: #123bff;
+  font-weight: 800;
+}
+
+.thread-article-modal-body hr {
+  border: 0;
+  border-top: 1px solid rgba(18,59,255,.16);
+}

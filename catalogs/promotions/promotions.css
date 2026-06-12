@@ -1257,19 +1257,25 @@ body.has-catalog-modal-open {
   position: sticky;
   top: 0;
   z-index: 2;
-  display: inline-flex !important;
-  align-items: center;
-  justify-content: center;
-  align-self: flex-end;
+  display: grid !important;
+  width: 32px;
+  min-width: 32px;
+  max-width: 32px;
+  height: 32px;
   min-height: 32px;
+  max-height: 32px;
+  place-items: center;
+  align-self: flex-end;
   margin: 0 0 12px auto;
-  padding: 0 11px;
+  padding: 0;
   border: 1px solid rgba(135, 177, 255, 0.52);
-  border-radius: 999px;
+  border-radius: 50%;
   background: rgba(4, 15, 34, 0.92);
   color: #ffffff;
-  font-size: 0.76rem;
-  font-weight: 900;
+  font-size: 1.18rem;
+  font-weight: 700;
+  line-height: 1;
+  aspect-ratio: 1 / 1;
   cursor: pointer;
 }
 

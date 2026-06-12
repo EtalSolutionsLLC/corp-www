@@ -16,13 +16,14 @@ HEADERS = [
 EXPECTED_LINKS = [
     '/#home',
     '/#services',
+    '/#explore',
     '/#brands',
     '/#promotions',
     '/#blog',
     '/#about',
     '/#contact',
 ]
-EXPECTED_PANEL_IDS = ['home', 'services', 'brands', 'promotions', 'blog', 'about', 'contact']
+EXPECTED_PANEL_IDS = ['home', 'services', 'explore', 'brands', 'promotions', 'blog', 'about', 'contact']
 
 
 class SpaBlogPartialTests(unittest.TestCase):
@@ -46,9 +47,14 @@ class SpaBlogPartialTests(unittest.TestCase):
 
     def test_counter_selector_and_refinements_remain(self):
         self.assertIn('data-performance-proof', INDEX)
-        self.assertIn('data-service-selector', INDEX)
+        self.assertIn('data-explore-root', INDEX)
         self.assertIn('assets/js/visual-polish.js', INDEX)
         self.assertIn('assets/js/catalog-carousel.js', INDEX)
+
+    def test_full_article_delivery_assets_remain_loaded(self):
+        self.assertIn('data-thread-article-modal', PARTIAL)
+        self.assertIn('/assets/js/transformation-thread.js', INDEX)
+        self.assertIn('/assets/css/transformation-thread.css', INDEX)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,252 @@
+{
+  "version": "3.1",
+  "start": "pressure",
+  "order": [
+    "pressure",
+    "constraint",
+    "exposure",
+    "move"
+  ],
+  "cards": {
+    "pressure": {
+      "label": "What changed",
+      "eyebrow": "Card 1 of 4 · What changed",
+      "prompt": "What is making this conversation necessary now?",
+      "options": [
+        {
+          "key": "delivery-drag",
+          "icon": "↗",
+          "label": "Delivery is slowing down important work",
+          "next": "constraint",
+          "title": "Delivery slowdown",
+          "summary": "The visible problem is not just speed. Current systems may be making it harder to respond to important needs.",
+          "firstLook": [
+            "time required to make a change",
+            "release delays",
+            "connections that slow important work"
+          ]
+        },
+        {
+          "key": "ai-control-gap",
+          "icon": "✦",
+          "label": "A.I. plans are moving faster than the guardrails",
+          "next": "constraint",
+          "title": "A.I. guardrail gap",
+          "summary": "The opportunity is real, but adoption may be moving faster than clear ownership, reliable data, and practical safeguards.",
+          "firstLook": [
+            "priority A.I. use cases",
+            "data quality and access",
+            "ownership and guardrails"
+          ]
+        },
+        {
+          "key": "complexity-tax",
+          "icon": "◇",
+          "label": "Complexity is growing faster than value",
+          "next": "constraint",
+          "title": "Growing complexity",
+          "summary": "Systems, subscriptions, custom code, and exceptions may be multiplying faster than the value they create.",
+          "firstLook": [
+            "overlapping tools and platforms",
+            "main cost drivers",
+            "avoidable complexity"
+          ]
+        },
+        {
+          "key": "resilience-risk",
+          "icon": "◈",
+          "label": "Reliability concerns are getting harder to ignore",
+          "next": "constraint",
+          "title": "Reliability concerns",
+          "summary": "Confidence is slipping around uptime, security, recovery, or the ability to make changes safely.",
+          "firstLook": [
+            "single points of failure",
+            "recovery plan",
+            "security and control gaps"
+          ]
+        }
+      ]
+    },
+    "constraint": {
+      "label": "What is in the way",
+      "eyebrow": "Card 2 of 4 · What is in the way",
+      "prompt": "What is making the situation harder to resolve?",
+      "options": [
+        {
+          "key": "knowledge-concentration",
+          "icon": "◎",
+          "label": "Critical knowledge lives with too few people",
+          "next": "exposure",
+          "title": "Key-person risk",
+          "summary": "Too much important knowledge is unwritten, difficult to transfer, or held by too few people.",
+          "firstLook": [
+            "knowledge held by one person",
+            "support handoffs",
+            "documentation gaps"
+          ]
+        },
+        {
+          "key": "fragmented-ownership",
+          "icon": "↔",
+          "label": "Ownership is fragmented across teams and vendors",
+          "next": "exposure",
+          "title": "Split ownership",
+          "summary": "The problem may not have one accountable owner, so local decisions accumulate without a clear overall result.",
+          "firstLook": [
+            "decision ownership",
+            "vendor boundaries",
+            "day-to-day accountability"
+          ]
+        },
+        {
+          "key": "dependency-opacity",
+          "icon": "⌁",
+          "label": "Important connections become visible only when something breaks",
+          "next": "exposure",
+          "title": "Hidden dependencies",
+          "summary": "The systems may be hard to understand as a whole, so each change becomes a partial discovery exercise.",
+          "firstLook": [
+            "system connection map",
+            "hidden coupling",
+            "impact of a change"
+          ]
+        },
+        {
+          "key": "evidence-gap",
+          "icon": "?",
+          "label": "We do not have enough evidence to choose what comes first",
+          "next": "exposure",
+          "title": "Missing evidence",
+          "summary": "The organization has options, but not enough trusted information to choose an order, make tradeoffs, or explain the investment.",
+          "firstLook": [
+            "decision criteria",
+            "starting measures",
+            "assumptions about order"
+          ]
+        }
+      ]
+    },
+    "exposure": {
+      "label": "Where it hurts",
+      "eyebrow": "Card 3 of 4 · Where it hurts",
+      "prompt": "Where will the problem cause the most damage if nothing changes?",
+      "options": [
+        {
+          "key": "customer-friction",
+          "icon": "◌",
+          "label": "Customer or staff experience keeps degrading",
+          "next": "move",
+          "title": "Experience degradation",
+          "insight": "The problem is already affecting the people the systems are meant to serve. Friction is showing up in the customer or staff experience.",
+          "why": "When experience degrades gradually, organizations often normalize the symptoms until the cost appears as abandonment, workarounds, or lost trust.",
+          "firstLook": [
+            "customer or staff journey",
+            "performance and reliability",
+            "manual workarounds"
+          ]
+        },
+        {
+          "key": "operational-continuity",
+          "icon": "⟳",
+          "label": "Daily operations depend on fragile assumptions",
+          "next": "move",
+          "title": "Fragile continuity",
+          "insight": "The system may work today while relying on assumptions that are difficult to test or sustain.",
+          "why": "Fragile continuity is expensive because it is often invisible during normal operation and most costly during an incident or transition.",
+          "firstLook": [
+            "recovery path",
+            "single points of failure",
+            "recovery rehearsal"
+          ]
+        },
+        {
+          "key": "data-trust",
+          "icon": "≋",
+          "label": "Data cannot support confident decisions",
+          "next": "move",
+          "title": "Data trust gap",
+          "insight": "Teams may be moving slowly because the information they rely on is inconsistent, delayed, or difficult to explain.",
+          "why": "When leaders cannot trust the data, automation, A.I., and investment decisions all inherit the same uncertainty.",
+          "firstLook": [
+            "where critical data comes from",
+            "decision-critical measures",
+            "quality ownership"
+          ]
+        },
+        {
+          "key": "security-control",
+          "icon": "◆",
+          "label": "Security and control gaps are growing",
+          "next": "move",
+          "title": "Growing control gaps",
+          "insight": "Risk may be spreading through exceptions, unclear access, aging dependencies, or limited visibility into what is happening.",
+          "why": "Security debt compounds quietly. The longer it remains hidden, the harder it becomes to separate urgent fixes from longer-term improvement.",
+          "firstLook": [
+            "access boundaries",
+            "exception inventory",
+            "monitoring and response"
+          ]
+        }
+      ]
+    },
+    "move": {
+      "label": "First step",
+      "eyebrow": "Card 4 of 4 · Choose a first step",
+      "prompt": "What first step would create the clearest evidence?",
+      "options": [
+        {
+          "key": "architecture-baseline",
+          "icon": "▦",
+          "label": "Build a clear technology baseline",
+          "complete": true,
+          "title": "Technology baseline",
+          "move": "Begin with a focused technology baseline: map the most important systems, connections, ownership boundaries, and measures before committing to a major program.",
+          "firstLook": [
+            "assumptions about the desired future state",
+            "system connection map",
+            "decision-critical measures"
+          ]
+        },
+        {
+          "key": "risk-containment",
+          "icon": "⬡",
+          "label": "Contain the most important risk",
+          "complete": true,
+          "title": "Risk containment",
+          "move": "Begin with a targeted containment plan: isolate the highest-consequence risk, define near-term controls, and preserve room for a better long-term decision.",
+          "firstLook": [
+            "highest-consequence scenario",
+            "containment options",
+            "recovery confidence"
+          ]
+        },
+        {
+          "key": "focused-pilot",
+          "icon": "▶",
+          "label": "Run a focused pilot that produces evidence",
+          "complete": true,
+          "title": "Focused pilot",
+          "move": "Begin with a narrow pilot designed to produce evidence: one bounded workflow, one accountable owner, and explicit measures for value, risk, and maintainability.",
+          "firstLook": [
+            "bounded use case",
+            "success measures",
+            "accountable owner"
+          ]
+        },
+        {
+          "key": "sequencing-roadmap",
+          "icon": "⇢",
+          "label": "Build a practical step-by-step roadmap",
+          "complete": true,
+          "title": "Step-by-step roadmap",
+          "move": "Begin with a practical roadmap: identify the decisions that unlock other decisions, separate reversible steps from commitments, and make the tradeoffs visible.",
+          "firstLook": [
+            "decisions that unlock other decisions",
+            "reversible first steps",
+            "investment order"
+          ]
+        }
+      ]
+    }
+  }
+}

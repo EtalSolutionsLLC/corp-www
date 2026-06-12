@@ -185,17 +185,25 @@
   position: sticky;
   top: 0;
   z-index: 2;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  width: 32px;
+  min-width: 32px;
+  max-width: 32px;
+  height: 32px;
+  min-height: 32px;
+  max-height: 32px;
+  place-items: center;
   margin-left: auto;
   margin-bottom: 18px;
-  padding: 8px 12px;
+  padding: 0;
   border: 1px solid rgba(18, 59, 255, 0.22);
-  border-radius: 999px;
+  border-radius: 50%;
   background: #ffffff;
   color: #123bff;
-  font-weight: 900;
+  font-size: 1.18rem;
+  font-weight: 700;
+  line-height: 1;
+  aspect-ratio: 1 / 1;
   cursor: pointer;
 }
 
