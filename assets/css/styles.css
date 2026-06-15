@@ -247,7 +247,7 @@ body:not(:has(section:target)) .brand-page-hero {
   font-size: clamp(1.06rem, 1.35vw, 1.38rem);
   line-height: 1.42;
   color: rgba(255,255,255,0.9);
-  max-width: 1060px;
+  max-width: 600px; !Important
 }
 
 .hero-actions {
@@ -2370,25 +2370,6 @@ body {
   transform: translateY(0.28em);
 }
 
-.quick-summary {
-  margin-top: 22px;
-  padding: 14px 16px;
-  border-left: 3px solid rgba(143, 178, 255, 0.88);
-  background: rgba(255, 255, 255, 0.055);
-  max-width: 760px;
-}
-
-.quick-summary summary {
-  cursor: pointer;
-  color: rgba(255, 255, 255, 0.92);
-  font-weight: 850;
-}
-
-.quick-summary p {
-  margin: 12px 0 0;
-  color: rgba(255, 255, 255, 0.78);
-}
-
 .performance-proof {
   padding: clamp(28px, 4vw, 44px) 0;
   background:
@@ -2788,7 +2769,6 @@ body:has(#explore:target) .nav a[href$="#explore"] { color: #b8cdff; }
   .hero-cta { min-height: 46px; padding-inline: 20px; }
   .hero-trust { margin-top: 14px; gap: 8px 16px; }
   .hero-motion-line { margin-top: 12px; }
-  .quick-summary { margin-top: 10px; }
 }
 /* Menu-aligned band contract and Transformation Thread editorial rail */
 :root {

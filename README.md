@@ -550,3 +550,20 @@ pm-setup
 ```
 
 The performance counter is intentionally browser-observed and lives inside Explore. It does not claim a Lighthouse or Core Web Vitals score.
+
+## Homepage 60-second summary
+
+The homepage keeps a compact `In a hurry? Read the 60-second version.` trigger. The substantive summary opens in a standard top-layer dialog so it does not consume hero viewport space.
+
+The isolated component assets are:
+
+```text
+assets/css/home-quick-summary.css
+assets/js/home-quick-summary.js
+```
+
+The dialog uses the shared circular `×` modal-close standard and supports its close button, Escape, clicking outside the dialog, and modal action navigation.
+
+### Viewport composition practice
+
+When composing a screen between the shared header and footer, preserve approximately half an inch of visible breathing room at the top and bottom whenever practical. Treat this as a design-review judgment, not as a global CSS rule.

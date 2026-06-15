@@ -16,6 +16,7 @@
 .policy-modal-close-enhanced,
 .explore-mesh-modal-close,
 .thread-article-modal-close,
+.home-quick-summary-modal-close,
 #cc-main .pm__close-btn {
   display: grid !important;
   width: var(--modal-close-size) !important;
@@ -54,6 +55,8 @@
 .explore-mesh-modal-close:focus-visible,
 .thread-article-modal-close:hover,
 .thread-article-modal-close:focus-visible,
+.home-quick-summary-modal-close:hover,
+.home-quick-summary-modal-close:focus-visible,
 #cc-main .pm__close-btn:hover,
 #cc-main .pm__close-btn:focus-visible {
   background: var(--modal-close-bg-hover) !important;
@@ -109,3 +112,4 @@
 }
 
 .thread-article-modal-close { position:absolute!important; top:14px!important; right:14px!important; bottom:auto!important; left:auto!important; z-index:3!important; margin:0!important; }
+.home-quick-summary-modal-close { position:absolute!important; top:14px!important; right:14px!important; bottom:auto!important; left:auto!important; z-index:3!important; margin:0!important; }

@@ -18,7 +18,7 @@ class ModalCloseStandardTests(unittest.TestCase):
   for token in ['function normalizeModalCloseControl(control)','control.textContent = "×";','[data-catalog-detail-close], [data-catalog-overview-close]']: self.assertIn(token,self.carousel)
  def test_policy_closer_is_icon_only(self): self.assertIn('element.textContent = "×";',self.policy); self.assertNotIn('Close ×',self.policy)
  def test_every_known_modal_family_is_in_shared_circle_standard(self):
-  for selector in ['.catalog-detail-close','.catalog-overview-close','.policy-modal-close-enhanced','.explore-mesh-modal-close','.thread-article-modal-close','#cc-main .pm__close-btn']: self.assertIn(selector,self.system)
+  for selector in ['.catalog-detail-close','.catalog-overview-close','.policy-modal-close-enhanced','.explore-mesh-modal-close','.thread-article-modal-close','.home-quick-summary-modal-close','#cc-main .pm__close-btn']: self.assertIn(selector,self.system)
   self.assertIn('border-radius: 50% !important;',self.system); self.assertIn('aspect-ratio: 1 / 1 !important;',self.system)
  def test_component_sources_no_longer_define_close_pills(self):
   overview=self.brands[self.brands.index('.catalog-overview-close {'):self.brands.index('.catalog-overview-close:hover,')]; self.assertIn('border-radius: 50%;',overview); self.assertNotIn('border-radius: 999px;',overview)
