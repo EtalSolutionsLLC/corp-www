@@ -1,0 +1,39 @@
+name: ${STACK}
+services:
+  web:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    volumes:
+      - ./www:/usr/share/nginx/html:ro
+      - ./.containers/site-web/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    expose:
+      - "80"
+    networks:
+      - proxy
+    env_file:
+      - ./.env
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.${STACK}.rule=Host(`${APP_HOST}`)"
+      - "traefik.http.routers.${STACK}.entrypoints=web"
+      - "traefik.http.services.${STACK}.loadbalancer.server.port=80"
+
+  toolbox:
+    profiles:
+      - tools
+    build:
+      context: .
+      dockerfile: .containers/site-toolbox/Dockerfile
+    working_dir: /workspace
+    volumes:
+      - .:/workspace
+    environment:
+      REPO_ROOT: /workspace
+      SITE_ROOT: /workspace/www
+      SITE_DIR: /workspace/www
+      PORTMASON_SHARE: /workspace/portmason
+      LOG_DIR: /workspace/logs
+
+networks:
+  proxy:
+    external: true
