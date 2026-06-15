@@ -11,13 +11,20 @@ services:
     networks:
       - proxy
     env_file:
-      - ./.env
+      - ./.env.generated
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.${STACK}.rule=Host(`${APP_HOST}`)"
-      - "traefik.http.routers.${STACK}.entrypoints=web"
-      - "traefik.http.services.${STACK}.loadbalancer.server.port=80"
 
+      - "traefik.http.routers.${STACK}-http.rule=Host(`${APP_HOST}`)"
+      - "traefik.http.routers.${STACK}-http.entrypoints=web"
+      - "traefik.http.routers.${STACK}-http.service=${STACK}"
+
+      - "traefik.http.routers.${STACK}-https.rule=Host(`${APP_HOST}`)"
+      - "traefik.http.routers.${STACK}-https.entrypoints=websecure"
+      - "traefik.http.routers.${STACK}-https.tls=true"
+      - "traefik.http.routers.${STACK}-https.service=${STACK}"
+
+      - "traefik.http.services.${STACK}.loadbalancer.server.port=80"
   toolbox:
     profiles:
       - tools
