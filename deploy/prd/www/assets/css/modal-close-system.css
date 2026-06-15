@@ -1,0 +1,115 @@
+/* Site-wide modal close-control standard
+   ------------------------------------------------------------
+   Every modal uses the same circular, icon-only close affordance. */
+:root {
+  --modal-close-size: 32px;
+  --modal-close-border: rgba(143, 178, 255, 0.42);
+  --modal-close-bg: rgba(4, 15, 34, 0.84);
+  --modal-close-bg-hover: #123bff;
+  --modal-close-fg: #ffffff;
+  --modal-close-focus: 0 0 0 3px rgba(18, 59, 255, 0.22);
+}
+
+.modal-close-circle,
+.catalog-detail-close,
+.catalog-overview-close,
+.policy-modal-close-enhanced,
+.explore-mesh-modal-close,
+.thread-article-modal-close,
+.home-quick-summary-modal-close,
+#cc-main .pm__close-btn {
+  display: grid !important;
+  width: var(--modal-close-size) !important;
+  min-width: var(--modal-close-size) !important;
+  max-width: var(--modal-close-size) !important;
+  height: var(--modal-close-size) !important;
+  min-height: var(--modal-close-size) !important;
+  max-height: var(--modal-close-size) !important;
+  padding: 0 !important;
+  place-items: center !important;
+  border: 1px solid var(--modal-close-border) !important;
+  border-radius: 50% !important;
+  background: var(--modal-close-bg) !important;
+  color: var(--modal-close-fg) !important;
+  font-family: inherit !important;
+  font-size: 1.18rem !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+  text-align: center !important;
+  text-indent: 0 !important;
+  white-space: nowrap !important;
+  aspect-ratio: 1 / 1 !important;
+  cursor: pointer !important;
+  box-shadow: none !important;
+}
+
+.modal-close-circle:hover,
+.modal-close-circle:focus-visible,
+.catalog-detail-close:hover,
+.catalog-detail-close:focus-visible,
+.catalog-overview-close:hover,
+.catalog-overview-close:focus-visible,
+.policy-modal-close-enhanced:hover,
+.policy-modal-close-enhanced:focus-visible,
+.explore-mesh-modal-close:hover,
+.explore-mesh-modal-close:focus-visible,
+.thread-article-modal-close:hover,
+.thread-article-modal-close:focus-visible,
+.home-quick-summary-modal-close:hover,
+.home-quick-summary-modal-close:focus-visible,
+#cc-main .pm__close-btn:hover,
+#cc-main .pm__close-btn:focus-visible {
+  background: var(--modal-close-bg-hover) !important;
+  color: #ffffff !important;
+  outline: none !important;
+  box-shadow: var(--modal-close-focus) !important;
+}
+
+.catalog-detail-modal .catalog-detail-close {
+  position: sticky !important;
+  top: 0 !important;
+  right: auto !important;
+  bottom: auto !important;
+  left: auto !important;
+  z-index: 3 !important;
+  align-self: flex-end !important;
+  margin: 0 0 12px auto !important;
+}
+
+.catalog-overview-close {
+  position: sticky !important;
+  top: 0 !important;
+  right: auto !important;
+  bottom: auto !important;
+  left: auto !important;
+  z-index: 3 !important;
+  margin: 0 0 18px auto !important;
+}
+
+.policy-modal-close-enhanced {
+  position: absolute !important;
+  top: 12px !important;
+  right: 12px !important;
+  bottom: auto !important;
+  left: auto !important;
+  z-index: 3 !important;
+  margin: 0 !important;
+}
+
+#cc-main .pm__close-btn {
+  position: absolute !important;
+  top: 14px !important;
+  right: 14px !important;
+  bottom: auto !important;
+  left: auto !important;
+  z-index: 3 !important;
+  margin: 0 !important;
+}
+
+#cc-main .pm__close-btn svg {
+  width: 15px !important;
+  height: 15px !important;
+}
+
+.thread-article-modal-close { position:absolute!important; top:14px!important; right:14px!important; bottom:auto!important; left:auto!important; z-index:3!important; margin:0!important; }
+.home-quick-summary-modal-close { position:absolute!important; top:14px!important; right:14px!important; bottom:auto!important; left:auto!important; z-index:3!important; margin:0!important; }
