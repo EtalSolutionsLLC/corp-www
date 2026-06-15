@@ -29,8 +29,9 @@ jobs:
         run: |
           docker compose run --rm \
             --workdir /workspace/deploy/prd \
+            -e SITE_DIR=/workspace/deploy/prd/www \
             toolbox \
-            pm-setup
+            pm-process-site-partials
 
       - name: Commit generated production site HTML
         shell: bash
@@ -42,7 +43,8 @@ jobs:
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add deploy/prd/www
+
+          git add -f deploy/prd/www
           git commit -m "chore: generate production site HTML"
           git push
 
