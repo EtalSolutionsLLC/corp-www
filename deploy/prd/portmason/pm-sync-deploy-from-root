@@ -1,0 +1,130 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+: "${PORTMASON_SHARE:="$(cd -- "$(dirname -- "${BASH_SOURCE[0]:-${0:-}}")" && pwd -P)"}"
+
+. "${PORTMASON_SHARE}/pm-helpers-base"
+
+usage() {
+  cat <<'USAGE'
+Usage: pm-sync-deploy-from-root [-o|--overwrite|-f|--force]
+
+Sync deployable project files from repo root into the current deploy environment directory.
+
+Rules:
+  - Must be run from deploy/<env>.
+  - Default: if the deploy env dir contains anything except protected config files, NO-OP.
+  - --overwrite allows refreshing generated deploy content.
+  - Environment/control files are never copied from root and never deleted from deploy env.
+USAGE
+}
+
+env_is_clean() {
+  shopt -s nullglob dotglob
+
+  local item name
+  for item in "$PWD"/*; do
+    name="$(basename "$item")"
+
+    case "$name" in
+      .env|.env.example|.env.generated|*.env|*.env.example|*.env.generated|docker-compose.yml|logs)
+        ;;
+      *)
+        return 1
+        ;;
+    esac
+  done
+
+  return 0
+}
+
+detect_repo_root() {
+  local env_dir="$PWD"
+
+  if git -C "$env_dir" rev-parse --show-toplevel >/dev/null 2>&1; then
+    git -C "$env_dir" rev-parse --show-toplevel
+    return 0
+  fi
+
+  cd "$env_dir/../.." && pwd -P
+}
+
+deploy_sync_from_root() {
+  local overwrite="$1"
+  local env_dir="$PWD"
+  local root_dir=""
+
+  if ! is_env_dir; then
+    echo "ERROR: Must run from deploy/<env>." >&2
+    return 1
+  fi
+
+  if ! env_is_clean && [[ "$overwrite" -ne 1 ]]; then
+    echo "Environment folder '$env_dir' is already populated with deploy content."
+    echo "NO-OP. Use -o/--overwrite to refresh generated deploy content."
+    return 0
+  fi
+
+  root_dir="$(detect_repo_root)"
+
+  if [[ ! -d "$root_dir" ]]; then
+    echo "ERROR: repo root '$root_dir' not found." >&2
+    return 1
+  fi
+
+  echo "Repo root:  $root_dir"
+  echo "Env folder: $env_dir"
+  echo "Mode:       $([[ "$overwrite" -eq 1 ]] && echo "overwrite" || echo "safe")"
+  echo
+
+  rsync -a --delete \
+    --exclude='.git/' \
+    --exclude='.github/' \
+    --exclude='deploy/' \
+    --exclude='logs/' \
+    --exclude='capture/' \
+    --exclude='.project_timestamp' \
+    --exclude='.htaccess' \
+    --exclude='.env' \
+    --exclude='.env.example' \
+    --exclude='.env.generated' \
+    --exclude='*.env' \
+    --exclude='*.env.example' \
+    --exclude='*.env.generated' \
+    --exclude='docker-compose.yml' \
+    --exclude='config.generated.json' \
+    --exclude='Dockerfile*' \
+    --exclude='archive/' \
+    --exclude='tests' \
+    "$root_dir/" \
+    "$env_dir/"
+
+  echo
+  echo "Sync complete."
+}
+
+main() {
+  local overwrite=0
+  local arg=""
+
+  for arg in "$@"; do
+    case "$arg" in
+      -o|--overwrite|--force|-f)
+        overwrite=1
+        ;;
+      -h|--help)
+        usage
+        return 0
+        ;;
+      *)
+        echo "ERROR: unknown argument: $arg" >&2
+        usage >&2
+        return 2
+        ;;
+    esac
+  done
+
+  deploy_sync_from_root "$overwrite"
+}
+
+main "$@"
