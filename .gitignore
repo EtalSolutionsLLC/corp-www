@@ -6,3 +6,30 @@
 /chg.txt
 /.env.restore
 *.bak
+
+# Portmason staged copy at repo root is generated/local.
+/portmason/
+.env.generated
+*.pyc
+__pycache__/
+/capture/
+/archive/
+/*.tar.gz
+*:Zone.Identifier
+/chg.txt
+/.env.restore
+*.bak
+
+# Portmason staged copy at repo root is generated/local.
+ /portmason/
+.env.generated
+config.generated.json 
+*.pyc
+__pycache__/
+/capture/
+/archive/
+/*.tar.gz
+*:Zone.Identifier
+/chg.txt
+/.env.restore
+*.bak
