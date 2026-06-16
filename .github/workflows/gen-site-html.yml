@@ -35,6 +35,9 @@ jobs:
             toolbox \
             portmason/pm-process-site-partials
 
+      - name: Report blog entry rotation
+        run: ./bin/report-blog-rotation
+
       - name: Commit generated production site HTML
         if: ${{ !env.ACT }}
         shell: bash
