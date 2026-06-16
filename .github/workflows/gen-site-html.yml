@@ -36,6 +36,7 @@ jobs:
             portmason/pm-process-site-partials
 
       - name: Commit generated production site HTML
+        if: ${{ !env.ACT }}
         shell: bash
         working-directory: .
         run: |
@@ -51,6 +52,7 @@ jobs:
           git push
 
       - name: Upload GitHub Pages artifact
+        if: ${{ !env.ACT }}
         uses: actions/upload-pages-artifact@v3
         with:
           path: deploy/prd/www
@@ -64,4 +66,5 @@ jobs:
 
     steps:
       - name: Deploy to GitHub Pages
+        if: ${{ !env.ACT }}
         uses: actions/deploy-pages@v4
