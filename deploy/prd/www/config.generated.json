@@ -3,7 +3,7 @@
   "APP_HOST": "www.etal.solutions",
   "APP_SLUG": "www",
   "CLIENT": "Et al Solutions LLC",
-  "CONTAINER_ROOT": "",
+  "CONTAINER_ROOT": "/workspace",
   "DATA_CLASS": "public",
   "DATA_LIFECYCLE": "persistent",
   "DEPLOYMENT_ID": "www-1778610786",
