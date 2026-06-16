@@ -3,9 +3,6 @@ name: Generate site HTML
 on:
   workflow_dispatch:
   schedule:
-    # GitHub Actions cron is UTC.
-    # 12:05 AM Eastern during daylight saving time = 04:05 UTC.
-    # 12:05 AM Eastern during standard time = 05:05 UTC.
     - cron: "5 4,5 * * *"
 
 permissions:
@@ -14,12 +11,16 @@ permissions:
   id-token: write
 
 concurrency:
-  group: generate-site-html
+  group: gen-site-html
   cancel-in-progress: false
 
 jobs:
   generate:
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: deploy/prd
 
     steps:
       - name: Check out repository
@@ -27,14 +28,16 @@ jobs:
 
       - name: Generate production site HTML
         run: |
-          docker compose run --rm \
-            --workdir /deploy/prd \
+          docker compose \
+            -f docker-compose.yml \
+            run --rm \
             -e SITE_DIR=/workspace/www \
             toolbox \
             /workspace/portmason/pm-process-site-partials
 
       - name: Commit generated production site HTML
         shell: bash
+        working-directory: .
         run: |
           if git diff --quiet -- deploy/prd/www; then
             echo "Production site HTML is already current."
@@ -43,7 +46,6 @@ jobs:
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
           git add -f deploy/prd/www
           git commit -m "chore: generate production site HTML"
           git push
@@ -63,3 +65,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
+EOF
