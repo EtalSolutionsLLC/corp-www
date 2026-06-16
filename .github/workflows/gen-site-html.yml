@@ -33,7 +33,7 @@ jobs:
             run --rm \
             -e SITE_DIR=/workspace/www \
             toolbox \
-            /workspace/portmason/pm-process-site-partials
+            portmason/pm-process-site-partials
 
       - name: Commit generated production site HTML
         shell: bash
