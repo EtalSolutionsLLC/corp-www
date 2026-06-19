@@ -2,6 +2,7 @@
   "use strict";
 
   var enhancedClass = "policy-modal-close-enhanced";
+  var hostClass = "policy-modal-close-host";
   var enhancedAttribute = "data-policy-modal-close-enhanced";
   var candidateSelector = 'button, [role="button"], a';
   var policyContainerSelector = [
@@ -35,6 +36,12 @@
     return value.indexOf("close") !== -1 || value === "×" || value === "x";
   }
 
+  function findCloseHost(element) {
+    var parent = element && element.parentElement;
+    if (!parent || !parent.closest) return null;
+    return parent.closest('[role="dialog"], [aria-modal="true"], [data-policy-modal-dialog], [class*="policy"], [id*="policy"]');
+  }
+
   function isPolicyCloseControl(element) {
     if (!isCloseControl(element)) return false;
 
@@ -60,6 +67,10 @@
      * observer from re-entering enhance() when the class or aria-label changes.
      */
     element.setAttribute(enhancedAttribute, "");
+    var closeHost = findCloseHost(element);
+    if (closeHost && closeHost !== element) {
+      closeHost.classList.add(hostClass);
+    }
     element.classList.add("modal-close-circle", enhancedClass);
 
     if (element.getAttribute("aria-label") !== "Close privacy policy") {

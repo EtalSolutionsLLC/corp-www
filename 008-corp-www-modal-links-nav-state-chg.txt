@@ -1,0 +1,17 @@
+project/www/assets/js/viewport-targets.js
+project/deploy/prd/www/assets/js/viewport-targets.js
+project/www/assets/css/viewport-contract.css
+project/deploy/prd/www/assets/css/viewport-contract.css
+project/www/assets/css/modal-close-system.css
+project/deploy/prd/www/assets/css/modal-close-system.css
+project/www/assets/css/policy-modal-overrides.css
+project/deploy/prd/www/assets/css/policy-modal-overrides.css
+project/www/assets/js/policy-modal-close.js
+project/deploy/prd/www/assets/js/policy-modal-close.js
+project/www/assets/css/action-system.css
+project/deploy/prd/www/assets/css/action-system.css
+project/tests/test_viewport_targets_script.py
+project/tests/test_viewport_contract.py
+project/tests/test_policy_modal_close_style.py
+project/tests/test_policy_modal_close_position.py
+project/tests/test_catalog_link_treatment.py

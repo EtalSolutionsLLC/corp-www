@@ -13,7 +13,7 @@ BLOG_REDIRECT = (ROOT / "transformation-thread/index.html").read_text(encoding="
 
 class BlogNavDecorationTests(unittest.TestCase):
     def test_blog_is_an_spa_target(self):
-        self.assertIn('<section class="thread-blog panel" id="blog"', INDEX)
+        self.assertRegex(INDEX, r'<section class="thread-blog panel[^"]*pm-viewport-target[^"]*" id="blog"')
         self.assertIn('<a href="/#blog">Blog</a>', HEADER)
 
     def test_blog_target_decorates_blog_link(self):

@@ -34,11 +34,11 @@ class SectionThemeAlternationTests(unittest.TestCase):
                 self.assertIn(f'data-theme="{theme}"', self.section_tag(section_id))
 
     def test_services_and_contact_classes_match_theme(self):
-        self.assertIn('class="section-light panel" id="services" data-theme="light"', INDEX)
-        self.assertIn('class="section-light panel" id="contact" data-theme="light"', INDEX)
+        self.assertRegex(INDEX, r'class="section-light panel[^"]*pm-viewport-target[^"]*" id="services" data-theme="light"')
+        self.assertRegex(INDEX, r'class="section-light panel[^"]*pm-viewport-target[^"]*" id="contact" data-theme="light"')
 
     def test_blog_partial_declares_light_theme(self):
-        self.assertIn('class="thread-blog panel" id="blog" data-theme="light"', BLOG_PARTIAL)
+        self.assertRegex(BLOG_PARTIAL, r'class="thread-blog panel[^"]*pm-viewport-target[^"]*" id="blog" data-theme="light"')
 
     def test_light_services_have_readable_overrides(self):
         self.assertIn('.section-light .service-line span,', CSS)

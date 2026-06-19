@@ -8,11 +8,11 @@
     "itemFallback": "Promotion",
     "heroCta": "View Details",
     "learnMore": "Learn More",
-    "newer": "Newer promotion",
-    "previous": "Previous promotion",
+    "newer": "Newer offer",
+    "previous": "Previous offer",
     "end": "End of promotions",
-    "scrollHint": "Scroll sideways through catalog items.",
-    "detail": "Detail",
+    "scrollHint": "Focused offers for practical progress.",
+    "detail": "Details",
     "summary": "Summary"
   },
   "regions": {

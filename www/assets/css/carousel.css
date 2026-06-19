@@ -470,3 +470,36 @@
     transition: none !important;
   }
 }
+
+/* 2026-06-16 intentional refinement: catalog cards should not look like empty white boxes. */
+.catalog-page-head {
+  margin-bottom: clamp(16px, 2.4vw, 26px);
+}
+
+.catalog-page-head h2 {
+  text-wrap: balance;
+}
+
+.catalog-carousel-instructions {
+  margin-bottom: 12px;
+}
+
+.catalog-carousel-track {
+  padding-top: 4px;
+}
+
+.catalog-card,
+.catalog-panel {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.99), rgba(244,248,255,0.96));
+}
+
+.catalog-summary-brand-header {
+  min-height: 0;
+  margin-bottom: 14px;
+}
+
+.catalog-card h2,
+.catalog-panel-detail h3 {
+  text-wrap: balance;
+}

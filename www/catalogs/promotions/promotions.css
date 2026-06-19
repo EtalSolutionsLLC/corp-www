@@ -1762,3 +1762,56 @@ body.has-catalog-modal-open {
     display: none !important;
   }
 }
+
+/* 2026-06-16 intentional refinement: promotions need a visible title and earned card space. */
+#promotions.catalog-home-section {
+  padding-top: clamp(36px, 5vh, 62px);
+  padding-bottom: clamp(42px, 6vh, 72px);
+}
+
+#promotions .catalog-page-head {
+  display: grid;
+  gap: 8px;
+  max-width: 760px;
+  margin: 0 auto clamp(18px, 2.8vw, 28px);
+  text-align: center;
+}
+
+#promotions .catalog-page-head h2 {
+  margin: 0;
+  color: #ffffff;
+  font-size: clamp(2rem, 3.2vw, 4rem);
+  line-height: 0.98;
+}
+
+#promotions .catalog-page-head p {
+  max-width: 68ch;
+  margin: 0 auto;
+  color: rgba(255,255,255,0.72);
+}
+
+#promotions .catalog-carousel-instructions {
+  color: rgba(255,255,255,0.70);
+}
+
+#promotions .catalog-item-panels {
+  min-height: 360px;
+  background:
+    linear-gradient(145deg, rgba(255,255,255,0.99), rgba(239,245,255,0.96));
+  box-shadow:
+    0 0 0 1px rgba(143,178,255,0.14),
+    0 24px 62px rgba(0,0,0,0.24);
+}
+
+#promotions .catalog-panel-summary,
+#promotions .catalog-panel-detail {
+  padding-top: clamp(20px, 2.4vw, 30px);
+}
+
+#promotions .catalog-badge {
+  margin-bottom: 12px;
+}
+
+#promotions .catalog-tag-list {
+  margin-top: 16px;
+}

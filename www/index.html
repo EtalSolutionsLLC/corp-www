@@ -40,6 +40,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <link rel="stylesheet" href="assets/css/explore.css" />
     <link rel="stylesheet" href="assets/css/theme-rhythm.css" />
     <link rel="stylesheet" href="assets/css/cookie-consent-overrides.css" />
+    <link rel="stylesheet" href="assets/css/viewport-contract.css" />
 </head>
 <body>
 <!-- PM:TRACKING-CONSENT-PART2 -->
@@ -70,44 +71,40 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 
     <main>
-      <section class="hero panel" id="home" data-theme="dark">
-        <div class="container">
+      <section class="hero panel pm-viewport-target pm-scroll-target" id="home" data-theme="dark">
+        <div class="container pm-viewport-target__inner">
           <div class="hero-copy">
             <p class="hero-kicker">Et al Solutions LLC</p>
-            <h1>Technology Solutions for Modern Small Businesses</h1>
+            <h1>Practical technology for work that has to keep moving.</h1>
           </div>
 
 <!-- PM:CATALOG-PROMOTIONS-HERO-TEASER -->
           <aside class="catalog-hero-card" aria-label="Featured catalog item">
             <span class="catalog-hero-kicker">Featured Promotion</span>
-            <h2>Everyday A.I. Session</h2>
+            <h2>Workflow Friction Review</h2>
             <div class="catalog-hero-meta" aria-label="Catalog item details">
-              <span>General consumers</span>
-              <span>Price: <strong>$149</strong></span>
+              <span>Small teams and owner-led businesses</span>
+              <span>Price: <strong>$495</strong></span>
             </div>
-            <p>A friendly, practical A.I. session for everyday people who want useful help without the jargon.</p>
-            <a class="catalog-hero-cta action action-primary" href="/#promotions" data-catalog-detail-open="what-can-ai-do-for-you-details">View Details</a>
+            <p>A focused review of the recurring handoffs, delays, and workarounds that keep technology from feeling useful.</p>
+            <a class="catalog-hero-cta action action-primary" href="/#promotions" data-catalog-detail-open="workflow-friction-review-details">View Details</a>
           </aside>
 <!-- /PM:CATALOG-PROMOTIONS-HERO-TEASER -->
 
           <div class="hero-support">
             <p class="hero-sub">
-              We help small businesses grow with lighter technology: practical A.I., dependable software, and clear guidance without unnecessary weight.
+              We help smaller organizations choose the right technology, adopt A.I. effectively, and build simpler systems that remove unnecessary complexity and simplify day-to-day work.
             </p>
 
             <div class="hero-actions">
-              <a class="hero-cta action action-primary" href="#explore">Start with Your Problem</a>
-              <a class="hero-cta secondary action action-secondary" href="#services">Explore Services</a>
+              <a class="hero-cta action action-primary" href="#explore">Find the Right First Step</a>
+              <a class="hero-cta secondary action action-secondary" href="#services">See What We Do</a>
             </div>
+          </div>
 
-            <ul class="hero-trust">
-              <li>Practical A.I.</li>
-              <li>Custom software</li>
-              <li>Clear guidance</li>
-            </ul>
-
+          <div class="hero-motion-cluster">
             <p class="hero-motion-line" aria-live="polite">
-              Built to stay <span data-kinetic-word>light</span>.
+              Built to stay <span data-kinetic-word>useful</span>.
             </p>
 
             <div class="home-quick-summary-launch">
@@ -117,10 +114,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 data-home-quick-open
                 aria-haspopup="dialog"
                 aria-controls="home-quick-summary-modal"
-              >In a hurry? Read the 60-second version. <span aria-hidden="true">→</span></button>
+              >Need the short version? Read this in 60 seconds.</button>
             </div>
+          </div>
 
-            <dialog
+          <dialog
               class="home-quick-summary-modal"
               id="home-quick-summary-modal"
               data-home-quick-modal
@@ -135,42 +133,41 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 >×</button>
 
                 <span class="home-quick-summary-kicker">The 60-second version</span>
-                <h2 id="home-quick-summary-title">Lighter technology. Clearer next steps.</h2>
+                <h2 id="home-quick-summary-title">Better decisions. Lighter systems. Clearer next steps.</h2>
                 <p class="home-quick-summary-intro">
-                  We help smaller organizations modernize, simplify, and strengthen the technology behind their work. The goal is dependable progress without unnecessary complexity.
+                  We help smaller organizations modernize without turning every improvement into a major program. The work starts with judgment: what matters, what can wait, and what should be made simpler first.
                 </p>
 
                 <div class="home-quick-summary-grid" aria-label="How Et al Solutions helps">
                   <article>
                     <span>01</span>
-                    <strong>Start with the real problem.</strong>
-                    <p>Clarify the pressure, the constraint, and the first decision that will make the work easier.</p>
+                    <strong>Clarify the decision.</strong>
+                    <p>Separate the visible symptom from the choice that will actually make the work easier.</p>
                   </article>
                   <article>
                     <span>02</span>
-                    <strong>Use technology with purpose.</strong>
-                    <p>Apply practical A.I., dependable software, and clear guidance where they create measurable value.</p>
+                    <strong>Apply the right level of technology.</strong>
+                    <p>Use A.I., software, automation, or plain process improvement only where it earns its place.</p>
                   </article>
                   <article>
                     <span>03</span>
-                    <strong>Keep the first move focused.</strong>
-                    <p>Choose a sensible next step that reduces friction without adding another layer of complexity.</p>
+                    <strong>Make the first move useful.</strong>
+                    <p>Deliver a practical next step that reduces friction and leaves room to grow.</p>
                   </article>
                 </div>
 
                 <div class="home-quick-summary-actions">
-                  <a class="action action-primary" href="#explore" data-home-quick-modal-action>Explore your situation →</a>
+                  <a class="action action-primary" href="#explore" data-home-quick-modal-action>Find the right first step →</a>
                   <a class="action action-secondary" href="#contact" data-home-quick-modal-action>Start a conversation →</a>
                 </div>
               </div>
-            </dialog>
-          </div>
+          </dialog>
         </div>
       </section>
 
-      <section class="section-light panel" id="services" data-theme="light">
+      <section class="section-light panel pm-viewport-target pm-scroll-target" id="services" data-theme="light">
         <p class="mobile-swipe-hint" aria-hidden="true" data-swipe-hint data-forward-text="Swipe sideways for service details" data-back-text="Swipe left for service summary">Swipe sideways for service details <span>→</span></p>
-        <div class="container services-band" data-swipe-region>
+        <div class="container services-band pm-viewport-target__inner" data-swipe-region>
           <div class="services-stack">
             <span class="section-kicker">Services</span>
             <div class="service-line">
@@ -221,26 +218,26 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       </section>
 
 <!-- PM:EXPLORE -->
-<section class="section-dark panel explore-section" id="explore" data-theme="dark" aria-labelledby="explore-title" data-explore-root data-explore-stage="pressure" data-explore-source="content/explore-decision-tree.json">
-  <div class="container explore-section-layout">
+<section class="section-dark panel explore-section pm-viewport-target pm-scroll-target" id="explore" data-theme="dark" aria-labelledby="explore-title" data-explore-root data-explore-stage="pressure" data-explore-source="content/explore-decision-tree.json">
+  <div class="container explore-section-layout pm-viewport-target__inner">
     <header class="explore-intro">
       <div class="explore-title-row">
         <span class="section-kicker light">Explore</span>
         <span class="explore-title-divider" aria-hidden="true"></span>
-        <h2 id="explore-title">Start with the problem.</h2>
+        <h2 id="explore-title">Find the right first step.</h2>
       </div>
     </header>
 
     <div class="explore-tool-stack">
       <section class="explore-path-card explore-tool explore-tool-guided" aria-labelledby="explore-question-title" data-explore-guide>
       <span class="explore-material-label explore-material-label-guided">
-        <span>Guided path</span>
+        <span>Guided thinking</span>
         <button class="explore-mesh-help" type="button" data-explore-mesh-help aria-haspopup="dialog" aria-controls="explore-mesh-modal" aria-label="Learn how this guided path works">?</button>
       </span>
       <span class="explore-guide-texture" aria-hidden="true"></span>
       <div class="explore-guide-head">
         <div>
-          <p class="explore-guide-copy">Answer four practical questions. Your choices stay in this browser and shape a clear starting point at the end.</p>
+          <p class="explore-guide-copy">Answer four plain-language questions. The goal is not a diagnosis. It is a clearer first move.</p>
         </div>
       </div>
 
@@ -287,18 +284,18 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </div>
 
         <aside class="explore-route-panel" aria-label="Your answers">
-          <span class="explore-panel-label">Your answers</span>
+          <span class="explore-panel-label">What you have told us</span>
           <ol class="explore-route-list" data-explore-route-list>
             <li>No answer yet.</li>
           </ol>
-          <p class="explore-route-note" data-explore-signal-note>Your choices stay anonymous in this browser. You can review and change them at any time.</p>
+          <p class="explore-route-note" data-explore-signal-note>Nothing is submitted. Change any answer as you think it through.</p>
         </aside>
       </div>
 
       <section class="explore-result explore-guidance-brief" aria-live="polite" aria-labelledby="explore-result-title" data-explore-result hidden>
-        <span class="explore-panel-label">Suggested next step</span>
-        <h3 id="explore-result-title" data-explore-result-title>Your answers will lead to a practical starting point.</h3>
-        <p data-explore-result-summary>Answer the four questions to see a suggested first step.</p>
+        <span class="explore-panel-label">A practical starting point</span>
+        <h3 id="explore-result-title" data-explore-result-title>Your answers will point to a practical first move.</h3>
+        <p data-explore-result-summary>Answer the four questions to see where we would start.</p>
 
         <div class="explore-brief-grid">
           <article>
@@ -310,7 +307,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <p data-explore-result-why></p>
           </article>
           <article>
-            <h4>A sensible first move</h4>
+            <h4>Where we would start</h4>
             <p data-explore-result-move></p>
           </article>
           <div class="explore-first-look" data-explore-first-look hidden>
@@ -320,7 +317,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </div>
 
         <div class="explore-route-summary">
-          <span class="explore-panel-label">Your answers</span>
+          <span class="explore-panel-label">What you have told us</span>
           <p data-explore-route-summary></p>
           <p class="explore-local-weight" data-explore-local-weight></p>
         </div>
@@ -339,9 +336,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       <dialog class="explore-mesh-modal" id="explore-mesh-modal" data-explore-mesh-modal aria-labelledby="explore-mesh-modal-title">
         <div class="explore-mesh-modal-shell">
           <button class="explore-mesh-modal-close modal-close-circle" type="button" data-explore-mesh-modal-close aria-label="Close guided-path explanation">×</button>
-          <span class="explore-panel-label">Guided path</span>
-          <h3 id="explore-mesh-modal-title">A clear way to think through a complex problem.</h3>
-          <p>This tool asks four practical questions and turns your answers into a suggested starting point.</p>
+          <span class="explore-panel-label">Guided thinking</span>
+          <h3 id="explore-mesh-modal-title">A clear way to choose a first move.</h3>
+          <p>This guided path asks four practical questions and turns the pattern into a starting point.</p>
           <p>Your choices stay visible, reversible, and local to this browser. Nothing is submitted unless you decide to start a conversation.</p>
         </div>
       </dialog>
@@ -349,7 +346,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       <noscript><p class="explore-noscript">JavaScript is optional. You can still <a class="action-link" href="mailto:info@etalsolutions.tech?subject=Technology%20Inquiry">start a conversation</a> and tell us what is getting in the way.</p></noscript>
       </section>
 
-      <section class="explore-performance-tool explore-tool" aria-label="Live page-size tools">
+      <details class="explore-performance-tool explore-tool" aria-label="Live page-size tools">
+        <summary class="explore-performance-summary"><span>Built to stay light.</span><small>Optional page-size proof</small></summary>
         <span class="explore-material-label explore-material-label-performance">A quick size check</span>
         <aside class="explore-proof-strip" aria-labelledby="explore-proof-title">
       <div class="explore-proof-copy">
@@ -395,14 +393,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <p class="site-size-result-source">Typical-homepage benchmark: <a href="https://almanac.httparchive.org/en/2025/page-weight" target="_blank" rel="noopener noreferrer">HTTP Archive, 2025 Web Almanac</a>.</p>
       </section>
         </section>
-      </section>
+      </details>
     </div>
   </div>
 </section>
 <!-- /PM:EXPLORE -->
 
-      <section class="section-light panel catalog-home-section brand-catalog-section" id="brands" data-theme="light" aria-labelledby="brands-title">
-        <div class="container catalog-page-layout">
+      <section class="section-light panel catalog-home-section brand-catalog-section pm-viewport-target pm-scroll-target" id="brands" data-theme="light" aria-labelledby="brands-title">
+        <div class="container catalog-page-layout pm-viewport-target__inner">
           <section class="catalog-page-head" id="brands-top" aria-labelledby="brands-title">
             <span class="section-kicker light">Brands</span>
             <h2 id="brands-title">Focused brands, one strong foundation.</h2>
@@ -433,19 +431,18 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               <img class="catalog-summary-logo" src="https://public.etal.solutions/assets/simplifai/logos/SIMPLIFAI-SILVER.png" alt="SIMPLIFAI logo" />
             </div>
             <h2>Practical A.I. education for everyday work.</h2>
-            <p class="catalog-subtitle">Accessible A.I. education and enablement for everyday work.</p>
-            <p>SIMPLIFAI helps people and smaller businesses use A.I. with confidence through accessible training, plain-language guidance, and practical workflows that reduce friction instead of adding complexity.</p>
+            <p class="catalog-subtitle">Practical A.I. education for everyday work.</p>
+            <p>SIMPLIFAI helps people and smaller businesses use A.I. with plain-language training and practical workflows.</p>
             <ul class="catalog-tag-list" aria-label="Tags">
-              <li>Training brand</li>
+              <li>Training</li>
               <li>Accessible A.I.</li>
-              <li>Business-friendly</li>
               <li>Practical workflows</li>
             </ul>
           </article>
           <aside class="catalog-detail-panel catalog-panel catalog-panel-detail" id="simplifai-details" aria-label="Practical A.I. education for everyday work. details">
             <span class="catalog-badge">A.I. Training &amp; Enablement</span>
             <h3>SIMPLIFAI</h3>
-            <p class="catalog-subtitle">Accessible A.I. education and enablement for everyday work.</p>
+            <p class="catalog-subtitle">Practical A.I. education for everyday work.</p>
             <img class="catalog-detail-logo" src="https://public.etal.solutions/assets/simplifai/logos/SIMPLIFAI-SILVER.png" alt="SIMPLIFAI logo" />
             <p class="catalog-detail-summary">Practical A.I. education that helps people use new tools with confidence.</p>
             <div class="catalog-attribute-grid">
@@ -471,27 +468,26 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
       <section class="catalog-carousel-item" data-catalog-item data-catalog-slug="solutions-et-al" data-catalog-title="Solutions et al">
         <div class="catalog-item-panels">
-          <article class="catalog-card catalog-panel catalog-panel-summary" aria-label="Focused technology guidance for real operational problems. summary">
+          <article class="catalog-card catalog-panel catalog-panel-summary" aria-label="Technology guidance for real operations. summary">
             <div class="catalog-summary-brand-header">
               <span class="catalog-badge">Consulting &amp; Practical Delivery</span>
               <img class="catalog-summary-logo" src="https://public.etal.solutions/assets/sea/logos/SEA-OFFICIAL.png" alt="Solutions et al logo" />
             </div>
-            <h2>Focused technology guidance for real operational problems.</h2>
-            <p class="catalog-subtitle">Practical consulting, solution design, and implementation support.</p>
-            <p>Solutions et al is the consulting and delivery brand for organizations that need clear technical direction, practical systems, and implementation support without unnecessary ceremony.</p>
+            <h2>Technology guidance for real operations.</h2>
+            <p class="catalog-subtitle">Practical consulting and delivery support.</p>
+            <p>Clear technical direction, practical systems, and implementation support without extra ceremony.</p>
             <ul class="catalog-tag-list" aria-label="Tags">
-              <li>Consulting brand</li>
+              <li>Consulting</li>
               <li>Solution design</li>
-              <li>Implementation support</li>
               <li>Clear handoff</li>
             </ul>
           </article>
-          <aside class="catalog-detail-panel catalog-panel catalog-panel-detail" id="solutions-et-al-details" aria-label="Focused technology guidance for real operational problems. details">
+          <aside class="catalog-detail-panel catalog-panel catalog-panel-detail" id="solutions-et-al-details" aria-label="Technology guidance for real operations. details">
             <span class="catalog-badge">Consulting &amp; Practical Delivery</span>
             <h3>Solutions et al</h3>
-            <p class="catalog-subtitle">Practical consulting, solution design, and implementation support.</p>
+            <p class="catalog-subtitle">Practical consulting and delivery support.</p>
             <img class="catalog-detail-logo" src="https://public.etal.solutions/assets/sea/logos/SEA-OFFICIAL.png" alt="Solutions et al logo" />
-            <p class="catalog-detail-summary">Focused consulting and delivery support for practical technology decisions.</p>
+            <p class="catalog-detail-summary">Focused support for practical technology decisions.</p>
             <div class="catalog-attribute-grid">
               <div class="catalog-attribute">
                 <strong>For</strong>
@@ -515,27 +511,26 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
       <section class="catalog-carousel-item" data-catalog-item data-catalog-slug="25th-hour" data-catalog-title="25th Hour">
         <div class="catalog-item-panels">
-          <article class="catalog-card catalog-panel catalog-panel-summary" aria-label="Helping people use reclaimed time with intention. summary">
+          <article class="catalog-card catalog-panel catalog-panel-summary" aria-label="Reclaimed time, used with intention. summary">
             <div class="catalog-summary-brand-header">
               <span class="catalog-badge">Time, Focus &amp; A.I.-Enabled Leverage</span>
               <img class="catalog-summary-logo" src="https://public.etal.solutions/assets/25th-hour/logos/25th-hour-OFFICIAL.png" alt="25th Hour logo" />
             </div>
-            <h2>Helping people use reclaimed time with intention.</h2>
-            <p class="catalog-subtitle">Human-centered A.I. leverage for time, focus, and intention.</p>
-            <p>25th Hour focuses on the human side of A.I. adoption: what people do with the time, attention, and creative energy that thoughtful automation can give back.</p>
+            <h2>Reclaimed time, used with intention.</h2>
+            <p class="catalog-subtitle">A.I. leverage for time and focus.</p>
+            <p>25th Hour explores how thoughtful automation can give back time, attention, and creative energy.</p>
             <ul class="catalog-tag-list" aria-label="Tags">
-              <li>Developing brand</li>
               <li>A.I. leverage</li>
               <li>Time reclaimed</li>
               <li>Human-centered</li>
             </ul>
           </article>
-          <aside class="catalog-detail-panel catalog-panel catalog-panel-detail" id="25th-hour-details" aria-label="Helping people use reclaimed time with intention. details">
+          <aside class="catalog-detail-panel catalog-panel catalog-panel-detail" id="25th-hour-details" aria-label="Reclaimed time, used with intention. details">
             <span class="catalog-badge">Time, Focus &amp; A.I.-Enabled Leverage</span>
             <h3>25th Hour</h3>
-            <p class="catalog-subtitle">Human-centered A.I. leverage for time, focus, and intention.</p>
+            <p class="catalog-subtitle">A.I. leverage for time and focus.</p>
             <img class="catalog-detail-logo" src="https://public.etal.solutions/assets/25th-hour/logos/25th-hour-OFFICIAL.png" alt="25th Hour logo" />
-            <p class="catalog-detail-summary">Human-centered ideas for using time reclaimed through thoughtful automation.</p>
+            <p class="catalog-detail-summary">Ideas for using reclaimed time with intention.</p>
             <div class="catalog-attribute-grid">
               <div class="catalog-attribute">
                 <strong>For</strong>
@@ -565,8 +560,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </div>
       </section>
 
-      <section class="section-dark panel catalog-home-section" id="promotions" data-theme="dark" aria-labelledby="catalog-page-title">
-        <div class="container catalog-page-layout">
+      <section class="section-dark panel catalog-home-section pm-viewport-target pm-scroll-target" id="promotions" data-theme="dark" aria-labelledby="catalog-page-title">
+        <div class="container catalog-page-layout pm-viewport-target__inner">
           <section class="catalog-page-head" id="promotions-top" aria-labelledby="catalog-page-title">
             <span class="section-kicker light">Promotions</span>
             <h2 id="catalog-page-title">Focused promotions for practical progress.</h2>
@@ -575,162 +570,24 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
           <div class="catalog-full-list" id="promotion-details" aria-label="Promotion details">
 <!-- PM:CATALOG-PROMOTIONS-FULL-LIST -->
-      <section class="catalog-carousel" aria-label="Catalog carousel" data-catalog-carousel data-catalog-default="what-can-ai-do-for-you">
+      <section class="catalog-carousel" aria-label="Catalog carousel" data-catalog-carousel data-catalog-default="workflow-friction-review">
 
-        <div class="catalog-carousel-instructions" data-catalog-nav data-newer-label="Newer promotion" data-previous-label="Previous promotion" data-end-label="End of promotions" data-detail-label="Detail" data-summary-label="Summary">
+        <div class="catalog-carousel-instructions" data-catalog-nav data-newer-label="Newer offer" data-previous-label="Previous offer" data-end-label="End of offers" data-detail-label="Details" data-summary-label="Summary">
 
-          <span class="catalog-scroll-hint">Scroll sideways through catalog items.</span>
+          <span class="catalog-scroll-hint">Focused offers for practical progress.</span>
 
           <span data-catalog-newer-slot><span class="catalog-direction-empty"></span></span>
 
-          <span data-catalog-previous-slot><a class="catalog-direction-link" href="#ai-optimized-sdlc-assessment">Previous promotion: <strong>A.I. SDLC Assessment</strong> <span>→</span></a></span>
+          <span data-catalog-previous-slot><a class="catalog-direction-link" href="#industry-ai-fusion-assessment">Next offer: <strong>Industry A.I. Assessment</strong> <span>→</span></a></span>
 
         </div>
 
         <div class="catalog-carousel-track" data-catalog-track>
 
-      <section class="catalog-carousel-item is-featured" data-catalog-item data-catalog-slug="what-can-ai-do-for-you" data-catalog-title="Everyday A.I. Session">
+      <section class="catalog-carousel-item is-featured" data-catalog-item data-catalog-slug="workflow-friction-review" data-catalog-title="Workflow Friction Review">
         <div class="catalog-item-panels">
-          <article class="catalog-card catalog-panel catalog-panel-summary is-featured" aria-label="What Can A.I. Do for You? summary">
-            <span class="catalog-badge">Featured Promotion</span>
-            <h2>What Can A.I. Do for You?</h2>
-            <p class="catalog-subtitle">A friendly, practical A.I. session for everyday people who want useful help without the jargon.</p>
-            <p>A plain-language A.I. discovery session for people who are curious about A.I. but do not know where to start.</p>
-            <div class="catalog-price">$149 <small>fixed price</small></div>
-            <ul class="catalog-tag-list" aria-label="Tags">
-              <li>Everyday A.I.</li>
-              <li>Plain-language</li>
-              <li>Hands-on</li>
-              <li>No tech background needed</li>
-            </ul>
-          </article>
-          <aside class="catalog-detail-panel catalog-panel catalog-panel-detail" id="what-can-ai-do-for-you-details" aria-label="What Can A.I. Do for You? details">
-            <span class="catalog-badge">Featured Promotion</span>
-            <h3>Everyday A.I. Session</h3>
-            <p class="catalog-subtitle">A friendly, practical A.I. session for everyday people who want useful help without the jargon.</p>
-            <div class="catalog-price">$149 <small>fixed price</small></div>
-            <p class="catalog-detail-summary">A plain-language A.I. discovery session for people who are curious about A.I. but do not know where to start.</p>
-            <div class="catalog-attribute-grid">
-              <div class="catalog-attribute">
-                <strong>60-minute session</strong>
-                <p>Friendly walkthrough, real-life examples, and simple next steps.</p>
-              </div>
-              <div class="catalog-attribute">
-                <strong>Practical uses</strong>
-                <p>Messages, reminders, photos, planning, writing, organizing, and everyday tasks.</p>
-              </div>
-              <div class="catalog-attribute">
-                <strong>Best fit</strong>
-                <p>Consumers, families, caregivers, retirees, and curious non-technical users.</p>
-              </div>
-              <div class="catalog-attribute">
-                <strong>Goal</strong>
-                <p>Leave with a short personal A.I. plan you can actually use.</p>
-              </div>
-            </div>
-            <div class="catalog-actions">
-              <a class="hero-cta" href="https://outlook.office.com/bookwithme/user/74526c29d14348708c4b83c724b1bbc3@etal.solutions?anonymous&amp;ismsaljsauthenabled&amp;ep=pcard" target="_blank" rel="noopener noreferrer">Book the Session</a>
-            </div>
-          </aside>
-        </div>
-      </section>
-
-      <section class="catalog-carousel-item" data-catalog-item data-catalog-slug="ai-optimized-sdlc-assessment" data-catalog-title="A.I. SDLC Assessment">
-        <div class="catalog-item-panels">
-          <article class="catalog-card catalog-panel catalog-panel-summary" aria-label="A.I.-Optimized SDLC Assessment summary">
-            <span class="catalog-badge">Past Promotion</span>
-            <h2>A.I.-Optimized SDLC Assessment</h2>
-            <p class="catalog-subtitle">Turn scattered A.I. usage into a governed software delivery process.</p>
-            <p>A focused assessment and design sprint for software teams that want to use A.I. across the SDLC without losing control of quality, security, or accountability.</p>
-            <div class="catalog-price">$1,200 <small>fixed price</small></div>
-            <ul class="catalog-tag-list" aria-label="Tags">
-              <li>Human-led</li>
-              <li>Test-driven</li>
-              <li>Governed</li>
-              <li>Verified</li>
-            </ul>
-          </article>
-          <aside class="catalog-detail-panel catalog-panel catalog-panel-detail" id="ai-optimized-sdlc-assessment-details" aria-label="A.I.-Optimized SDLC Assessment details">
-            <span class="catalog-badge">Past Promotion</span>
-            <h3>A.I. SDLC Assessment</h3>
-            <p class="catalog-subtitle">Turn scattered A.I. usage into a governed software delivery process.</p>
-            <div class="catalog-price">$1,200 <small>fixed price</small></div>
-            <p class="catalog-detail-summary">A focused assessment and design sprint for software teams that want to use A.I. across the SDLC without losing control of quality, security, or accountability.</p>
-            <div class="catalog-attribute-grid">
-              <div class="catalog-attribute">
-                <strong>12-hour sprint</strong>
-                <p>Current-state review, opportunity map, guardrails, and roadmap.</p>
-              </div>
-              <div class="catalog-attribute">
-                <strong>Practical outputs</strong>
-                <p>Use-case map, verification gates, and accountability model.</p>
-              </div>
-              <div class="catalog-attribute">
-                <strong>Best fit</strong>
-                <p>Small to mid-sized software teams using or evaluating A.I. tools.</p>
-              </div>
-              <div class="catalog-attribute">
-                <strong>Goal</strong>
-                <p>Faster delivery with stronger process, review, and confidence.</p>
-              </div>
-            </div>
-            <div class="catalog-actions">
-              <a class="hero-cta" href="https://outlook.office.com/bookwithme/user/74526c29d14348708c4b83c724b1bbc3@etal.solutions?anonymous&amp;ismsaljsauthenabled&amp;ep=pcard" target="_blank" rel="noopener noreferrer">Book the Sprint</a>
-            </div>
-          </aside>
-        </div>
-      </section>
-
-      <section class="catalog-carousel-item" data-catalog-item data-catalog-slug="industry-ai-fusion-assessment" data-catalog-title="Industry A.I. Assessment">
-        <div class="catalog-item-panels">
-          <article class="catalog-card catalog-panel catalog-panel-summary" aria-label="Industry A.I. Fusion Assessment summary">
-            <span class="catalog-badge">Past Promotion</span>
-            <h2>Industry A.I. Fusion Assessment</h2>
-            <p class="catalog-subtitle">Find practical, low-disruption ways to apply A.I. inside a real business operation.</p>
-            <p>A practical A.I. assessment for business owners and operators who want to identify useful A.I. opportunities without chasing hype or disrupting the way their teams already work.</p>
-            <div class="catalog-price">$750 <small>fixed price</small></div>
-            <ul class="catalog-tag-list" aria-label="Tags">
-              <li>Industry A.I.</li>
-              <li>Practical</li>
-              <li>Low-disruption</li>
-              <li>Operator-friendly</li>
-            </ul>
-          </article>
-          <aside class="catalog-detail-panel catalog-panel catalog-panel-detail" id="industry-ai-fusion-assessment-details" aria-label="Industry A.I. Fusion Assessment details">
-            <span class="catalog-badge">Past Promotion</span>
-            <h3>Industry A.I. Assessment</h3>
-            <p class="catalog-subtitle">Find practical, low-disruption ways to apply A.I. inside a real business operation.</p>
-            <div class="catalog-price">$750 <small>fixed price</small></div>
-            <p class="catalog-detail-summary">A practical A.I. assessment for business owners and operators who want to identify useful A.I. opportunities without chasing hype or disrupting the way their teams already work.</p>
-            <div class="catalog-attribute-grid">
-              <div class="catalog-attribute">
-                <strong>Business-use review</strong>
-                <p>A focused review of customer service, staffing, operations, workflows, and recurring friction.</p>
-              </div>
-              <div class="catalog-attribute">
-                <strong>Opportunity map</strong>
-                <p>Clear recommendations for where A.I. can help now, where it may help later, and what to avoid.</p>
-              </div>
-              <div class="catalog-attribute">
-                <strong>Best fit</strong>
-                <p>Food service, healthcare, hospitality, manufacturing, retail, and service-based businesses.</p>
-              </div>
-              <div class="catalog-attribute">
-                <strong>Goal</strong>
-                <p>Identify practical A.I. use cases that improve responsiveness, accuracy, efficiency, and customer experience.</p>
-              </div>
-            </div>
-            <div class="catalog-actions">
-              <a class="hero-cta" href="https://outlook.office.com/bookwithme/user/74526c29d14348708c4b83c724b1bbc3@etal.solutions?anonymous&amp;ismsaljsauthenabled&amp;ep=pcard" target="_blank" rel="noopener noreferrer">Book the Assessment</a>
-            </div>
-          </aside>
-        </div>
-      </section>
-
-      <section class="catalog-carousel-item" data-catalog-item data-catalog-slug="workflow-friction-review" data-catalog-title="Workflow Friction Review">
-        <div class="catalog-item-panels">
-          <article class="catalog-card catalog-panel catalog-panel-summary" aria-label="Workflow Friction Review summary">
-            <span class="catalog-badge">Past Promotion</span>
+          <article class="catalog-card catalog-panel catalog-panel-summary is-featured" aria-label="Workflow Friction Review summary">
+            <span class="catalog-badge">Featured Offer</span>
             <h2>Workflow Friction Review</h2>
             <p class="catalog-subtitle">Find the repetitive work worth simplifying before adding another tool.</p>
             <p>A practical review for organizations that want to reduce recurring operational friction with focused automation and clearer workflows.</p>
@@ -743,7 +600,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             </ul>
           </article>
           <aside class="catalog-detail-panel catalog-panel catalog-panel-detail" id="workflow-friction-review-details" aria-label="Workflow Friction Review details">
-            <span class="catalog-badge">Past Promotion</span>
+            <span class="catalog-badge">Featured Offer</span>
             <h3>Workflow Friction Review</h3>
             <p class="catalog-subtitle">Find the repetitive work worth simplifying before adding another tool.</p>
             <div class="catalog-price">$495 <small>fixed price</small></div>
@@ -772,7 +629,141 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           </aside>
         </div>
       </section>
-
+      <section class="catalog-carousel-item" data-catalog-item data-catalog-slug="industry-ai-fusion-assessment" data-catalog-title="Industry A.I. Assessment">
+        <div class="catalog-item-panels">
+          <article class="catalog-card catalog-panel catalog-panel-summary" aria-label="Industry A.I. Fusion Assessment summary">
+            <span class="catalog-badge">Available Offer</span>
+            <h2>Industry A.I. Fusion Assessment</h2>
+            <p class="catalog-subtitle">Find practical, low-disruption ways to apply A.I. inside a real business operation.</p>
+            <p>A practical A.I. assessment for business owners and operators who want to identify useful A.I. opportunities without chasing hype or disrupting the way their teams already work.</p>
+            <div class="catalog-price">$750 <small>fixed price</small></div>
+            <ul class="catalog-tag-list" aria-label="Tags">
+              <li>Industry A.I.</li>
+              <li>Practical</li>
+              <li>Low-disruption</li>
+              <li>Operator-friendly</li>
+            </ul>
+          </article>
+          <aside class="catalog-detail-panel catalog-panel catalog-panel-detail" id="industry-ai-fusion-assessment-details" aria-label="Industry A.I. Fusion Assessment details">
+            <span class="catalog-badge">Available Offer</span>
+            <h3>Industry A.I. Assessment</h3>
+            <p class="catalog-subtitle">Find practical, low-disruption ways to apply A.I. inside a real business operation.</p>
+            <div class="catalog-price">$750 <small>fixed price</small></div>
+            <p class="catalog-detail-summary">A practical A.I. assessment for business owners and operators who want to identify useful A.I. opportunities without chasing hype or disrupting the way their teams already work.</p>
+            <div class="catalog-attribute-grid">
+              <div class="catalog-attribute">
+                <strong>Business-use review</strong>
+                <p>A focused review of customer service, staffing, operations, workflows, and recurring friction.</p>
+              </div>
+              <div class="catalog-attribute">
+                <strong>Opportunity map</strong>
+                <p>Clear recommendations for where A.I. can help now, where it may help later, and what to avoid.</p>
+              </div>
+              <div class="catalog-attribute">
+                <strong>Best fit</strong>
+                <p>Food service, healthcare, hospitality, manufacturing, retail, and service-based businesses.</p>
+              </div>
+              <div class="catalog-attribute">
+                <strong>Goal</strong>
+                <p>Identify practical A.I. use cases that improve responsiveness, accuracy, efficiency, and customer experience.</p>
+              </div>
+            </div>
+            <div class="catalog-actions">
+              <a class="hero-cta" href="https://outlook.office.com/bookwithme/user/74526c29d14348708c4b83c724b1bbc3@etal.solutions?anonymous&amp;ismsaljsauthenabled&amp;ep=pcard" target="_blank" rel="noopener noreferrer">Book the Assessment</a>
+            </div>
+          </aside>
+        </div>
+      </section>
+      <section class="catalog-carousel-item" data-catalog-item data-catalog-slug="ai-optimized-sdlc-assessment" data-catalog-title="A.I. SDLC Assessment">
+        <div class="catalog-item-panels">
+          <article class="catalog-card catalog-panel catalog-panel-summary" aria-label="A.I.-Optimized SDLC Assessment summary">
+            <span class="catalog-badge">Available Offer</span>
+            <h2>A.I.-Optimized SDLC Assessment</h2>
+            <p class="catalog-subtitle">Turn scattered A.I. usage into a governed software delivery process.</p>
+            <p>A focused assessment and design sprint for software teams that want to use A.I. across the SDLC without losing control of quality, security, or accountability.</p>
+            <div class="catalog-price">$1,200 <small>fixed price</small></div>
+            <ul class="catalog-tag-list" aria-label="Tags">
+              <li>Human-led</li>
+              <li>Test-driven</li>
+              <li>Governed</li>
+              <li>Verified</li>
+            </ul>
+          </article>
+          <aside class="catalog-detail-panel catalog-panel catalog-panel-detail" id="ai-optimized-sdlc-assessment-details" aria-label="A.I.-Optimized SDLC Assessment details">
+            <span class="catalog-badge">Available Offer</span>
+            <h3>A.I. SDLC Assessment</h3>
+            <p class="catalog-subtitle">Turn scattered A.I. usage into a governed software delivery process.</p>
+            <div class="catalog-price">$1,200 <small>fixed price</small></div>
+            <p class="catalog-detail-summary">A focused assessment and design sprint for software teams that want to use A.I. across the SDLC without losing control of quality, security, or accountability.</p>
+            <div class="catalog-attribute-grid">
+              <div class="catalog-attribute">
+                <strong>12-hour sprint</strong>
+                <p>Current-state review, opportunity map, guardrails, and roadmap.</p>
+              </div>
+              <div class="catalog-attribute">
+                <strong>Practical outputs</strong>
+                <p>Use-case map, verification gates, and accountability model.</p>
+              </div>
+              <div class="catalog-attribute">
+                <strong>Best fit</strong>
+                <p>Small to mid-sized software teams using or evaluating A.I. tools.</p>
+              </div>
+              <div class="catalog-attribute">
+                <strong>Goal</strong>
+                <p>Faster delivery with stronger process, review, and confidence.</p>
+              </div>
+            </div>
+            <div class="catalog-actions">
+              <a class="hero-cta" href="https://outlook.office.com/bookwithme/user/74526c29d14348708c4b83c724b1bbc3@etal.solutions?anonymous&amp;ismsaljsauthenabled&amp;ep=pcard" target="_blank" rel="noopener noreferrer">Book the Sprint</a>
+            </div>
+          </aside>
+        </div>
+      </section>
+      <section class="catalog-carousel-item" data-catalog-item data-catalog-slug="what-can-ai-do-for-you" data-catalog-title="Everyday A.I. Session">
+        <div class="catalog-item-panels">
+          <article class="catalog-card catalog-panel catalog-panel-summary is-featured" aria-label="What Can A.I. Do for You? summary">
+            <span class="catalog-badge">Available Offer</span>
+            <h2>What Can A.I. Do for You?</h2>
+            <p class="catalog-subtitle">A friendly, practical A.I. session for everyday people who want useful help without the jargon.</p>
+            <p>A plain-language A.I. discovery session for people who are curious about A.I. but do not know where to start.</p>
+            <div class="catalog-price">$149 <small>fixed price</small></div>
+            <ul class="catalog-tag-list" aria-label="Tags">
+              <li>Everyday A.I.</li>
+              <li>Plain-language</li>
+              <li>Hands-on</li>
+              <li>No tech background needed</li>
+            </ul>
+          </article>
+          <aside class="catalog-detail-panel catalog-panel catalog-panel-detail" id="what-can-ai-do-for-you-details" aria-label="What Can A.I. Do for You? details">
+            <span class="catalog-badge">Available Offer</span>
+            <h3>Everyday A.I. Session</h3>
+            <p class="catalog-subtitle">A friendly, practical A.I. session for everyday people who want useful help without the jargon.</p>
+            <div class="catalog-price">$149 <small>fixed price</small></div>
+            <p class="catalog-detail-summary">A plain-language A.I. discovery session for people who are curious about A.I. but do not know where to start.</p>
+            <div class="catalog-attribute-grid">
+              <div class="catalog-attribute">
+                <strong>60-minute session</strong>
+                <p>Friendly walkthrough, real-life examples, and simple next steps.</p>
+              </div>
+              <div class="catalog-attribute">
+                <strong>Practical uses</strong>
+                <p>Messages, reminders, photos, planning, writing, organizing, and everyday tasks.</p>
+              </div>
+              <div class="catalog-attribute">
+                <strong>Best fit</strong>
+                <p>Consumers, families, caregivers, retirees, and curious non-technical users.</p>
+              </div>
+              <div class="catalog-attribute">
+                <strong>Goal</strong>
+                <p>Leave with a short personal A.I. plan you can actually use.</p>
+              </div>
+            </div>
+            <div class="catalog-actions">
+              <a class="hero-cta" href="https://outlook.office.com/bookwithme/user/74526c29d14348708c4b83c724b1bbc3@etal.solutions?anonymous&amp;ismsaljsauthenabled&amp;ep=pcard" target="_blank" rel="noopener noreferrer">Book the Session</a>
+            </div>
+          </aside>
+        </div>
+      </section>
         </div>
 
       </section>
@@ -782,9 +773,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       </section>
 
 <!-- PM:TRANSFORMATION-THREAD -->
-<section class="thread-blog panel" id="blog" data-theme="light" aria-labelledby="thread-blog-title" data-thread-blog data-thread-source="/content/transformation-thread-posts.json">
+<section class="thread-blog panel pm-viewport-target pm-scroll-target" id="blog" data-theme="light" aria-labelledby="thread-blog-title" data-thread-blog data-thread-source="/content/transformation-thread-posts.json">
 
-    <div class="container">
+    <div class="container pm-viewport-target__inner">
       <div class="thread-blog-showcase">
         <div class="thread-blog-masthead">
           <div class="thread-blog-logo-wrap" aria-label="The Transformation Thread">
@@ -797,9 +788,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <span>people,</span>
             <span>A.I.</span>
           </h2>
-          <p class="thread-blog-summary">Short field notes from The Transformation Thread on practical change and useful technology.</p>
+          <p class="thread-blog-summary">Sharp, practical notes on technology decisions, organizational change, and using A.I. without losing the thread.</p>
           <div class="thread-blog-actions">
-            <a class="hero-cta secondary action action-secondary" href="mailto:info@etalsolutions.tech?subject=The%20Transformation%20Thread%20Article%20Idea">Suggest a Topic</a>
+            <a class="thread-topic-cta action action-primary" href="mailto:info@etalsolutions.tech?subject=The%20Transformation%20Thread%20Article%20Idea">Suggest an Article Idea</a>
           </div>
         </div>
 
@@ -855,52 +846,52 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   </section>
 <!-- /PM:TRANSFORMATION-THREAD -->
 
-      <section class="section-dark panel" id="about" data-theme="dark">
-        <div class="container about-layout">
+      <section class="section-dark panel pm-viewport-target pm-scroll-target" id="about" data-theme="dark">
+        <div class="container about-layout pm-viewport-target__inner">
           <div class="section-copy">
-            <span class="section-kicker light">Accessible Innovation</span>
-            <h2>Your Partner in Practical Technology</h2>
+            <span class="section-kicker light">How We Think</span>
+            <h2>Enterprise judgment without enterprise drag.</h2>
             <p>
-              Et al Solutions LLC helps smaller organizations use technology with the same clarity and discipline larger companies rely on, without adding unnecessary complexity.
+              Et al Solutions LLC helps smaller organizations make technology decisions with the clarity larger companies expect, without importing the weight that often comes with them.
             </p>
             <p>
-              The work is intentionally straightforward: understand the business problem, choose the smallest reliable solution, and build a foundation that can grow when the business is ready.
+              We look for the smallest reliable move that improves the work now and leaves the organization stronger for whatever comes next.
             </p>
           </div>
 
           <div class="about-cards">
             <article class="about-card" data-reveal>
-              <strong>Experience where it matters most</strong>
-              <p>Decades of technology experience across software, systems, and business operations, focused on solutions that are useful in the real world.</p>
+              <strong>Seasoned technical judgment</strong>
+              <p>More than 25 years of software, systems, integration, and enterprise architecture experience applied to practical business problems.</p>
             </article>
             <article class="about-card" data-reveal>
-              <strong>Cutting-edge A.I. with a proven-tech mindset</strong>
-              <p>Modern tools are paired with dependable implementation so businesses can move forward without taking on unnecessary risk.</p>
+              <strong>A.I. with adult supervision</strong>
+              <p>Modern tools are useful when the use case, data, review path, and operating risk are understood before the rollout.</p>
             </article>
             <article class="about-card" data-reveal>
-              <strong>Enterprise thinking sized for smaller businesses</strong>
-              <p>The goal is not to make things more complex. The goal is clear structure, smart tools, and repeatable systems that support growth.</p>
+              <strong>Small enough to stay useful</strong>
+              <p>The goal is not a bigger technology footprint. The goal is better structure, cleaner handoffs, and systems people can live with.</p>
             </article>
           </div>
         </div>
       </section>
 
-      <section class="section-light panel" id="contact" data-theme="light">
-        <div class="container founder-band">
+      <section class="section-light panel pm-viewport-target pm-scroll-target" id="contact" data-theme="light">
+        <div class="container founder-band pm-viewport-target__inner">
           <div class="founder-copy">
             <span class="section-kicker light">How We Work</span>
-            <h2>Built for Clear Thinking, Practical Delivery, and Real-World Use</h2>
+            <h2>Bring the messy version. We will help make it clearer.</h2>
             <p>
-              We built this company to help smaller businesses gain access to the kind of technology thinking that is often reserved for larger organizations.
-              Our approach combines practical strategy, proven implementation patterns, and modern tools that move the business forward.
+              The best starting point is usually not a perfect specification. It is a real problem, a constraint, or a decision that keeps getting delayed.
+              We help turn that into a practical path forward.
             </p>
             <p>
-              The best technology should feel clarifying. It should reduce uncertainty, make daily work easier, and leave the business with something maintainable after the first launch.
+              The right solution should feel clarifying. It should reduce uncertainty, make daily work easier, and leave the business with something maintainable after the first launch.
             </p>
 
             <div class="founder-principles" aria-label="Founder principles">
               <span>Useful before impressive</span>
-              <span>Simple before complicated</span>
+              <span>Judgment before tooling</span>
               <span>Durable before trendy</span>
             </div>
 
@@ -958,6 +949,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <script src="assets/js/catalog-carousel.js" defer></script>
 <script src="assets/js/explore-decision-tree.js" defer></script>
 <script src="assets/js/site-size-compare.js" defer></script>
+<script src="assets/js/viewport-targets.js" defer></script>
 <script src="assets/js/visual-polish.js" defer></script>
 </body>
 </html>

@@ -140,3 +140,16 @@
     transition: none !important;
   }
 }
+
+
+/* 008: text catalog links use underline/color focus, not a pill or border. */
+.catalog-inline-link:focus-visible,
+.brand-overview-link:focus-visible,
+.catalog-direction-link:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+  border-color: transparent !important;
+  text-decoration: underline !important;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 5px;
+}

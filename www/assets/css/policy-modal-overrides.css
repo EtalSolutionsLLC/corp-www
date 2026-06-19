@@ -33,3 +33,21 @@
   outline: none;
   box-shadow: 0 0 0 3px rgba(18, 59, 255, 0.22);
 }
+
+
+/* 008: policy modal close host and late-position guard. */
+.policy-modal-close-host {
+  position: relative !important;
+}
+
+.policy-modal-close-host .policy-modal-close-enhanced,
+.policy-modal-close-enhanced[data-policy-modal-close-enhanced] {
+  position: absolute !important;
+  top: 12px !important;
+  right: 12px !important;
+  bottom: auto !important;
+  left: auto !important;
+  z-index: 50 !important;
+  margin: 0 !important;
+  transform: none !important;
+}

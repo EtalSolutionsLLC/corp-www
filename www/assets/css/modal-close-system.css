@@ -113,3 +113,79 @@
 
 .thread-article-modal-close { position:absolute!important; top:14px!important; right:14px!important; bottom:auto!important; left:auto!important; z-index:3!important; margin:0!important; }
 .home-quick-summary-modal-close { position:absolute!important; top:14px!important; right:14px!important; bottom:auto!important; left:auto!important; z-index:3!important; margin:0!important; }
+
+/* 2026-06-16 intentional refinement: visible close controls
+   The icon is now rendered by CSS so missing/empty modal markup cannot hide the X. */
+.modal-close-circle,
+.catalog-detail-close,
+.catalog-overview-close,
+.policy-modal-close-enhanced,
+.explore-mesh-modal-close,
+.thread-article-modal-close,
+.home-quick-summary-modal-close,
+#cc-main .pm__close-btn {
+  --modal-close-size: 36px;
+  position: relative !important;
+  isolation: isolate !important;
+  font-size: 0 !important;
+  background: rgba(4, 15, 34, 0.92) !important;
+  border-color: rgba(255, 255, 255, 0.58) !important;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.20) !important;
+}
+
+.modal-close-circle::before,
+.catalog-detail-close::before,
+.catalog-overview-close::before,
+.policy-modal-close-enhanced::before,
+.explore-mesh-modal-close::before,
+.thread-article-modal-close::before,
+.home-quick-summary-modal-close::before,
+#cc-main .pm__close-btn::before {
+  content: "×";
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  color: #ffffff;
+  font-size: 1.34rem;
+  font-weight: 900;
+  line-height: 1;
+  transform: translateY(-0.5px);
+}
+
+#cc-main .pm__close-btn svg {
+  display: none !important;
+}
+
+.thread-article-modal-close,
+.home-quick-summary-modal-close,
+.explore-mesh-modal-close,
+.policy-modal-close-enhanced,
+#cc-main .pm__close-btn {
+  top: 10px !important;
+  right: 10px !important;
+}
+
+.catalog-detail-modal .catalog-detail-close,
+.catalog-overview-close {
+  top: 10px !important;
+  margin-bottom: 10px !important;
+}
+
+
+/* 008: keep external policy-modal close control pinned to the modal shell. */
+.policy-modal-close-host {
+  position: relative !important;
+}
+
+.policy-modal-close-host .policy-modal-close-enhanced,
+.policy-modal-close-enhanced[data-policy-modal-close-enhanced] {
+  position: absolute !important;
+  top: 12px !important;
+  right: 12px !important;
+  bottom: auto !important;
+  left: auto !important;
+  z-index: 50 !important;
+  margin: 0 !important;
+  transform: none !important;
+}

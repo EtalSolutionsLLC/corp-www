@@ -17,7 +17,7 @@
   "MANAGED_BY": "compose",
   "OWNER_ALIAS": "etalsolutions",
   "PAGESPEED_APIKEY": "AIzaSyCiz7ukeHKQyMmf5vQnRaBdFgS2cc1oeEE",
-  "PM_STATIC_EXCLUDE_DIRS": "capture",
+  "PM_STATIC_EXCLUDE_DIRS": "capture,deploy",
   "PROJECT_ID": "www-1778610786",
   "REPO_ROOT": "/home/davidomer/code/corp-www",
   "RUNTIME_ADAPTER_CODE": "static-local",

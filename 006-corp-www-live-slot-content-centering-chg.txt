@@ -1,0 +1,3 @@
+project/www/assets/js/viewport-targets.js
+project/deploy/prd/www/assets/js/viewport-targets.js
+project/tests/test_viewport_targets_script.py
