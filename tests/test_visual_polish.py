@@ -2,9 +2,10 @@ from pathlib import Path
 import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
-INDEX = (ROOT / "index.html").read_text(encoding="utf-8")
-CSS = (ROOT / "assets/css/styles.css").read_text(encoding="utf-8")
-JS = (ROOT / "assets/js/visual-polish.js").read_text(encoding="utf-8")
+SITE = ROOT / "www"
+INDEX = (SITE / "index.html").read_text(encoding="utf-8")
+CSS = (SITE / "assets/css/styles.css").read_text(encoding="utf-8")
+JS = (SITE / "assets/js/visual-polish.js").read_text(encoding="utf-8")
 
 
 class VisualPolishTests(unittest.TestCase):
@@ -28,10 +29,10 @@ class VisualPolishTests(unittest.TestCase):
             self.assertNotIn(token, JS)
 
     def test_team_voice_applies_to_primary_www_copy(self) -> None:
-        self.assertIn('We help small businesses grow', INDEX)
-        self.assertIn('We built this company', INDEX)
-        self.assertNotIn('I help small businesses grow', INDEX)
-        self.assertNotIn('I built this company', INDEX)
+        self.assertIn('We help smaller organizations choose the right technology', INDEX)
+        self.assertIn('We help smaller organizations modernize', INDEX)
+        self.assertNotIn('I help smaller organizations choose the right technology', INDEX)
+        self.assertNotIn('I help smaller organizations modernize', INDEX)
 
 
 if __name__ == '__main__':

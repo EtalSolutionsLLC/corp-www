@@ -12,7 +12,6 @@ class ManualRotationOverrideWorkflowTests(unittest.TestCase):
     def setUpClass(cls):
         cls.workflow = WORKFLOW.read_text(encoding="utf-8")
         cls.readme = (ROOT / "README.md").read_text(encoding="utf-8")
-        cls.prd_readme = (ROOT / "deploy" / "prd" / "README.md").read_text(encoding="utf-8")
 
     def test_workflow_dispatch_exposes_optional_rotation_date(self):
         self.assertIn("rotation_date:", self.workflow)
@@ -34,13 +33,13 @@ class ManualRotationOverrideWorkflowTests(unittest.TestCase):
     def test_workflow_uses_tracked_root_rotation_script(self):
         self.assertIn('../../bin/rotate-transformation-thread "${rotation_args[@]}"', self.workflow)
 
-    def test_rotation_uses_explicit_production_paths(self):
-        for expected in [
-            "--config www/content/transformation-thread-posts.json",
-            "--selection www/content/transformation-thread-selection.json",
-            "--partial www/partials/transformation-thread.html",
-        ]:
-            self.assertIn(expected, self.workflow)
+    def test_rotation_uses_collection_manifest(self):
+        self.assertIn(
+            "--collection www/collections/transformation-thread/collection.json",
+            self.workflow,
+        )
+        self.assertNotIn("www/content/transformation-thread", self.workflow)
+        self.assertNotIn("www/partials/transformation-thread.html", self.workflow)
 
     def test_rotation_precedes_generation_and_reporting(self):
         rotate = self.workflow.index("- name: Rotate Transformation Thread selection")
@@ -50,12 +49,13 @@ class ManualRotationOverrideWorkflowTests(unittest.TestCase):
         self.assertLess(generate, report)
 
     def test_documentation_explains_manual_override(self):
-        for readme in [self.readme, self.prd_readme]:
-            self.assertIn("Actions → Generate site HTML → Run workflow", readme)
-            self.assertIn("Manual runs bypass the local-midnight guard", readme)
-            self.assertIn("--config www/content/transformation-thread-posts.json", readme)
+        self.assertIn("Actions → Generate site HTML → Run workflow", self.readme)
+        self.assertIn("Scheduled runs retain the local-midnight guard", self.readme)
         self.assertIn("bin/rotate-transformation-thread", self.readme)
-        self.assertIn("../../bin/rotate-transformation-thread", self.prd_readme)
+        self.assertIn(
+            "--collection www/collections/transformation-thread/collection.json",
+            self.readme,
+        )
 
 
 if __name__ == "__main__":

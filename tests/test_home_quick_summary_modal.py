@@ -5,16 +5,17 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+SITE = ROOT / "www"
 
 class HomeQuickSummaryModalTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.index = (ROOT / "index.html").read_text(encoding="utf-8")
-        cls.footer = (ROOT / "partials/footer.html").read_text(encoding="utf-8")
-        cls.styles = (ROOT / "assets/css/styles.css").read_text(encoding="utf-8")
-        cls.modal_css = (ROOT / "assets/css/home-quick-summary.css").read_text(encoding="utf-8")
-        cls.modal_system = (ROOT / "assets/css/modal-close-system.css").read_text(encoding="utf-8")
-        cls.js = (ROOT / "assets/js/home-quick-summary.js").read_text(encoding="utf-8")
+        cls.index = (SITE / "index.html").read_text(encoding="utf-8")
+        cls.footer = (SITE / "partials/footer.html").read_text(encoding="utf-8")
+        cls.styles = (SITE / "assets/css/styles.css").read_text(encoding="utf-8")
+        cls.modal_css = (SITE / "assets/css/home-quick-summary.css").read_text(encoding="utf-8")
+        cls.modal_system = (SITE / "assets/css/modal-close-system.css").read_text(encoding="utf-8")
+        cls.js = (SITE / "assets/js/home-quick-summary.js").read_text(encoding="utf-8")
 
     def test_inline_details_disclosure_is_retired(self):
         self.assertNotIn('<details class="quick-summary">', self.index)
@@ -23,7 +24,7 @@ class HomeQuickSummaryModalTests(unittest.TestCase):
 
     def test_homepage_retains_compact_trigger(self):
         self.assertIn("data-home-quick-open", self.index)
-        self.assertIn("In a hurry? Read the 60-second version.", self.index)
+        self.assertIn("Need the short version? Read this in 60 seconds.", self.index)
         self.assertIn('aria-controls="home-quick-summary-modal"', self.index)
 
     def test_summary_content_is_delivered_in_standard_dialog(self):
@@ -32,8 +33,8 @@ class HomeQuickSummaryModalTests(unittest.TestCase):
             'id="home-quick-summary-modal"',
             "data-home-quick-modal",
             "data-home-quick-close",
-            "Lighter technology. Clearer next steps.",
-            "Explore your situation",
+            "Better decisions. Lighter systems. Clearer next steps.",
+            "Find the right first step",
             "Start a conversation",
         ]:
             self.assertIn(token, self.index)

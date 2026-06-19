@@ -2,7 +2,7 @@
 
 Static corporate website for Et al Solutions LLC.
 
-This site is rendered through Portmason. Source HTML, structural partials, catalog JSON, catalog CSS, and environment values are combined during `pm-setup` to produce the working static site.
+This site is rendered through Portmason. Source HTML, structural partials, collection manifests, collection data, collection styles, and environment values are combined during `pm-setup` to produce the working static site.
 
 ## Quick start
 
@@ -35,34 +35,31 @@ Portmason owns repeatable static rendering.
   -> rendered HTML pages
 ```
 
-The site separates structure, catalog data, catalog styling, and rendered routes:
+The site separates shared structure, registered collections, non-collection content, and rendered SPA targets:
 
 ```text
 Structural HTML
   partials/*.html
-  public page shells and PM render regions
+  partials/hooks/*
 
-Catalog data
-  catalogs/*.json
+Registered collections
+  collections/<collection-id>/collection.json
+  collections/<collection-id>/items.json
+  collections/<collection-id>/styles.css
+  collections/<collection-id>/items/         # optional long-form item content
+  collections/<collection-id>/generated/     # optional generated collection state
 
-Catalog styling
-  catalogs/*.css
+Non-collection content
+  content/*.json
 
-Rendered routes
+Rendered SPA targets
   index.html
+  index.html#brands
   index.html#promotions
   index.html#blog
-  transformation-thread/index.html  # compatibility redirect to /#blog
 ```
 
-Keep the distinction clear:
-
-```text
-Partials define shared structure.
-Catalog JSON files define catalog data/content.
-Catalog CSS files define reusable catalog presentation.
-HTML pages define public routes, page-specific copy, and stable anchors.
-```
+Collection data and configuration belong only under `collections/`. The `content/` directory is reserved for data that is not a reusable collection, such as the Explore decision tree.
 
 ## Environment values
 
@@ -110,8 +107,6 @@ Shared site structure lives in:
 
 ```text
 partials/header.html
-partials/brand-header.html
-partials/promotion-header.html
 partials/footer.html
 ```
 
@@ -127,378 +122,147 @@ Example:
 
 Do not remove PM marker pairs unless the page is being intentionally detached from Portmason rendering.
 
-## Catalog collection model
+## Collection System
 
-Catalogs are reusable data-driven collections.
-
-Each catalog lives in:
+Brands, Promotions, and The Transformation Thread use one reusable Collection System. Catalog and publication are behavior profiles of the same foundation, not separate storage models.
 
 ```text
-catalogs/<catalog-name>/<catalog-name>.json
-catalogs/<catalog-name>/items.json
-catalogs/<catalog-name>/<catalog-name>.css
+collections/
+├── _system/
+│   ├── collection.js
+│   ├── collection.css
+│   ├── collection.schema.json
+│   └── render-collection
+├── brands/
+│   ├── collection.json
+│   ├── items.json
+│   └── styles.css
+├── promotions/
+│   ├── collection.json
+│   ├── items.json
+│   └── styles.css
+└── transformation-thread/
+    ├── collection.json
+    ├── items.json
+    ├── styles.css
+    ├── items/<permanent-id>/*.md
+    └── generated/selection.json
 ```
 
-Current catalog:
-
-```text
-catalogs/promotions/promotions.json
-catalogs/promotions/items.json
-catalogs/promotions/promotions.css
-```
-
-The catalog name is declared by each catalog manifest. For example:
-
-```text
-catalogs/promotions/promotions.json + items.json + promotions.css = self-registering promotions catalog
-catalogs/blog/blog.json + items.json + blog.css = blog catalog
-catalogs/services/services.json + items.json + services.css = services catalog
-```
-
-The catalog renderer should stay domain-agnostic. A promotion is not a special renderer type; it is a catalog item displayed on the promotions route.
-
-Use generic catalog fields such as:
-
-```text
-id
-slug
-status
-label
-title
-shortTitle
-subtitle
-audience
-summary
-description
-price
-priceNote
-primaryAction
-secondaryAction
-tags
-attributes
-sections
-sortOrder
-```
-
-Avoid data keys that over-couple the renderer to a specific domain, such as:
-
-```text
-promotionTitle
-promotionSummary
-promotionCta
-promotionStatus
-```
-
-Route-specific page copy may still say “Promotions,” “Services,” or “Blog.” The data model and renderer should remain catalog-oriented.
-
-## Catalog CSS
-
-Catalog styling is intentionally isolated from the main stylesheet.
-
-The promotions catalog stylesheet is:
-
-```text
-catalogs/promotions/promotions.css
-```
-
-It styles both:
-
-```text
-homepage featured catalog teaser/summary
-index.html#promotions full catalog page
-```
-
-This makes the catalog component easier to reuse or resell. A future customer-specific implementation can replace or customize the catalog stylesheet without digging through the global site CSS.
-
-## Homepage featured catalog item
-
-The homepage keeps a featured catalog summary section at:
-
-```html
-<section class="section-light panel" id="promotions" aria-labelledby="featured-promotion-title">
-  <!-- PM:CATALOG-PROMOTIONS-FEATURED -->
-  ...
-  <!-- /PM:CATALOG-PROMOTIONS-FEATURED -->
-</section>
-```
-
-Portmason renders this region from the featured item in:
-
-```text
-catalogs/promotions/items.json
-```
-
-The homepage hero also has a smaller teaser region:
-
-```html
-<!-- PM:CATALOG-PROMOTIONS-HERO-TEASER -->
-...
-<!-- /PM:CATALOG-PROMOTIONS-HERO-TEASER -->
-```
-
-That teaser is also rendered from the same featured catalog item.
-
-## Promotions page
-
-The promotions page is:
-
-```text
-index.html#promotions
-```
-
-Public URL:
-
-```text
-/#promotions
-```
-
-This is the full promotions destination. It renders the featured/current item first and then renders the remaining catalog items below it.
-
-Each item receives a stable section anchor based on its slug:
-
-```text
-/#<slug>
-```
-
-The full-list render region is:
-
-```html
-<!-- PM:CATALOG-PROMOTIONS-FULL-LIST -->
-...
-<!-- /PM:CATALOG-PROMOTIONS-FULL-LIST -->
-```
-
-Do not create one-off standalone promotion pages for normal catalog items. The full detail view lives as a section on `/#promotions`.
-
-## Launching a new featured catalog item
-
-Use this process when promoting a new offer to the homepage.
-
-### 1. Edit the catalog data
-
-Update:
-
-```text
-catalogs/promotions/items.json
-```
-
-Add or update the catalog item record.
-
-### 2. Set item state
-
-Set the new item as:
+Every manifest declares a stable collection id, behavior mode, layout, data file, style file, presentation, labels, and Portmason render regions. Catalog manifests own their entire SPA section heading and wrapper; the entry page contains only collection render markers.
 
 ```json
-"status": "featured"
+{
+  "id": "brands",
+  "mode": "catalog",
+  "layout": "carousel",
+  "dataFile": "items.json",
+  "styleFile": "styles.css"
+}
 ```
-
-Set the outgoing item to an appropriate non-featured status, such as:
 
 ```json
-"status": "past"
+{
+  "id": "transformation-thread",
+  "mode": "publication",
+  "layout": "featured-grid",
+  "dataFile": "items.json",
+  "styleFile": "styles.css"
+}
 ```
 
-There should normally be exactly one featured item.
+The shared browser controller is `collections/_system/collection.js`. Catalog profile behavior includes paging, hash state, details, keyboard handling, and responsive controls. Publication profile behavior includes manifest-driven item loading and safe Markdown article rendering inside the SPA.
 
-### 3. Confirm generic fields
+The shared catalog carousel chrome is `collections/_system/collection.css`. Each collection keeps its visual identity in its own `styles.css`. The `COLLECTION-STYLES` render hook discovers registered manifests and materializes the stylesheet links, so collection style configuration is not duplicated in `index.html`.
 
-Confirm the item has appropriate values for:
+### Structural rendering
+
+Collection manifests and data are authoritative. Static HTML for the SPA is materialized by executable Portmason hooks in `partials/hooks/`, which delegate to `collections/_system/render-collection`. Do not keep hand-maintained collection HTML partials beside the data.
+
+Current render markers are:
 
 ```text
-id
-slug
-title
-subtitle
-summary
-description
-price
-priceNote
-primaryAction
-tags
-attributes
-sortOrder
+PM:COLLECTION-STYLES
+PM:COLLECTION-BRANDS
+PM:COLLECTION-PROMOTIONS-HERO-TEASER
+PM:COLLECTION-PROMOTIONS
+PM:COLLECTION-TRANSFORMATION-THREAD
 ```
 
-### 4. Render the site
+After changing a collection manifest, item registry, Markdown item, or collection style, run:
 
 ```bash
-./portmason/pm-setup
+pm-setup
 ```
 
-### 5. Verify
+### Catalog profile
 
-Check:
+Brands and Promotions use `mode: catalog`. Their `items.json` files share a common item contract with optional fields such as logo, price, tags, attributes, and primary action. The renderer adapts to the fields present; domain-specific configuration is not scattered through JavaScript or partials.
+
+Catalog sections land directly on the configured default item. A separate overview is optional and must not become the default landing experience.
+
+### Publication profile
+
+The Transformation Thread uses `mode: publication` and remains inside the main SPA at `/#blog`. It has no standalone page, header, footer, or redirect shell.
+
+Its manifest owns presentation and selection policy. Its `items.json` registry owns permanent ids, editorial slots, categories, status, and Markdown references. Long-form files live under the same collection:
 
 ```text
-Homepage hero teaser renders the featured catalog item.
-Homepage /#promotions renders the featured catalog summary.
-The mobile swipe hint appears on the featured catalog summary.
-The featured item links to /#<slug> for details.
-/#promotions renders the featured item first.
-/#promotions renders all other catalog items below it.
-No per-item standalone promotion page is required.
+collections/transformation-thread/items/008/title.md
+collections/transformation-thread/items/008/excerpt.md
+collections/transformation-thread/items/008/full-article.md
 ```
 
-## Mobile swipe behavior
-
-Some mobile sections use horizontal swipe panels instead of long stacked content.
-
-Current mobile swipe areas include:
+Daily rotation writes only the generated selection state:
 
 ```text
-Services
-Homepage featured catalog summary
+collections/transformation-thread/generated/selection.json
 ```
 
-Swipe hints should be visible on mobile only and should remain consumer-facing.
+The collection renderer reads that selection when `pm-setup` materializes the SPA. The rotation command no longer edits an HTML partial.
 
-Example:
-
-```html
-<p class="mobile-swipe-hint catalog-swipe-hint" aria-hidden="true" data-swipe-hint data-forward-text="Swipe sideways for details" data-back-text="Swipe left for summary">Swipe sideways for details <span>→</span></p>
-```
-
-The behavior is handled by:
-
-```text
-```
-
-Do not remove the hints unless the section no longer uses a horizontal swipe layout.
-
-## Brands catalog
-
-Brand identities are rendered from the self-registering Brands catalog:
-
-```text
-catalogs/brands/brands.json
-catalogs/brands/items.json
-catalogs/brands/brands.css
-```
-
-The SPA homepage owns the placement marker only. The catalog renderer owns the brand carousel and the ancillary brand overview. The root `brands/` route folder has been removed.
-
-The Transformation Thread remains outside the Brands catalog. Its landing experience is rendered as an SPA panel through the same Portmason partial model used by the rest of the site.
-
-## The Transformation Thread blog interface
-
-The canonical Blog destination is:
-
-```text
-/#blog
-```
-
-The structural source is:
-
-```text
-partials/transformation-thread.html
-```
-
-The main SPA owns the Portmason render region:
-
-```html
-<!-- PM:TRANSFORMATION-THREAD -->
-...
-<!-- /PM:TRANSFORMATION-THREAD -->
-```
-
-Transformation Thread identity, rotation metadata, and Markdown references live in:
-
-```text
-content/transformation-thread-posts.json
-```
-
-Each post has a permanent numeric `id`, a repeating editorial `slot` from `1` through `7`, and three Markdown references:
-
-```text
-title_md
-excerpt_md
-full_article_md
-```
-
-The corresponding editorial files live under a zero-padded permanent-id directory:
-
-```text
-content/transformation-thread/posts/008/title.md
-content/transformation-thread/posts/008/excerpt.md
-content/transformation-thread/posts/008/full-article.md
-```
-
-The Blog panel renders only `title.md` and `excerpt.md`. The complete `full-article.md` is fetched and safely rendered only after a visitor requests the article. Raw HTML is not interpreted by the browser renderer.
-
-Daily rotation preserves the wide featured card over two supporting cards. The current ISO weekday chooses the starting slot (`Monday = 1` through `Sunday = 7`). The first eligible post becomes featured; the next two become supporting cards. When a slot cannot fill all three positions, the generator continues into following slots and wraps after `7`. When a slot contains more than three posts, week-of-month groups of three rotate through that slot while preserving source order.
-
-Full draft article source files may also live in:
-
-```text
-content/transformation-thread-articles/
-```
-
-The compatibility route remains:
-
-```text
-transformation-thread/index.html
-```
-
-It redirects existing bookmarks to `/#blog`.
-
-To rotate the visible articles manually from GitHub, open **Actions → Generate site HTML → Run workflow**. Leave **Rotation date** blank to use the current date in the configured rotation timezone, or enter an ISO date such as `2026-06-19` to evaluate that rotation cycle explicitly. Manual runs bypass the local-midnight guard; scheduled runs retain it.
-
-For a local forced rotation, pass the production content paths explicitly:
+Manual local rotation:
 
 ```bash
 bin/rotate-transformation-thread \
   --force \
-  --config www/content/transformation-thread-posts.json \
-  --selection www/content/transformation-thread-selection.json \
-  --partial www/partials/transformation-thread.html
+  --collection www/collections/transformation-thread/collection.json
 pm-setup
 ```
 
-The generator updates `www/partials/transformation-thread.html`. `pm-setup` then renders the partial into `www/index.html`. Do not edit the rendered `PM:TRANSFORMATION-THREAD` block manually.
+Manual GitHub rotation remains available under **Actions → Generate site HTML → Run workflow**. Leave **Rotation date** blank to use the current date in the configured timezone, or enter an ISO date such as `2026-06-19`. Scheduled runs retain the local-midnight guard.
 
-## Data vs structural naming
+### Ownership rule
 
-Use names that make ownership clear.
+Do not create or restore `www/catalogs/`, `www/content/transformation-thread*`, collection-specific JavaScript under `assets/js/`, collection-specific CSS under `assets/css/`, or hand-maintained collection HTML partials. Those are legacy locations and are removed by `bin/cleanup-root`.
 
-Good examples:
+## Repository cleanup
 
-```text
-catalogs/promotions/promotions.json
-catalogs/promotions/items.json
-catalogs/promotions/promotions.css
-PM:CATALOG-PROMOTIONS-HERO-TEASER
-PM:CATALOG-PROMOTIONS-FEATURED
-PM:CATALOG-PROMOTIONS-FULL-LIST
+The repository root is the authoritative working source. Each `deploy/<env>/`
+directory is a preserved snapshot of the root from the time that deployment was
+built and must not be selectively cleaned or deduplicated.
+
+Use the repeatable root cleanup command to remove verified obsolete source files
+and generated workspace residue without changing any deployment snapshot:
+
+```bash
+bin/cleanup-root --dry-run
+bin/cleanup-root
 ```
 
-Avoid names that imply JSON owns structure, such as:
-
-```text
-PM:PROMOTIONS-JSON
-```
-
-The render region is structural. The JSON file is only the data source.
+The command protects `.project_timestamp`, `.env`, `.env.generated`,
+`config.generated.json`, `www/`, and every `deploy/*` tree.
 
 ## Common checks
 
-Search for catalog references:
+Check for forbidden legacy collection locations:
 
 ```bash
-grep -RIn --exclude-dir=.git --exclude-dir=capture \
-  -e 'catalogs/promotions/items.json' \
-  -e 'PM:CATALOG-PROMOTIONS' \
-  -e 'catalog-featured' \
-  .
-```
-
-Check for stale promotion-specific render references:
-
-```bash
-grep -RIn --exclude-dir=.git --exclude-dir=capture \
-  -e 'PM:PROMOTIONS-CURRENT-FEATURED' \
-  -e 'PM:PROMOTIONS-ARCHIVE' \
-  -e 'catalogs/promotions/items.json' \
-  -e 'PM:CATALOG' \
+grep -RIn --exclude-dir=.git --exclude-dir=deploy --exclude-dir=capture \
+  -e 'www/catalogs/' \
+  -e 'content/transformation-thread' \
+  -e 'PM:CATALOG-' \
+  -e 'PM:TRANSFORMATION-THREAD' \
   .
 ```
 

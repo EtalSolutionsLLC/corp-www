@@ -79,7 +79,7 @@
   }
 
   function catalogPages(track) {
-    return track ? Array.prototype.slice.call(track.querySelectorAll(":scope > [data-catalog-page]")) : [];
+    return track ? Array.prototype.slice.call(track.querySelectorAll(":scope > [data-collection-page]")) : [];
   }
 
   function activeCatalogPageIndex(track, pages) {
@@ -100,8 +100,8 @@
   }
 
   function enableCarouselKeyboardRefinement() {
-    document.querySelectorAll("[data-catalog-carousel]").forEach(function (carousel) {
-      var track = carousel.querySelector("[data-catalog-track]");
+    document.querySelectorAll("[data-collection-carousel]").forEach(function (carousel) {
+      var track = carousel.querySelector("[data-collection-track]");
       if (!track || track.hasAttribute("data-keyboard-refined")) return;
 
       track.setAttribute("data-keyboard-refined", "");

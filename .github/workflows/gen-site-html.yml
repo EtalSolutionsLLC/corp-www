@@ -38,9 +38,7 @@ jobs:
           ROTATION_DATE: ${{ github.event.inputs.rotation_date || '' }}
         run: |
           rotation_args=(
-            --config www/content/transformation-thread-posts.json
-            --selection www/content/transformation-thread-selection.json
-            --partial www/partials/transformation-thread.html
+            --collection www/collections/transformation-thread/collection.json
           )
 
           if [[ "$WORKFLOW_EVENT" == "workflow_dispatch" ]]; then

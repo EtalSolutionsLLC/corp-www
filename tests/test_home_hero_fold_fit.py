@@ -6,7 +6,6 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
 WWW = ROOT / "www"
-PRD_WWW = ROOT / "deploy" / "prd" / "www"
 
 
 class HomeHeroFoldFitTests(unittest.TestCase):
@@ -50,12 +49,8 @@ class HomeHeroFoldFitTests(unittest.TestCase):
         self.assertIn('#home .hero-motion-line [data-kinetic-word].is-changing', css)
         self.assertIn('transform: none !important;', css)
 
-    def test_prd_uses_same_home_hero_fold_fit_contract(self) -> None:
-        self.assertEqual(self.read_css(), self.read_css(PRD_WWW))
-        self.assertEqual(
-            self.read_index().count('<div class="hero-motion-cluster">'),
-            self.read_index(PRD_WWW).count('<div class="hero-motion-cluster">'),
-        )
+    def test_root_has_exactly_one_motion_cluster(self) -> None:
+        self.assertEqual(self.read_index().count('<div class="hero-motion-cluster">'), 1)
 
 
 if __name__ == "__main__":

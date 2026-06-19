@@ -7,17 +7,17 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-INDEX = (ROOT / "index.html").read_text(encoding="utf-8")
-CSS = (ROOT / "assets/css/styles.css").read_text(encoding="utf-8")
-EXPLORE_CSS = (ROOT / "assets/css/explore.css").read_text(encoding="utf-8")
-ACTION_CSS = (ROOT / "assets/css/action-system.css").read_text(encoding="utf-8")
-JS = (ROOT / "assets/js/explore-decision-tree.js").read_text(encoding="utf-8")
-COMPARE_JS = (ROOT / "assets/js/site-size-compare.js").read_text(encoding="utf-8")
-VISUAL_JS = (ROOT / "assets/js/visual-polish.js").read_text(encoding="utf-8")
-TREE = json.loads((ROOT / "content/explore-decision-tree.json").read_text(encoding="utf-8"))
-EXPLORE_PARTIAL = (ROOT / "partials/explore.html").read_text(encoding="utf-8")
-BLOG_PARTIAL = (ROOT / "partials/transformation-thread.html").read_text(encoding="utf-8")
-HEADERS = [(ROOT / "partials" / name).read_text(encoding="utf-8") for name in ["header.html", "brand-header.html", "promotion-header.html"]]
+SITE = ROOT / "www"
+INDEX = (SITE / "index.html").read_text(encoding="utf-8")
+CSS = (SITE / "assets/css/styles.css").read_text(encoding="utf-8")
+EXPLORE_CSS = (SITE / "assets/css/explore.css").read_text(encoding="utf-8")
+ACTION_CSS = (SITE / "assets/css/action-system.css").read_text(encoding="utf-8")
+JS = (SITE / "assets/js/explore-decision-tree.js").read_text(encoding="utf-8")
+COMPARE_JS = (SITE / "assets/js/site-size-compare.js").read_text(encoding="utf-8")
+VISUAL_JS = (SITE / "assets/js/visual-polish.js").read_text(encoding="utf-8")
+TREE = json.loads((SITE / "content/explore-decision-tree.json").read_text(encoding="utf-8"))
+EXPLORE_PARTIAL = (SITE / "partials/explore.html").read_text(encoding="utf-8")
+HEADERS = [(SITE / "partials" / name).read_text(encoding="utf-8") for name in ["header.html"]]
 
 class ExploreDecisionTreeTests(unittest.TestCase):
     def test_nav_and_panel_order_include_explore(self):
@@ -26,7 +26,7 @@ class ExploreDecisionTreeTests(unittest.TestCase):
         for header in HEADERS:
             positions = [header.index(f'href="{href}"') for href in links]
             self.assertEqual(positions, sorted(positions))
-        positions = [INDEX.index(f'id="{panel}"') for panel in panels]
+        positions = [re.search(rf'<section[^>]+id="{panel}"[^>]*>', INDEX).start() for panel in panels]
         self.assertEqual(positions, sorted(positions))
 
     def test_explore_is_portmason_partial(self):
@@ -118,7 +118,9 @@ class ExploreDecisionTreeTests(unittest.TestCase):
             tag = re.search(rf'<section[^>]+id="{section_id}"[^>]*>', INDEX)
             self.assertIsNotNone(tag, section_id)
             self.assertIn(f'data-theme="{theme}"', tag.group(0))
-        self.assertIn('data-theme="light"', BLOG_PARTIAL)
+        blog = re.search(r'<section[^>]+id="blog"[^>]*>', INDEX)
+        self.assertIsNotNone(blog)
+        self.assertIn('data-theme="light"', blog.group(0))
 
     def test_shared_action_system_is_loaded(self):
         self.assertIn('assets/css/action-system.css', INDEX)
@@ -153,7 +155,7 @@ class ExploreDecisionTreeTests(unittest.TestCase):
         intro = EXPLORE_PARTIAL[intro_start:intro_end]
         self.assertNotIn('Follow the signal', intro)
         self.assertIn('class="explore-guide-copy"', EXPLORE_PARTIAL)
-        self.assertIn('Answer four practical questions.', EXPLORE_PARTIAL)
+        self.assertIn('Answer four plain-language questions.', EXPLORE_PARTIAL)
         self.assertIn('gap: 44px;', EXPLORE_CSS)
 
     def test_explore_title_row_is_compact_and_tools_are_visually_distinct(self):
@@ -287,7 +289,7 @@ class ExploreDecisionTreeTests(unittest.TestCase):
     def test_005_mesh_help_opens_explanatory_modal(self):
         for token in ['data-explore-mesh-help', 'data-explore-mesh-modal', 'data-explore-mesh-modal-close']:
             self.assertIn(token, EXPLORE_PARTIAL)
-        self.assertIn('A clear way to think through a complex problem.', EXPLORE_PARTIAL)
+        self.assertIn('A clear way to choose a first move.', EXPLORE_PARTIAL)
         self.assertIn('Nothing is submitted unless you decide to start a conversation.', EXPLORE_PARTIAL)
         self.assertIn('showModal', JS)
         self.assertIn('openMeshModal', JS)
@@ -305,8 +307,8 @@ class ExploreDecisionTreeTests(unittest.TestCase):
 
 
     def test_009_explore_surface_language_is_plain_and_action_row_is_balanced(self):
-        self.assertIn('Answer four practical questions.', EXPLORE_PARTIAL)
-        self.assertIn('Your choices stay anonymous in this browser.', EXPLORE_PARTIAL)
+        self.assertIn('Answer four plain-language questions.', EXPLORE_PARTIAL)
+        self.assertIn('Your choices stay visible, reversible, and local to this browser.', EXPLORE_PARTIAL)
         self.assertIn('data-explore-result-link hidden', EXPLORE_PARTIAL)
         self.assertIn('class="action action-primary explore-conversation-action"', EXPLORE_PARTIAL)
         self.assertIn('.explore-guide-actions .explore-conversation-action {', EXPLORE_CSS)
@@ -337,7 +339,7 @@ if __name__ == '__main__':
 
 
 def test_explore_integrated_rail_titles_and_grouped_actions():
-    css = (ROOT / "assets/css/explore.css").read_text()
+    css = (SITE / "assets/css/explore.css").read_text()
     assert "/* 011 Explore integrated rail titles and grouped result actions */" in css
     assert ".explore-material-label {" in css
     assert "background: transparent;" in css
@@ -348,7 +350,7 @@ def test_explore_integrated_rail_titles_and_grouped_actions():
 
 
 def test_explore_rail_titles_are_legible_and_primary_action_is_restrained():
-    css = (ROOT / "assets/css/explore.css").read_text()
+    css = (SITE / "assets/css/explore.css").read_text()
     assert "/* 012 Explore readable rail titles and restrained primary action */" in css
     assert "background: rgba(4, 14, 31, 0.24);" in css
     assert "color: rgba(241, 247, 255, 0.96);" in css

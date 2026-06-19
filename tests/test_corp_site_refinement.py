@@ -2,12 +2,13 @@ from pathlib import Path
 import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
-INDEX = (ROOT / "index.html").read_text(encoding="utf-8")
-CSS = (ROOT / "assets/css/styles.css").read_text(encoding="utf-8")
-CAROUSEL_CSS = (ROOT / "assets/css/carousel.css").read_text(encoding="utf-8")
-JS = (ROOT / "assets/js/visual-polish.js").read_text(encoding="utf-8")
-EXPLORE_JS = (ROOT / "assets/js/explore-decision-tree.js").read_text(encoding="utf-8")
-TREE = (ROOT / "content/explore-decision-tree.json").read_text(encoding="utf-8")
+SITE = ROOT / "www"
+INDEX = (SITE / "index.html").read_text(encoding="utf-8")
+CSS = (SITE / "assets/css/styles.css").read_text(encoding="utf-8")
+CAROUSEL_CSS = (SITE / "collections/_system/collection.css").read_text(encoding="utf-8")
+JS = (SITE / "assets/js/visual-polish.js").read_text(encoding="utf-8")
+EXPLORE_JS = (SITE / "assets/js/explore-decision-tree.js").read_text(encoding="utf-8")
+TREE = (SITE / "content/explore-decision-tree.json").read_text(encoding="utf-8")
 
 NATIVE_TARGET_BLOCK = """section[id] {
   scroll-margin-top: calc(var(--header-h)); /* + 12px);(*/
@@ -68,9 +69,9 @@ class CorpSiteRefinementTests(unittest.TestCase):
     def test_active_menu_decoration_persists(self) -> None:
         self.assertIn('body:has(#about:target) .nav a[href$="#about"]::after', CSS)
         self.assertIn('body:has(#contact:target) .nav a[href$="#contact"]::after', CSS)
-        self.assertIn('body:has(#promotions [data-catalog-item]:target) .nav a[href$="#promotions"]::after', CSS)
+        self.assertIn('body:has(#promotions [data-collection-item]:target) .nav a[href$="#promotions"]::after', CSS)
         self.assertIn('body:has(#blog:target) .nav a[href$="#blog"]::after', CSS)
-        self.assertIn('body:has(#brands [data-catalog-item]:target) .nav a[href$="#brands"]::after', CSS)
+        self.assertIn('body:has(#brands [data-collection-item]:target) .nav a[href$="#brands"]::after', CSS)
 
     def test_native_view_transition_polish_is_declared_without_controller_dependency(self) -> None:
         self.assertIn('@view-transition', CSS)

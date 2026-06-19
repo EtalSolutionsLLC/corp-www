@@ -5,10 +5,10 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-CSS = (ROOT / "assets/css/styles.css").read_text(encoding="utf-8")
-INDEX = (ROOT / "index.html").read_text(encoding="utf-8")
-HEADER = (ROOT / "partials/header.html").read_text(encoding="utf-8")
-BLOG_REDIRECT = (ROOT / "transformation-thread/index.html").read_text(encoding="utf-8")
+SITE = ROOT / "www"
+CSS = (SITE / "assets/css/styles.css").read_text(encoding="utf-8")
+INDEX = (SITE / "index.html").read_text(encoding="utf-8")
+HEADER = (SITE / "partials/header.html").read_text(encoding="utf-8")
 
 
 class BlogNavDecorationTests(unittest.TestCase):
@@ -20,9 +20,8 @@ class BlogNavDecorationTests(unittest.TestCase):
         self.assertIn('body:has(#blog:target) .nav a[href$="#blog"]::after', CSS)
         self.assertIn('body:has(#blog:target) .nav a[href$="#blog"]', CSS)
 
-    def test_blog_route_is_compatibility_redirect(self):
-        self.assertIn('window.location.replace("/#blog")', BLOG_REDIRECT)
-        self.assertIn('url=/#blog', BLOG_REDIRECT)
+    def test_blog_has_no_standalone_page(self):
+        self.assertFalse((SITE / "transformation-thread/index.html").exists())
 
     def test_durable_page_override_is_removed(self):
         self.assertNotIn('body[data-brand-name="Blog"]', CSS)

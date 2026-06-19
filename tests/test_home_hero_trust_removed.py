@@ -6,7 +6,6 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
 WWW = ROOT / "www"
-PRD_WWW = ROOT / "deploy" / "prd" / "www"
 
 
 class HomeHeroTrustRemovedTests(unittest.TestCase):
@@ -23,9 +22,6 @@ class HomeHeroTrustRemovedTests(unittest.TestCase):
 
     def test_home_hero_trust_items_are_removed_from_dev_index(self) -> None:
         self.assert_home_trust_removed(self.read(WWW))
-
-    def test_home_hero_trust_items_are_removed_from_prd_index(self) -> None:
-        self.assert_home_trust_removed(self.read(PRD_WWW))
 
 
 if __name__ == "__main__":

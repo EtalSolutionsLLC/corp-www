@@ -6,10 +6,11 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-INDEX = (ROOT / 'index.html').read_text(encoding='utf-8')
-BLOG_PARTIAL = (ROOT / 'partials/transformation-thread.html').read_text(encoding='utf-8')
-CSS = (ROOT / 'assets/css/styles.css').read_text(encoding='utf-8')
-THEME_CSS = (ROOT / 'assets/css/theme-rhythm.css').read_text(encoding='utf-8')
+SITE = ROOT / "www"
+INDEX = (SITE / 'index.html').read_text(encoding='utf-8')
+CSS = (SITE / 'assets/css/styles.css').read_text(encoding='utf-8')
+THEME_CSS = (SITE / 'assets/css/theme-rhythm.css').read_text(encoding='utf-8')
+THREAD_CSS = (SITE / 'collections/transformation-thread/styles.css').read_text(encoding='utf-8')
 
 
 class SectionThemeAlternationTests(unittest.TestCase):
@@ -37,8 +38,8 @@ class SectionThemeAlternationTests(unittest.TestCase):
         self.assertRegex(INDEX, r'class="section-light panel[^"]*pm-viewport-target[^"]*" id="services" data-theme="light"')
         self.assertRegex(INDEX, r'class="section-light panel[^"]*pm-viewport-target[^"]*" id="contact" data-theme="light"')
 
-    def test_blog_partial_declares_light_theme(self):
-        self.assertRegex(BLOG_PARTIAL, r'class="thread-blog panel[^"]*pm-viewport-target[^"]*" id="blog" data-theme="light"')
+    def test_blog_collection_declares_light_theme(self):
+        self.assertRegex(INDEX, r'class="thread-blog panel[^"]*pm-viewport-target[^"]*" id="blog" data-theme="light"')
 
     def test_light_services_have_readable_overrides(self):
         self.assertIn('.section-light .service-line span,', CSS)
@@ -57,10 +58,10 @@ class SectionThemeAlternationTests(unittest.TestCase):
         self.assertIn('#about[data-theme="dark"] {', THEME_CSS)
 
     def test_theme_rhythm_layer_loads_after_generated_catalog_styles(self):
-        html = (ROOT / 'index.html').read_text(encoding='utf-8')
+        html = (SITE / 'index.html').read_text(encoding='utf-8')
         self.assertIn('assets/css/theme-rhythm.css', html)
-        self.assertGreater(html.index('assets/css/theme-rhythm.css'), html.index('catalogs/brands/brands.css'))
-        self.assertGreater(html.index('assets/css/theme-rhythm.css'), html.index('assets/css/carousel.css'))
+        self.assertGreater(html.index('assets/css/theme-rhythm.css'), html.index('collections/brands/styles.css'))
+        self.assertGreater(html.index('assets/css/theme-rhythm.css'), html.index('collections/_system/collection.css'))
 
     def test_brands_visible_band_is_durably_light(self):
         self.assertIn('/* Durable visible Brands correction', THEME_CSS)
@@ -70,20 +71,19 @@ class SectionThemeAlternationTests(unittest.TestCase):
         self.assertIn('color: #091427 !important;', THEME_CSS)
 
     def test_blog_identity_is_theme_neutral_orange_thread_rail(self):
-        self.assertIn('/* The Transformation Thread identity is a single orange editorial rail.', CSS)
-        self.assertIn('.thread-blog[data-theme="light"] {', CSS)
-        self.assertIn('.thread-blog[data-theme="dark"] {', CSS)
-        self.assertIn('.thread-blog-masthead::before {', CSS)
-        self.assertIn('.thread-blog-masthead::after {', CSS)
-        self.assertIn('background: radial-gradient(circle, var(--thread-accent)', CSS)
-        self.assertIn('border-left: 0;', CSS)
-        self.assertIn('background: transparent;', CSS)
+        self.assertIn('/* The Transformation Thread identity is a single orange editorial rail.', THREAD_CSS)
+        self.assertIn('.thread-blog[data-theme="light"] {', THREAD_CSS)
+        self.assertIn('.thread-blog[data-theme="dark"] {', THREAD_CSS)
+        self.assertIn('.thread-blog-masthead::before {', THREAD_CSS)
+        self.assertIn('.thread-blog-masthead::after {', THREAD_CSS)
+        self.assertIn('background: radial-gradient(circle, var(--thread-accent)', THREAD_CSS)
+        self.assertIn('border-left: 0;', THREAD_CSS)
+        self.assertIn('background: transparent;', THREAD_CSS)
 
     def test_blog_light_theme_does_not_use_grey_masthead_surface(self):
-        override = CSS[CSS.index('/* Menu-aligned band contract and Transformation Thread editorial rail */'):]
-        self.assertIn('.thread-blog[data-theme="light"] .thread-blog-masthead,', override)
-        self.assertIn('background: transparent;', override)
-        self.assertIn('--thread-surface: rgba(255, 255, 255, 0.92);', override)
+        self.assertIn('.thread-blog[data-theme="light"] .thread-blog-masthead,', THREAD_CSS)
+        self.assertIn('background: transparent;', THREAD_CSS)
+        self.assertIn('--thread-surface: rgba(255, 255, 255, 0.92);', THREAD_CSS)
 
 
 if __name__ == '__main__':

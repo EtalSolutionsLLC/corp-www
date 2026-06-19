@@ -1,7 +1,0 @@
-project/.github/workflows/gen-site-html.yml
-project/bin/rotate-transformation-thread
-project/README.md
-project/deploy/prd/README.md
-project/tests/test_rotate_transformation_thread.py
-project/tests/test_manual_rotation_override_workflow.py
-project/019-corp-www-manual-rotation-override-chg.txt

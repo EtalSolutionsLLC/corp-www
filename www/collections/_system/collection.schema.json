@@ -1,0 +1,200 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://www.etal.solutions/collections/_system/collection.schema.json",
+  "title": "Et al Solutions Collection Manifest",
+  "type": "object",
+  "required": [
+    "id",
+    "mode",
+    "layout",
+    "dataFile",
+    "styleFile",
+    "presentation",
+    "regions"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$"
+    },
+    "mode": {
+      "enum": ["catalog", "publication"]
+    },
+    "layout": {
+      "type": "string",
+      "minLength": 1
+    },
+    "dataFile": {
+      "type": "string",
+      "minLength": 1
+    },
+    "styleFile": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sectionHref": {
+      "type": "string",
+      "pattern": "^/#"
+    },
+    "defaultItem": {
+      "type": ["string", "null"]
+    },
+    "labels": {
+      "type": "object"
+    },
+    "presentation": {
+      "type": "object",
+      "minProperties": 1,
+      "properties": {
+        "theme": {
+          "enum": ["light", "dark"]
+        },
+        "extraClasses": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9_-]+$"
+          },
+          "uniqueItems": true
+        },
+        "kicker": {
+          "type": "string",
+          "minLength": 1
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "titleLines": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "contentId": {
+          "type": "string",
+          "pattern": "^[a-zA-Z][a-zA-Z0-9_-]*$"
+        },
+        "contentLabel": {
+          "type": "string",
+          "minLength": 1
+        },
+        "brand": {
+          "type": "string",
+          "minLength": 1
+        },
+        "logo": {
+          "type": "string",
+          "minLength": 1
+        },
+        "logoAlt": {
+          "type": "string"
+        },
+        "primaryAction": {
+          "type": "object",
+          "required": ["label", "href"],
+          "properties": {
+            "label": {
+              "type": "string",
+              "minLength": 1
+            },
+            "href": {
+              "type": "string",
+              "minLength": 1
+            },
+            "openInNewTab": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "selection": {
+      "type": "object",
+      "required": ["strategy", "visibleItems", "timezone", "outputFile"],
+      "properties": {
+        "strategy": {
+          "enum": ["weekday-week-of-month"]
+        },
+        "visibleItems": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "timezone": {
+          "type": "string",
+          "minLength": 1
+        },
+        "outputFile": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "regions": {
+      "type": "object",
+      "minProperties": 1,
+      "properties": {
+        "section": {
+          "type": "string",
+          "pattern": "^COLLECTION-[A-Z0-9-]+$"
+        },
+        "heroTeaser": {
+          "type": "string",
+          "pattern": "^COLLECTION-[A-Z0-9-]+$"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "mode": {
+            "const": "catalog"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "presentation": {
+            "required": ["theme", "kicker", "title", "summary"]
+          },
+          "regions": {
+            "required": ["section"]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "mode": {
+            "const": "publication"
+          }
+        }
+      },
+      "then": {
+        "required": ["selection"],
+        "properties": {
+          "presentation": {
+            "required": ["brand", "kicker", "titleLines", "summary"]
+          },
+          "regions": {
+            "required": ["section"]
+          }
+        }
+      }
+    }
+  ],
+  "additionalProperties": false
+}

@@ -5,7 +5,8 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-CSS = (ROOT / 'assets/css/styles.css').read_text(encoding='utf-8')
+SITE = ROOT / "www"
+CSS = (SITE / 'assets/css/styles.css').read_text(encoding='utf-8')
 
 
 class HeaderViewportTests(unittest.TestCase):
