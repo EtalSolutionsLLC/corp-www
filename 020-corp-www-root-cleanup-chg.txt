@@ -1,0 +1,15 @@
+project/.gitignore
+project/README.md
+project/bin/cleanup-root
+project/tests/test_blog_nav_decoration.py
+project/tests/test_catalog_link_policy_config.py
+project/tests/test_corp_site_refinement.py
+project/tests/test_explore_decision_tree.py
+project/tests/test_header_viewport.py
+project/tests/test_home_quick_summary_modal.py
+project/tests/test_modal_close_standard.py
+project/tests/test_repo_cleanup_contract.py
+project/tests/test_section_theme_alternation.py
+project/tests/test_spa_blog_partial.py
+project/tests/test_transformation_thread_delivery.py
+project/tests/test_visual_polish.py

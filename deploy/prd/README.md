@@ -441,14 +441,20 @@ transformation-thread/index.html
 
 It redirects existing bookmarks to `/#blog`.
 
-To rotate the visible articles manually:
+To rotate the visible articles manually from GitHub, open **Actions → Generate site HTML → Run workflow**. Leave **Rotation date** blank to use the current date in the configured rotation timezone, or enter an ISO date such as `2026-06-19` to evaluate that rotation cycle explicitly. Manual runs bypass the local-midnight guard; scheduled runs retain it.
+
+For a local forced rotation, pass the production content paths explicitly:
 
 ```bash
-bin/rotate-transformation-thread --force
+../../bin/rotate-transformation-thread \
+  --force \
+  --config www/content/transformation-thread-posts.json \
+  --selection www/content/transformation-thread-selection.json \
+  --partial www/partials/transformation-thread.html
 pm-setup
 ```
 
-The generator updates `partials/transformation-thread.html`. `pm-setup` then renders the partial into `index.html`. Do not edit the rendered `PM:TRANSFORMATION-THREAD` block manually.
+The generator updates `www/partials/transformation-thread.html`. `pm-setup` then renders the partial into `www/index.html`. Do not edit the rendered `PM:TRANSFORMATION-THREAD` block manually.
 
 ## Data vs structural naming
 

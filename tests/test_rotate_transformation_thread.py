@@ -89,6 +89,43 @@ class RotationTests(unittest.TestCase):
         self.assertEqual(rendered.count('class="thread-post-card"'), 2)
         self.assertIn('data-thread-request-post-id="1"', rendered)
 
+    def test_absolute_content_refs_are_rooted_at_the_supplied_site_config(self):
+        site_root = self.root / "site"
+        content_root = site_root / "content"
+        config_path = content_root / "transformation-thread-posts.json"
+        posts = []
+
+        for post_id in range(1, 10):
+            post_root = content_root / "posts" / f"{post_id:03d}"
+            post_root.mkdir(parents=True, exist_ok=True)
+            (post_root / "title.md").write_text(f"Article {post_id}\n", encoding="utf-8")
+            (post_root / "excerpt.md").write_text(f"Summary {post_id}\n", encoding="utf-8")
+            (post_root / "full-article.md").write_text(
+                (f"Full article {post_id}. " * 80).strip() + "\n", encoding="utf-8"
+            )
+            posts.append({
+                "id": post_id,
+                "slot": ((post_id - 1) % 7) + 1,
+                "category": "Category",
+                "status": "Draft",
+                "title_md": f"/content/posts/{post_id:03d}/title.md",
+                "excerpt_md": f"/content/posts/{post_id:03d}/excerpt.md",
+                "full_article_md": f"/content/posts/{post_id:03d}/full-article.md",
+            })
+
+        config = {
+            "rotation_timezone": "America/Los_Angeles",
+            "visible_posts": 3,
+            "posts": posts,
+        }
+        raw = json.dumps(config).encode("utf-8")
+        config_path.write_bytes(raw)
+
+        selection = module.select_posts(
+            config, raw, date(2026, 6, 1), "America/Los_Angeles", config_path
+        )
+        self.assertEqual([post["id"] for post in selection.posts], [1, 8, 2])
+
     def test_validation_rejects_duplicate_ids(self):
         self.config["posts"][1]["id"] = 1
         self.write_config()
