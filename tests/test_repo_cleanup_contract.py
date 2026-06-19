@@ -18,7 +18,7 @@ class RepoCleanupContractTests(unittest.TestCase):
         script = SCRIPT.read_text(encoding="utf-8")
         for token in [
             '".project_timestamp"', '".env"', '".env.generated"',
-            '"config.generated.json"', '"deploy"',
+            '"config.generated.json"', '"VERSION"', '"deploy"',
             "-path './deploy' -prune", 'deploy|deploy/*',
         ]:
             self.assertIn(token, script)

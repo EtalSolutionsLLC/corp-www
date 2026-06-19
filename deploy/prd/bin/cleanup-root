@@ -1,0 +1,163 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+: "${CUR_SCRIPT:=$(basename "${BASH_SOURCE[0]}")}" 
+export CUR_SCRIPT
+
+resolve_portmason_share() {
+  if [[ -n "${PORTMASON_SHARE:-}" && -r "${PORTMASON_SHARE}/pm-helpers" ]]; then
+    printf '%s\n' "${PORTMASON_SHARE}"
+    return 0
+  fi
+
+  if [[ -r "/usr/local/share/portmason/bin/pm-helpers" ]]; then
+    printf '%s\n' "/usr/local/share/portmason/bin"
+    return 0
+  fi
+
+  local helper
+  helper="$(command -v pm-helpers 2>/dev/null || true)"
+  if [[ -n "${helper}" ]]; then
+    dirname "${helper}"
+    return 0
+  fi
+
+  return 1
+}
+
+PORTMASON_SHARE="$(resolve_portmason_share)" || {
+  printf 'ERROR: pm-helpers was not found. Run this from a Portmason-managed workspace.\n' >&2
+  exit 1
+}
+export PORTMASON_SHARE
+# shellcheck source=/dev/null
+. "${PORTMASON_SHARE}/pm-helpers" "$@"
+
+DRY_RUN=false
+case "${1:-}" in
+  "") ;;
+  --dry-run) DRY_RUN=true ;;
+  -h|--help)
+    cat <<'USAGE'
+Usage: bin/cleanup-root [--dry-run]
+
+Removes verified obsolete or generated files from the authoritative repository
+root while preserving every deploy/* snapshot and all Portmason contract files.
+USAGE
+    exit 0
+    ;;
+  *) die "Unknown argument: ${1}" ;;
+esac
+
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
+REPO_ROOT="$(cd -- "${SCRIPT_DIR}/.." && pwd -P)"
+cd "${REPO_ROOT}"
+
+required_paths=(
+  ".project_timestamp"
+  ".env"
+  ".env.generated"
+  "config.generated.json"
+  "deploy"
+  "www"
+)
+
+for required_path in "${required_paths[@]}"; do
+  [[ -e "${required_path}" ]] || die "Required Portmason path is missing: ${required_path}"
+done
+
+remove_path() {
+  local path="${1:?path required}"
+  [[ -e "${path}" || -L "${path}" ]] || return 0
+
+  case "${path}" in
+    deploy|deploy/*)
+      die "Refusing to alter deployment snapshot path: ${path}"
+      ;;
+  esac
+
+  if [[ "${DRY_RUN}" == "true" ]]; then
+    log INFO "Would remove ${path}"
+  else
+    rm -rf -- "${path}"
+    log INFO "Removed ${path}"
+  fi
+}
+
+# Verified obsolete source material.
+obsolete_paths=(
+  "www/catalogs"
+  "www/content/transformation-thread-articles"
+  "www/content/transformation-thread"
+  "www/content/transformation-thread-posts.json"
+  "www/content/transformation-thread-selection.json"
+  "www/assets/css/carousel.css"
+  "www/assets/css/transformation-thread.css"
+  "www/assets/js/catalog-carousel.js"
+  "www/assets/js/transformation-thread.js"
+  "www/assets/js/site-config.js"
+  "www/assets/js/should-run-eastern-midnight.mjs"
+  "www/partials/catalog-brands-full-list.html"
+  "www/partials/catalog-promotions-full-list.html"
+  "www/partials/catalog-promotions-hero-teaser.html"
+  "www/partials/transformation-thread.html"
+  "www/partials/brand-header.html"
+  "www/partials/promotion-header.html"
+  "tests/portmason"
+)
+
+# Generated/local workspace residue. Existing deploy/* snapshots are excluded.
+workspace_paths=(
+  ".artifacts"
+  "archive"
+  "www/logs"
+)
+
+for path in "${obsolete_paths[@]}" "${workspace_paths[@]}"; do
+  remove_path "${path}"
+done
+
+while IFS= read -r -d '' path; do
+  remove_path "${path#./}"
+done < <(
+  find . \
+    -path './.git' -prune -o \
+    -path './deploy' -prune -o \
+    -type f \( -name '*.pyc' -o -name '*.bak' -o -name '*:Zone.Identifier' \) \
+    -print0
+)
+
+while IFS= read -r -d '' path; do
+  remove_path "${path#./}"
+done < <(
+  find . \
+    -path './.git' -prune -o \
+    -path './deploy' -prune -o \
+    -type d -name '__pycache__' \
+    -print0
+)
+
+while IFS= read -r -d '' path; do
+  remove_path "${path#./}"
+done < <(
+  find . -maxdepth 1 -type f \
+    \( -name '[0-9][0-9][0-9]-corp-www-*.tar.gz' -o -name '[0-9][0-9][0-9]-corp-www-*-chg.txt' \) \
+    -print0
+)
+
+if [[ -d "logs" ]]; then
+  if [[ "${DRY_RUN}" == "true" ]]; then
+    log INFO "Would remove logs"
+  else
+    log INFO "Removing logs as the final cleanup step"
+    rm -rf -- logs
+    printf 'Root cleanup complete; deploy/* snapshots and Portmason contract files were preserved.\n' >&2
+    exit 0
+  fi
+fi
+
+if [[ "${DRY_RUN}" == "true" ]]; then
+  log INFO "Root cleanup dry run complete; deploy/* snapshots and Portmason contract files were preserved."
+else
+  log INFO "Root cleanup complete; deploy/* snapshots and Portmason contract files were preserved."
+fi

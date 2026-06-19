@@ -122,6 +122,26 @@ Example:
 
 Do not remove PM marker pairs unless the page is being intentionally detached from Portmason rendering.
 
+## Served build marker
+
+The site exposes the static artifact version in three ways:
+
+```text
+Footer copyright → About this build dialog
+View Source      → ETAL_SITE_BUILD comment and meta tag
+Automation       → /build-info.json
+```
+
+The authoritative build number lives in the repository-root `VERSION` file. The
+`SITE-BUILD-META` executable partial hook writes deterministic HTML metadata and
+a runtime `www/build-info.json` containing the source commit, UTC materialization
+time, deployment target, and builder. The JSON file is included in the served
+artifact but intentionally ignored by Git because its timestamp changes on every
+materialization.
+
+The footer copyright remains visually unchanged; selecting it opens the build
+information dialog.
+
 ## Collection System
 
 Brands, Promotions, and The Transformation Thread use one reusable Collection System. Catalog and publication are behavior profiles of the same foundation, not separate storage models.

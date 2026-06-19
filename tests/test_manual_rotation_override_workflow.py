@@ -33,6 +33,35 @@ class ManualRotationOverrideWorkflowTests(unittest.TestCase):
     def test_workflow_uses_tracked_root_rotation_script(self):
         self.assertIn('../../bin/rotate-transformation-thread "${rotation_args[@]}"', self.workflow)
 
+
+    def test_workflow_preflights_required_repository_scripts(self):
+        self.assertIn("- name: Verify repository automation", self.workflow)
+        self.assertIn("bin/rotate-transformation-thread", self.workflow)
+        self.assertIn("bin/report-blog-rotation", self.workflow)
+        self.assertIn("Required repository automation is missing or not executable", self.workflow)
+
+    def test_authoritative_scripts_are_present_and_executable(self):
+        for relative_path in [
+            "bin/cleanup-root",
+            "bin/report-blog-rotation",
+            "bin/rotate-transformation-thread",
+        ]:
+            path = ROOT / relative_path
+            self.assertTrue(path.is_file(), relative_path)
+            self.assertTrue(path.stat().st_mode & 0o111, relative_path)
+
+    def test_gitignore_reincludes_authoritative_and_snapshot_bin_directories(self):
+        gitignore = (ROOT / ".gitignore").read_text(encoding="utf-8")
+        for token in [
+            "!/bin/",
+            "!/bin/cleanup-root",
+            "!/bin/report-blog-rotation",
+            "!/bin/rotate-transformation-thread",
+            "!/deploy/*/bin/",
+            "!/deploy/*/bin/**",
+        ]:
+            self.assertIn(token, gitignore)
+
     def test_rotation_uses_collection_manifest(self):
         self.assertIn(
             "--collection www/collections/transformation-thread/collection.json",

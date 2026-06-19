@@ -29,6 +29,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<!-- PM:SITE-BUILD-META -->
+<!-- ETAL_SITE_BUILD version="026" details="/build-info.json" -->
+<meta name="etal-site-build" content="026" />
+<meta name="etal-site-build-info" content="/build-info.json" />
+<!-- /PM:SITE-BUILD-META -->
   <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
   <title>Et al Solutions LLC</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orestbida/cookieconsent@3.1.0/dist/cookieconsent.css" />
@@ -911,7 +916,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <footer class="site-footer">
   <div class="container">
     <div class="footer-legal">
-      <span>© 2026 Et al Solutions LLC.</span>
+      <button
+        class="footer-build-trigger"
+        type="button"
+        data-site-build-open
+        aria-haspopup="dialog"
+        aria-controls="site-build-modal"
+      >© 2026 Et al Solutions LLC.</button>
       <span class="footer-separator" aria-hidden="true">·</span>
 
       <a
@@ -925,13 +936,46 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   </div>
 </footer>
 
+<dialog
+  class="site-build-modal"
+  id="site-build-modal"
+  data-site-build-modal
+  aria-labelledby="site-build-modal-title"
+>
+  <div class="site-build-modal-shell">
+    <button
+      class="modal-close-circle"
+      type="button"
+      data-site-build-close
+      aria-label="Close build information"
+    >×</button>
+    <span class="site-build-modal-kicker">About this build</span>
+    <h2 id="site-build-modal-title">A small marker for the curious.</h2>
+    <p class="site-build-modal-intro">
+      This identifies the static artifact currently being served, so a deployed version can be verified without guessing from appearance alone.
+    </p>
+    <dl>
+      <dt>Site build</dt>
+      <dd><code data-site-build-version>Loading…</code></dd>
+      <dt>Source commit</dt>
+      <dd><code data-site-build-commit>Loading…</code></dd>
+      <dt>Built at</dt>
+      <dd><time data-site-build-time>Loading…</time></dd>
+      <dt>Target</dt>
+      <dd data-site-build-target>Loading…</dd>
+    </dl>
+  </div>
+</dialog>
+
 <link rel="stylesheet" href="https://public.etal.solutions/assets/css/policy-modal.css">
 <link rel="stylesheet" href="/assets/css/policy-modal-overrides.css">
 <link rel="stylesheet" href="/assets/css/modal-close-system.css">
 <link rel="stylesheet" href="/assets/css/home-quick-summary.css">
+<link rel="stylesheet" href="/assets/css/site-build-info.css">
 <script src="https://public.etal.solutions/assets/js/policy-modal.js" defer></script>
 <script src="/assets/js/policy-modal-close.js" defer></script>
 <script src="/assets/js/home-quick-summary.js" defer></script>
+<script src="/assets/js/site-build-info.js" defer></script>
 <!-- /PM:FOOTER -->
   </div>
 <script src="https://cdn.jsdelivr.net/gh/orestbida/cookieconsent@3.1.0/dist/cookieconsent.umd.js"></script>

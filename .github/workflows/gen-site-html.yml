@@ -31,6 +31,22 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
+      - name: Verify repository automation
+        shell: bash
+        working-directory: .
+        run: |
+          required_scripts=(
+            bin/rotate-transformation-thread
+            bin/report-blog-rotation
+          )
+
+          for script in "${required_scripts[@]}"; do
+            if [[ ! -x "$script" ]]; then
+              echo "Required repository automation is missing or not executable: $script" >&2
+              exit 1
+            fi
+          done
+
       - name: Rotate Transformation Thread selection
         shell: bash
         env:
@@ -63,6 +79,8 @@ jobs:
             -f docker-compose.yml \
             run --rm \
             -e SITE_DIR=/workspace/www \
+            -e GITHUB_ACTIONS=true \
+            -e GITHUB_SHA="${GITHUB_SHA}" \
             toolbox \
             portmason/pm-process-site-partials
 
@@ -74,14 +92,19 @@ jobs:
         shell: bash
         working-directory: .
         run: |
-          if git diff --quiet -- deploy/prd/www; then
+          generated_paths=(
+            deploy/prd/www/index.html
+            deploy/prd/www/collections/transformation-thread/generated/selection.json
+          )
+
+          if git diff --quiet -- "${generated_paths[@]}"; then
             echo "Production site HTML is already current."
             exit 0
           fi
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -f deploy/prd/www
+          git add -f "${generated_paths[@]}"
           git commit -m "chore: generate production site HTML"
           git push
 
