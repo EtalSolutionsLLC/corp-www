@@ -33,3 +33,8 @@ __pycache__/
 /chg.txt
 /.env.restore
 *.bak
+
+# Track the production rotation report while keeping other staged bin files local.
+!/deploy/prd/bin/
+/deploy/prd/bin/*
+!/deploy/prd/bin/report-blog-rotation
