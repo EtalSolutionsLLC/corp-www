@@ -21,8 +21,9 @@ Lifecycle:
   --status    Report synchronization state without changing files.
 
 Refresh rules:
-  - No state file: refresh from root. Deleting .pm-deploy-sync.state is the
-    explicit signal to reconstruct the deploy snapshot from root.
+  - No state file: refresh from root.
+  - --force explicitly reconstructs the managed deploy surface from root
+    without requiring synchronization state to be deleted first.
   - State exists and deploy matches its baseline: refresh automatically when
     the authoritative root changed.
   - State exists and deploy differs from its baseline: stop before copying and
@@ -133,7 +134,7 @@ is_excluded_file_basename() {
     .project_timestamp|.htaccess|.env|.env.example|.env.generated|*.env|*.env.example|*.env.generated)
       return 0
       ;;
-    docker-compose.yml|config.generated.json|Dockerfile*|*.pyc)
+    docker-compose.yml|config.generated.json|Dockerfile*|*.pyc|*.bak|*:Zone.Identifier|.DS_Store|Thumbs.db)
       return 0
       ;;
     *)
@@ -167,6 +168,10 @@ rsync_exclude_args() {
 --exclude=config.generated.json
 --exclude=Dockerfile*
 --exclude=*.pyc
+--exclude=*.bak
+--exclude=*:Zone.Identifier
+--exclude=.DS_Store
+--exclude=Thumbs.db
 EOF_ARGS
 }
 
@@ -293,7 +298,7 @@ sync_root_to_deploy() {
   log_info "Repo root:  $root_dir"
   log_info "Env folder: $env_dir"
 
-  rsync -a --delete \
+  rsync -a --checksum --delete \
     "${excludes[@]}" \
     "$root_dir/" \
     "$env_dir/"
@@ -356,7 +361,8 @@ report_manifest_drift() {
   fi
 
   printf '\nRoot synchronization was not performed.\n' >&2
-  printf 'Reconcile the deploy snapshot, or delete %s to authorize reconstruction from root.\n' "$STATE_FILE_NAME" >&2
+  printf 'Reconcile the managed deploy changes, or run pm-setup --refresh-from-root\n' >&2
+  printf 'to explicitly reconstruct the managed deploy surface from root.\n' >&2
 
   rm -rf -- "$work_dir"
 }
@@ -413,7 +419,7 @@ prepare_sync() {
         report_manifest_drift "$baseline_manifest" "$current_manifest"
       else
         log_error "deployment drift detected, but the baseline manifest is missing"
-        log_error "delete '$STATE_FILE_NAME' to authorize reconstruction from root"
+        log_error "run pm-setup --refresh-from-root to reconstruct from root"
       fi
       rm -f -- "$current_manifest"
       return 3
