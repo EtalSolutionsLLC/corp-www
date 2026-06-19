@@ -44,8 +44,10 @@ class HomeHeroFoldFitTests(unittest.TestCase):
         self.assertIn('font-size: clamp(1.48rem, 2.18vw, 2.08rem) !important;', css)
         self.assertIn('white-space: nowrap !important;', css)
         self.assertIn('min-height: 1.04em !important;', css)
-        self.assertIn('#home .hero-motion-line [data-kinetic-word]', css)
+        self.assertIn('#home .hero-motion-line .hero-kinetic-token', css)
         self.assertIn('min-width: 12ch !important;', css)
+        self.assertIn('#home .hero-motion-line [data-kinetic-word]', css)
+        self.assertIn('min-width: 0 !important;', css)
         self.assertIn('#home .hero-motion-line [data-kinetic-word].is-changing', css)
         self.assertIn('transform: none !important;', css)
 

@@ -791,3 +791,26 @@ body.has-js-active-nav .site-header .nav a:not([aria-current="page"]):not(:hover
   overflow: hidden !important;
 }
 
+
+/* 024: keep the kinetic punctuation attached to each replacement word.
+   The wrapper reserves the widest word without inserting space before the period. */
+@media (min-width: 900px) {
+  #home .hero-motion-line .hero-kinetic-token {
+    display: inline-block !important;
+    min-width: 12ch !important;
+    white-space: nowrap !important;
+    color: inherit !important;
+    text-shadow: none !important;
+    vertical-align: baseline !important;
+  }
+
+  #home .hero-motion-line [data-kinetic-word] {
+    min-width: 0 !important;
+  }
+
+  #home .hero-motion-line .hero-kinetic-period {
+    display: inline !important;
+    color: inherit !important;
+    text-shadow: none !important;
+  }
+}
