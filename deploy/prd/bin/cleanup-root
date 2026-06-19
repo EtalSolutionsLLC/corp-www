@@ -58,6 +58,7 @@ required_paths=(
   ".env"
   ".env.generated"
   "config.generated.json"
+  "VERSION"
   "deploy"
   "www"
 )
