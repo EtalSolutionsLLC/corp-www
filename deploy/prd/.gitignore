@@ -1,14 +1,27 @@
-.env.generated
-.env.bak
-config.generated.json 
+# Portmason-managed local workspace material.
+/portmason/
+/capture/
+/archive/
+/logs/
+/www/logs/
+/.artifacts/
+
+# Downloaded build packages and Windows attachment metadata.
+/*.tar.gz
+/*-chg.txt
+*:Zone.Identifier
+
+# Local recovery and interpreter residue.
+/.env.restore
 *.bak
-*.tmp
-*.log
 *.pyc
 __pycache__/
-logs/
-capture/
-archive/
-*.tar.gz
-*:Zone.Identifier
-chg.txt
+
+# Keep the generated Portmason contract files tracked.
+!.env.generated
+!config.generated.json
+
+# Track the production rotation report while keeping other staged bin files local.
+!/deploy/prd/bin/
+/deploy/prd/bin/*
+!/deploy/prd/bin/report-blog-rotation

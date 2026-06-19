@@ -1,3 +1,4 @@
+/* Shared Collection System: catalog profile */
 (function () {
   "use strict";
 
@@ -21,9 +22,9 @@
   function normalizeModalCloseControl(control) {
     if (!control || !control.classList) return;
     control.classList.add("modal-close-circle");
-    if (control.matches("[data-catalog-overview-close]")) {
+    if (control.matches("[data-collection-overview-close]")) {
       control.setAttribute("aria-label", "Close overview");
-    } else if (control.matches("[data-catalog-detail-close]")) {
+    } else if (control.matches("[data-collection-detail-close]")) {
       control.setAttribute("aria-label", "Close details");
     }
     control.textContent = "×";
@@ -31,44 +32,44 @@
 
   function normalizeCatalogModalCloseControls(scope) {
     var root = scope && scope.querySelectorAll ? scope : document;
-    if (root.matches && root.matches("[data-catalog-detail-close], [data-catalog-overview-close]")) {
+    if (root.matches && root.matches("[data-collection-detail-close], [data-collection-overview-close]")) {
       normalizeModalCloseControl(root);
     }
-    root.querySelectorAll("[data-catalog-detail-close], [data-catalog-overview-close]").forEach(normalizeModalCloseControl);
+    root.querySelectorAll("[data-collection-detail-close], [data-collection-overview-close]").forEach(normalizeModalCloseControl);
   }
 
   function catalogItems(carousel) {
-    return Array.prototype.slice.call(carousel.querySelectorAll("[data-catalog-item]"));
+    return Array.prototype.slice.call(carousel.querySelectorAll("[data-collection-item]"));
   }
 
   function itemSlug(item) {
-    return item ? item.getAttribute("data-catalog-slug") || "" : "";
+    return item ? item.getAttribute("data-collection-slug") || "" : "";
   }
 
   function itemTitle(item) {
     if (!item) return "";
     var titleElement = item.querySelector("h2, h3");
-    return item.getAttribute("data-catalog-title") || (titleElement ? titleElement.textContent : "");
+    return item.getAttribute("data-collection-title") || (titleElement ? titleElement.textContent : "");
   }
 
   var CATALOG_PAGE_SIZE = 3;
 
   function catalogPages(carousel) {
     if (!carousel) return [];
-    var track = carousel.querySelector("[data-catalog-track]");
+    var track = carousel.querySelector("[data-collection-track]");
     if (!track) return [];
-    return Array.prototype.slice.call(track.querySelectorAll(":scope > [data-catalog-page]"));
+    return Array.prototype.slice.call(track.querySelectorAll(":scope > [data-collection-page]"));
   }
 
   function ensureCatalogPages(carousel) {
     if (!carousel) return [];
-    var track = carousel.querySelector("[data-catalog-track]");
+    var track = carousel.querySelector("[data-collection-track]");
     if (!track) return [];
 
     var existingPages = catalogPages(carousel);
     if (existingPages.length) return existingPages;
 
-    var items = Array.prototype.slice.call(track.querySelectorAll(":scope > [data-catalog-item]"));
+    var items = Array.prototype.slice.call(track.querySelectorAll(":scope > [data-collection-item]"));
     if (!items.length) return [];
 
     var page = null;
@@ -76,7 +77,7 @@
       if (index % CATALOG_PAGE_SIZE === 0) {
         page = document.createElement("div");
         page.className = "catalog-carousel-page";
-        page.setAttribute("data-catalog-page", String(Math.floor(index / CATALOG_PAGE_SIZE)));
+        page.setAttribute("data-collection-page", String(Math.floor(index / CATALOG_PAGE_SIZE)));
         page.setAttribute("aria-label", "Catalog page " + String(Math.floor(index / CATALOG_PAGE_SIZE) + 1));
         track.appendChild(page);
       }
@@ -102,7 +103,7 @@
   }
 
   function pageForItem(item) {
-    return item ? item.closest("[data-catalog-page]") : null;
+    return item ? item.closest("[data-collection-page]") : null;
   }
 
   function activePageIndexForTrack(track, pages) {
@@ -136,14 +137,14 @@
   function pageControlHtml(carousel, pageIndex, direction) {
     var label = pageDirectionLabel(carousel, direction);
     if (direction === "newer") {
-      return '<button class="catalog-direction-link catalog-direction-button" type="button" data-catalog-page-target="' + String(pageIndex) + '"><span>←</span> ' + htmlEscape(label) + '</button>';
+      return '<button class="catalog-direction-link catalog-direction-button" type="button" data-collection-page-target="' + String(pageIndex) + '"><span>←</span> ' + htmlEscape(label) + '</button>';
     }
-    return '<button class="catalog-direction-link catalog-direction-button" type="button" data-catalog-page-target="' + String(pageIndex) + '">' + htmlEscape(label) + ' <span>→</span></button>';
+    return '<button class="catalog-direction-link catalog-direction-button" type="button" data-collection-page-target="' + String(pageIndex) + '">' + htmlEscape(label) + ' <span>→</span></button>';
   }
 
   function scrollTrackToPage(carousel, pageIndex, instant) {
     if (!carousel) return;
-    var track = carousel.querySelector("[data-catalog-track]");
+    var track = carousel.querySelector("[data-collection-track]");
     var pages = ensureCatalogPages(carousel);
     if (!track || !pages.length) return;
 
@@ -165,12 +166,12 @@
 
   function findCatalogItemBySlug(slug) {
     if (!slug) return null;
-    return document.querySelector('[data-catalog-item][data-catalog-slug="' + cssEscape(slug) + '"]');
+    return document.querySelector('[data-collection-item][data-collection-slug="' + cssEscape(slug) + '"]');
   }
 
   function findOverviewPanelById(id) {
     if (!id) return null;
-    return document.querySelector('[data-catalog-overview-panel="' + cssEscape(id) + '"]');
+    return document.querySelector('[data-collection-overview-panel="' + cssEscape(id) + '"]');
   }
 
   function linkHtml(label, item, direction) {
@@ -179,10 +180,10 @@
     var slug = itemSlug(item);
 
     if (direction === "newer") {
-      return '<a class="catalog-direction-link" data-catalog-target="' + htmlEscape(slug) + '" href="' + htmlEscape(href) + '"><span>←</span> ' + htmlEscape(label) + ': <strong>' + htmlEscape(title) + '</strong></a>';
+      return '<a class="catalog-direction-link" data-collection-target="' + htmlEscape(slug) + '" href="' + htmlEscape(href) + '"><span>←</span> ' + htmlEscape(label) + ': <strong>' + htmlEscape(title) + '</strong></a>';
     }
 
-    return '<a class="catalog-direction-link" data-catalog-target="' + htmlEscape(slug) + '" href="' + htmlEscape(href) + '">' + htmlEscape(label) + ': <strong>' + htmlEscape(title) + '</strong> <span>→</span></a>';
+    return '<a class="catalog-direction-link" data-collection-target="' + htmlEscape(slug) + '" href="' + htmlEscape(href) + '">' + htmlEscape(label) + ': <strong>' + htmlEscape(title) + '</strong> <span>→</span></a>';
   }
 
   function panelLinkHtml(label, item, panelType, direction) {
@@ -190,10 +191,10 @@
     var href = "#" + slug;
 
     if (direction === "newer") {
-      return '<a class="catalog-direction-link" data-catalog-target="' + htmlEscape(slug) + '" data-catalog-panel-target="' + htmlEscape(panelType) + '" href="' + htmlEscape(href) + '"><span>←</span> ' + htmlEscape(label) + '</a>';
+      return '<a class="catalog-direction-link" data-collection-target="' + htmlEscape(slug) + '" data-collection-panel-target="' + htmlEscape(panelType) + '" href="' + htmlEscape(href) + '"><span>←</span> ' + htmlEscape(label) + '</a>';
     }
 
-    return '<a class="catalog-direction-link" data-catalog-target="' + htmlEscape(slug) + '" data-catalog-panel-target="' + htmlEscape(panelType) + '" href="' + htmlEscape(href) + '">' + htmlEscape(label) + ' <span>→</span></a>';
+    return '<a class="catalog-direction-link" data-collection-target="' + htmlEscape(slug) + '" data-collection-panel-target="' + htmlEscape(panelType) + '" href="' + htmlEscape(href) + '">' + htmlEscape(label) + ' <span>→</span></a>';
   }
 
   function elementLeftWithinTrack(element, track) {
@@ -207,7 +208,7 @@
     if (!item) return;
 
     var carousel = carouselForItem(item);
-    var track = carousel ? carousel.querySelector("[data-catalog-track]") : null;
+    var track = carousel ? carousel.querySelector("[data-collection-track]") : null;
     var panel = item.querySelector(panelType === "detail" ? ".catalog-panel-detail" : ".catalog-panel-summary");
     if (!track || !panel) return;
 
@@ -272,20 +273,20 @@
 
   function ensureCarouselControl(carousel, direction) {
     if (!carousel) return null;
-    var selector = '[data-catalog-arrow="' + direction + '"]';
+    var selector = '[data-collection-arrow="' + direction + '"]';
     var control = carousel.querySelector(selector);
     if (control) return control;
 
     control = document.createElement("button");
     control.type = "button";
     control.className = "catalog-carousel-control catalog-carousel-control-" + direction;
-    control.setAttribute("data-catalog-arrow", direction);
+    control.setAttribute("data-collection-arrow", direction);
     control.setAttribute("aria-label", direction === "previous" ? "Previous catalog page" : "Next catalog page");
     control.innerHTML = direction === "previous"
       ? '<svg aria-hidden="true" viewBox="0 0 24 24" focusable="false"><path d="M15 6l-6 6 6 6"></path></svg>'
       : '<svg aria-hidden="true" viewBox="0 0 24 24" focusable="false"><path d="M9 6l6 6-6 6"></path></svg>';
 
-    var track = carousel.querySelector("[data-catalog-track]");
+    var track = carousel.querySelector("[data-collection-track]");
     if (track) {
       track.insertAdjacentElement("beforebegin", control);
     } else {
@@ -302,18 +303,18 @@
     control.setAttribute("aria-hidden", enabled ? "false" : "true");
 
     if (!enabled) {
-      control.removeAttribute("data-catalog-page-target");
+      control.removeAttribute("data-collection-page-target");
       return;
     }
 
-    control.setAttribute("data-catalog-page-target", String(pageIndex));
+    control.setAttribute("data-collection-page-target", String(pageIndex));
     control.setAttribute("aria-label", label);
   }
 
 
   function syncCarouselControlPosition(carousel) {
     if (!carousel) return;
-    var track = carousel.querySelector("[data-catalog-track]");
+    var track = carousel.querySelector("[data-collection-track]");
     if (!track) return;
 
     var carouselRect = carousel.getBoundingClientRect();
@@ -328,10 +329,10 @@
   function updateCarouselNav(carousel) {
     if (!carousel) return;
 
-    var nav = carousel.querySelector("[data-catalog-nav]");
-    var track = carousel.querySelector("[data-catalog-track]");
-    var newerSlot = carousel.querySelector("[data-catalog-newer-slot]");
-    var previousSlot = carousel.querySelector("[data-catalog-previous-slot]");
+    var nav = carousel.querySelector("[data-collection-nav]");
+    var track = carousel.querySelector("[data-collection-track]");
+    var newerSlot = carousel.querySelector("[data-collection-newer-slot]");
+    var previousSlot = carousel.querySelector("[data-collection-previous-slot]");
     var hint = carousel.querySelector(".catalog-scroll-hint");
     var pages = ensureCatalogPages(carousel);
     var previousControl = ensureCarouselControl(carousel, "previous");
@@ -378,7 +379,7 @@
   }
 
   function carouselForItem(item) {
-    return item ? item.closest("[data-catalog-carousel]") : null;
+    return item ? item.closest("[data-collection-carousel]") : null;
   }
 
   function catalogSectionForCarousel(carousel) {
@@ -427,18 +428,18 @@
 
   function defaultItemForCarousel(carousel) {
     if (!carousel) return null;
-    var defaultSlug = carousel.getAttribute("data-catalog-default") || "";
+    var defaultSlug = carousel.getAttribute("data-collection-default") || "";
     if (defaultSlug) {
-      var defaultItem = carousel.querySelector('[data-catalog-item][data-catalog-slug="' + cssEscape(defaultSlug) + '"]');
+      var defaultItem = carousel.querySelector('[data-collection-item][data-collection-slug="' + cssEscape(defaultSlug) + '"]');
       if (defaultItem) return defaultItem;
     }
-    return carousel.querySelector("[data-catalog-item]");
+    return carousel.querySelector("[data-collection-item]");
   }
 
   function defaultItemForSectionId(sectionId) {
     if (!sectionId) return null;
     var section = document.getElementById(sectionId);
-    var carousel = section ? section.querySelector("[data-catalog-carousel]") : null;
+    var carousel = section ? section.querySelector("[data-collection-carousel]") : null;
     return defaultItemForCarousel(carousel);
   }
 
@@ -460,7 +461,7 @@
   }
 
   function closeOverviewPanels() {
-    document.querySelectorAll("[data-catalog-overview-panel]").forEach(function (panel) {
+    document.querySelectorAll("[data-collection-overview-panel]").forEach(function (panel) {
       panel.hidden = true;
       panel.setAttribute("aria-hidden", "true");
     });
@@ -475,13 +476,13 @@
     panel.setAttribute("aria-hidden", "false");
     if (typeof syncCatalogModalBackdrop === "function") syncCatalogModalBackdrop();
 
-    var id = panel.getAttribute("data-catalog-overview-panel") || "";
+    var id = panel.getAttribute("data-collection-overview-panel") || "";
     if (updateHash && id) {
       updateHashWithoutJump("#" + id);
     }
 
     normalizeCatalogModalCloseControls(panel);
-    var closeButton = panel.querySelector("[data-catalog-overview-close]");
+    var closeButton = panel.querySelector("[data-collection-overview-close]");
     if (closeButton) {
       window.setTimeout(function () { closeButton.focus({ preventScroll: true }); }, 50);
     }
@@ -513,7 +514,7 @@
 
   function updateSelectedNavOption(slug) {
     document.querySelectorAll(".nav-dropdown-menu a").forEach(function (link) {
-      var target = link.getAttribute("data-catalog-target") || samePageHashFromLink(link);
+      var target = link.getAttribute("data-collection-target") || samePageHashFromLink(link);
       var isSelected = !!(slug && target && target === slug);
       link.classList.toggle("is-selected", isSelected);
       if (isSelected) {
@@ -702,11 +703,11 @@
 
   function ensureCatalogModalBackdrop() {
     if (catalogModalBackdrop) return catalogModalBackdrop;
-    catalogModalBackdrop = document.querySelector("[data-catalog-modal-backdrop]");
+    catalogModalBackdrop = document.querySelector("[data-collection-modal-backdrop]");
     if (!catalogModalBackdrop) {
       catalogModalBackdrop = document.createElement("div");
       catalogModalBackdrop.className = "catalog-modal-backdrop";
-      catalogModalBackdrop.setAttribute("data-catalog-modal-backdrop", "");
+      catalogModalBackdrop.setAttribute("data-collection-modal-backdrop", "");
       catalogModalBackdrop.hidden = true;
       document.body.appendChild(catalogModalBackdrop);
     }
@@ -714,8 +715,8 @@
   }
 
   function syncCatalogModalBackdrop() {
-    var overviewOpen = !!document.querySelector("[data-catalog-overview-panel]:not([hidden])");
-    var detailOpen = !!document.querySelector("[data-catalog-detail-panel]:not([hidden])");
+    var overviewOpen = !!document.querySelector("[data-collection-overview-panel]:not([hidden])");
+    var detailOpen = !!document.querySelector("[data-collection-detail-panel]:not([hidden])");
     var isOpen = overviewOpen || detailOpen;
     var backdrop = ensureCatalogModalBackdrop();
     backdrop.hidden = !isOpen;
@@ -723,7 +724,7 @@
   }
 
   function closeCatalogDetailPanels() {
-    document.querySelectorAll("[data-catalog-detail-panel]").forEach(function (panel) {
+    document.querySelectorAll("[data-collection-detail-panel]").forEach(function (panel) {
       panel.hidden = true;
       panel.setAttribute("aria-hidden", "true");
       panel.classList.remove("is-open");
@@ -736,7 +737,7 @@
 
   function positionCatalogDetailPanel(panel) {
     if (!panel || panel.hidden) return;
-    var carousel = panel._catalogCarousel || panel.closest("[data-catalog-carousel]");
+    var carousel = panel._catalogCarousel || panel.closest("[data-collection-carousel]");
     var rect = carousel ? carousel.getBoundingClientRect() : document.documentElement.getBoundingClientRect();
     var modalWidth = Math.min(panel.offsetWidth || 620, Math.max(280, window.innerWidth - 32));
     var minCenter = 16 + (modalWidth / 2);
@@ -758,7 +759,7 @@
     openCatalogDetailPanel = panel;
     positionCatalogDetailPanel(panel);
     syncCatalogModalBackdrop();
-    var closeButton = panel.querySelector("[data-catalog-detail-close]");
+    var closeButton = panel.querySelector("[data-collection-detail-close]");
     if (closeButton) {
       window.setTimeout(function () { closeButton.focus({ preventScroll: true }); }, 25);
     }
@@ -774,7 +775,7 @@
   }
 
   function prepareCatalogDetailModals() {
-    document.querySelectorAll("[data-catalog-carousel] [data-catalog-item]").forEach(function (item) {
+    document.querySelectorAll("[data-collection-carousel] [data-collection-item]").forEach(function (item) {
       var summary = item.querySelector(".catalog-panel-summary");
       var detail = item.querySelector(".catalog-panel-detail");
       if (!summary || !detail || !detail.id) return;
@@ -782,7 +783,7 @@
       detail.classList.add("catalog-detail-modal");
       var sourceSection = catalogSectionForItem(item);
       detail.classList.toggle("brand-catalog-detail-modal", !!(sourceSection && sourceSection.id === "brands"));
-      detail.setAttribute("data-catalog-detail-panel", "");
+      detail.setAttribute("data-collection-detail-panel", "");
       detail.setAttribute("role", "dialog");
       detail.setAttribute("aria-modal", "true");
       detail.setAttribute("aria-hidden", "true");
@@ -792,27 +793,27 @@
       // card allows ancestor stacking contexts to place it underneath the
       // shared backdrop, which made Brand details appear empty even though the
       // content was present. Preserve the originating carousel for positioning.
-      detail._catalogCarousel = item.closest("[data-catalog-carousel]");
+      detail._catalogCarousel = item.closest("[data-collection-carousel]");
       if (detail.parentElement !== document.body) {
         document.body.appendChild(detail);
       }
 
-      if (!detail.querySelector("[data-catalog-detail-close]")) {
+      if (!detail.querySelector("[data-collection-detail-close]")) {
         var closeButton = document.createElement("button");
         closeButton.className = "catalog-detail-close modal-close-circle";
         closeButton.type = "button";
-        closeButton.setAttribute("data-catalog-detail-close", "");
+        closeButton.setAttribute("data-collection-detail-close", "");
         closeButton.setAttribute("aria-label", "Close details");
         closeButton.textContent = "×";
         detail.insertBefore(closeButton, detail.firstChild);
       }
       normalizeCatalogModalCloseControls(detail);
 
-      if (!summary.querySelector("[data-catalog-detail-open]")) {
+      if (!summary.querySelector("[data-collection-detail-open]")) {
         var openButton = document.createElement("button");
         openButton.className = "catalog-details-toggle";
         openButton.type = "button";
-        openButton.setAttribute("data-catalog-detail-open", detail.id);
+        openButton.setAttribute("data-collection-detail-open", detail.id);
         openButton.setAttribute("aria-controls", detail.id);
         openButton.textContent = "View details →";
         summary.appendChild(openButton);
@@ -828,8 +829,8 @@
   function syncCatalogNavigationVisibility(carousel) {
     if (!carousel) return false;
     var needsNavigation = catalogNeedsNavigation(carousel);
-    var nav = carousel.querySelector("[data-catalog-nav]");
-    var dots = carousel.querySelector("[data-catalog-dots]");
+    var nav = carousel.querySelector("[data-collection-nav]");
+    var dots = carousel.querySelector("[data-collection-dots]");
     carousel.classList.toggle("is-static-catalog", !needsNavigation);
     if (nav) nav.hidden = !needsNavigation;
     if (dots) dots.hidden = !needsNavigation;
@@ -838,15 +839,15 @@
 
   function ensureCatalogDots(carousel) {
     if (!carousel) return null;
-    var track = carousel.querySelector("[data-catalog-track]");
+    var track = carousel.querySelector("[data-collection-track]");
     var pages = ensureCatalogPages(carousel);
     if (!track || !pages.length) return null;
 
-    var dots = carousel.querySelector("[data-catalog-dots]");
+    var dots = carousel.querySelector("[data-collection-dots]");
     if (!dots) {
       dots = document.createElement("div");
       dots.className = "catalog-position-dots";
-      dots.setAttribute("data-catalog-dots", "");
+      dots.setAttribute("data-collection-dots", "");
       dots.setAttribute("aria-label", "Catalog pages");
       track.insertAdjacentElement("afterend", dots);
     }
@@ -857,13 +858,13 @@
         var button = document.createElement("button");
         button.type = "button";
         button.className = "catalog-position-dot";
-        button.setAttribute("data-catalog-dot-index", String(index));
+        button.setAttribute("data-collection-dot-index", String(index));
         button.setAttribute("aria-label", "Show catalog page " + String(index + 1));
         dots.appendChild(button);
       });
     }
 
-    var nav = carousel.querySelector("[data-catalog-nav]");
+    var nav = carousel.querySelector("[data-collection-nav]");
     if (nav && dots.parentElement === carousel && nav.nextElementSibling !== dots) {
       dots.insertAdjacentElement("beforebegin", nav);
     }
@@ -874,7 +875,7 @@
 
   function updateCatalogDots(carousel) {
     if (!carousel) return;
-    var track = carousel.querySelector("[data-catalog-track]");
+    var track = carousel.querySelector("[data-collection-track]");
     var pages = ensureCatalogPages(carousel);
     var dots = ensureCatalogDots(carousel);
     if (!track || !pages.length || !dots) return;
@@ -892,17 +893,17 @@
   }
 
   function wireCatalogDots() {
-    document.querySelectorAll("[data-catalog-carousel]").forEach(function (carousel) {
+    document.querySelectorAll("[data-collection-carousel]").forEach(function (carousel) {
       ensureCatalogPages(carousel);
       ensureCatalogDots(carousel);
       updateCatalogDots(carousel);
     });
 
     document.addEventListener("click", function (event) {
-      var dot = event.target.closest ? event.target.closest("[data-catalog-dot-index]") : null;
+      var dot = event.target.closest ? event.target.closest("[data-collection-dot-index]") : null;
       if (!dot) return;
-      var carousel = dot.closest("[data-catalog-carousel]");
-      var index = Number(dot.getAttribute("data-catalog-dot-index"));
+      var carousel = dot.closest("[data-collection-carousel]");
+      var index = Number(dot.getAttribute("data-collection-dot-index"));
       if (!Number.isInteger(index)) return;
       event.preventDefault();
       scrollTrackToPage(carousel, index, false);
@@ -912,15 +913,15 @@
   function usesModalDetailHints(carousel, items) {
     if (!carousel || !items.length || !isMobileViewport()) return false;
     var section = catalogSectionForCarousel(carousel);
-    return !!(section && section.id === "promotions" && items[0].querySelector("[data-catalog-detail-panel]"));
+    return !!(section && section.id === "promotions" && items[0].querySelector("[data-collection-detail-panel]"));
   }
 
   function wireCatalogLinks() {
     document.addEventListener("click", function (event) {
-      var pageControl = event.target.closest ? event.target.closest("[data-catalog-page-target]") : null;
+      var pageControl = event.target.closest ? event.target.closest("[data-collection-page-target]") : null;
       if (pageControl) {
-        var pageCarousel = pageControl.closest("[data-catalog-carousel]");
-        var pageIndex = Number(pageControl.getAttribute("data-catalog-page-target"));
+        var pageCarousel = pageControl.closest("[data-collection-carousel]");
+        var pageIndex = Number(pageControl.getAttribute("data-collection-page-target"));
         if (pageCarousel && Number.isInteger(pageIndex)) {
           event.preventDefault();
           scrollTrackToPage(pageCarousel, pageIndex, false);
@@ -928,17 +929,17 @@
         return;
       }
 
-      var detailOpen = event.target.closest ? event.target.closest("[data-catalog-detail-open]") : null;
+      var detailOpen = event.target.closest ? event.target.closest("[data-collection-detail-open]") : null;
       if (detailOpen) {
         event.preventDefault();
-        openCatalogDetail(detailOpen.getAttribute("data-catalog-detail-open") || "", detailOpen);
+        openCatalogDetail(detailOpen.getAttribute("data-collection-detail-open") || "", detailOpen);
         return;
       }
 
       var link = event.target.closest ? event.target.closest("a[href]") : null;
       if (!link) return;
 
-      var overviewId = link.getAttribute("data-catalog-overview-open") || "";
+      var overviewId = link.getAttribute("data-collection-overview-open") || "";
       if (overviewId) {
         var overviewPanel = findOverviewPanelById(overviewId);
         if (overviewPanel) {
@@ -948,8 +949,8 @@
         return;
       }
 
-      var explicitTarget = link.getAttribute("data-catalog-target") || "";
-      var panelTarget = link.getAttribute("data-catalog-panel-target") || "";
+      var explicitTarget = link.getAttribute("data-collection-target") || "";
+      var panelTarget = link.getAttribute("data-collection-panel-target") || "";
       var hrefHash = samePageHashFromLink(link);
       var slug = explicitTarget || hrefHash;
       if (!slug) return;
@@ -985,35 +986,35 @@
     }, true);
 
     document.addEventListener("click", function (event) {
-      var detailClose = event.target.closest ? event.target.closest("[data-catalog-detail-close]") : null;
+      var detailClose = event.target.closest ? event.target.closest("[data-collection-detail-close]") : null;
       if (!detailClose) return;
       event.preventDefault();
-      closeCatalogDetailAndReturn(detailClose.closest("[data-catalog-detail-panel]"));
+      closeCatalogDetailAndReturn(detailClose.closest("[data-collection-detail-panel]"));
     }, true);
 
     document.addEventListener("click", function (event) {
-      if (!event.target.matches || !event.target.matches("[data-catalog-modal-backdrop]")) return;
+      if (!event.target.matches || !event.target.matches("[data-collection-modal-backdrop]")) return;
       event.preventDefault();
       closeCatalogDetailPanels();
       closeOverviewPanels();
     }, true);
 
     document.addEventListener("click", function (event) {
-      var closeButton = event.target.closest ? event.target.closest("[data-catalog-overview-close]") : null;
+      var closeButton = event.target.closest ? event.target.closest("[data-collection-overview-close]") : null;
       if (!closeButton) return;
       event.preventDefault();
-      closeOverviewAndReturn(closeButton.closest("[data-catalog-overview-panel]"));
+      closeOverviewAndReturn(closeButton.closest("[data-collection-overview-panel]"));
     }, true);
 
     document.addEventListener("keydown", function (event) {
       if (event.key !== "Escape") return;
-      var detailPanel = document.querySelector("[data-catalog-detail-panel]:not([hidden])");
+      var detailPanel = document.querySelector("[data-collection-detail-panel]:not([hidden])");
       if (detailPanel) {
         event.preventDefault();
         closeCatalogDetailAndReturn(detailPanel);
         return;
       }
-      var openPanel = document.querySelector("[data-catalog-overview-panel]:not([hidden])");
+      var openPanel = document.querySelector("[data-collection-overview-panel]:not([hidden])");
       if (openPanel) {
         event.preventDefault();
         closeOverviewAndReturn(openPanel);
@@ -1022,9 +1023,9 @@
   }
 
   function wireCarousels() {
-    document.querySelectorAll("[data-catalog-carousel]").forEach(function (carousel) {
+    document.querySelectorAll("[data-collection-carousel]").forEach(function (carousel) {
       ensureCatalogPages(carousel);
-      var track = carousel.querySelector("[data-catalog-track]");
+      var track = carousel.querySelector("[data-collection-track]");
       var updateTimer = null;
       if (!track) return;
 
@@ -1049,7 +1050,7 @@
   document.addEventListener("DOMContentLoaded", function () {
     ensureCatalogModalBackdrop();
     normalizeCatalogModalCloseControls(document);
-    document.querySelectorAll("[data-catalog-carousel]").forEach(function (carousel) {
+    document.querySelectorAll("[data-collection-carousel]").forEach(function (carousel) {
       ensureCatalogPages(carousel);
     });
     prepareCatalogDetailModals();
@@ -1066,12 +1067,272 @@
     });
     window.addEventListener("resize", function () {
       if (openCatalogDetailPanel) positionCatalogDetailPanel(openCatalogDetailPanel);
-      document.querySelectorAll("[data-catalog-carousel]").forEach(function (carousel) {
+      document.querySelectorAll("[data-collection-carousel]").forEach(function (carousel) {
         syncCarouselControlPosition(carousel);
         updateCarouselNav(carousel);
         updateCatalogDots(carousel);
         syncCatalogNavigationVisibility(carousel);
       });
     }, { passive: true });
+  });
+}());
+
+/* Shared Collection System: publication profile */
+(function () {
+  "use strict";
+
+  if (typeof window.fetch !== "function") return;
+
+  function initPublication(root) {
+    var configSource = root.getAttribute("data-collection-config");
+    if (!configSource) return;
+
+    var modal = root.querySelector("[data-collection-modal]");
+    var closeButton = root.querySelector("[data-collection-modal-close]");
+    var title = root.querySelector("[data-collection-modal-title]");
+    var meta = root.querySelector("[data-collection-modal-meta]");
+    var article = root.querySelector("[data-collection-modal-body]");
+    var collectionPromise = null;
+
+    function loadCollection() {
+      if (collectionPromise) return collectionPromise;
+      collectionPromise = window.fetch(configSource, { cache: "no-store" })
+        .then(function (response) {
+          if (!response.ok) throw new Error("Collection manifest unavailable");
+          return response.json();
+        })
+        .then(function (manifest) {
+          var manifestUrl = new URL(configSource, window.location.href);
+          var itemsUrl = new URL(manifest.dataFile, manifestUrl);
+          return window.fetch(itemsUrl, { cache: "no-store" })
+            .then(function (response) {
+              if (!response.ok) throw new Error("Collection items unavailable");
+              return response.json();
+            })
+            .then(function (items) {
+              return {
+                manifest: manifest,
+                items: Array.isArray(items) ? items : [],
+                baseUrl: new URL(".", manifestUrl)
+              };
+            });
+        });
+      return collectionPromise;
+    }
+
+    function loadText(ref, baseUrl) {
+      if (!ref || !/\.md(?:$|\?)/.test(ref)) {
+        return Promise.reject(new Error("Markdown article reference missing"));
+      }
+      return window.fetch(new URL(ref, baseUrl), { cache: "no-store" }).then(function (response) {
+        if (!response.ok) throw new Error("Markdown article unavailable");
+        return response.text();
+      });
+    }
+
+    function safeHref(value) {
+      var href = String(value || "").trim();
+      return /^(https?:|mailto:)/i.test(href) ? href : "";
+    }
+
+    function appendInlineMarkdown(container, value) {
+      var sourceText = String(value || "");
+      var token = /(`[^`]+`|\*\*[^*]+\*\*|\*[^*]+\*|\[[^\]]+\]\([^)]+\))/g;
+      var cursor = 0;
+      var match;
+
+      function appendText(text) {
+        if (text) container.appendChild(document.createTextNode(text));
+      }
+
+      while ((match = token.exec(sourceText))) {
+        appendText(sourceText.slice(cursor, match.index));
+        var raw = match[0];
+        var element;
+
+        if (raw.charAt(0) === "`") {
+          element = document.createElement("code");
+          element.textContent = raw.slice(1, -1);
+        } else if (raw.slice(0, 2) === "**") {
+          element = document.createElement("strong");
+          element.textContent = raw.slice(2, -2);
+        } else if (raw.charAt(0) === "*") {
+          element = document.createElement("em");
+          element.textContent = raw.slice(1, -1);
+        } else {
+          var link = raw.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+          var href = link && safeHref(link[2]);
+          if (href) {
+            element = document.createElement("a");
+            element.href = href;
+            element.textContent = link[1];
+          } else {
+            element = document.createTextNode(link ? link[1] : raw);
+          }
+        }
+
+        container.appendChild(element);
+        cursor = match.index + raw.length;
+      }
+
+      appendText(sourceText.slice(cursor));
+    }
+
+    function renderMarkdown(text) {
+      article.replaceChildren();
+
+      var lines = String(text || "").replace(/\r\n?/g, "\n").split("\n");
+      var paragraph = [];
+      var list = null;
+      var listType = "";
+      var codeLines = [];
+      var inCode = false;
+
+      function appendInlineElement(tag, textValue) {
+        var element = document.createElement(tag);
+        appendInlineMarkdown(element, textValue);
+        article.appendChild(element);
+      }
+
+      function flushParagraph() {
+        if (!paragraph.length) return;
+        appendInlineElement("p", paragraph.join(" "));
+        paragraph = [];
+      }
+
+      function flushList() {
+        list = null;
+        listType = "";
+      }
+
+      function flushCode() {
+        if (!codeLines.length) return;
+        var pre = document.createElement("pre");
+        var code = document.createElement("code");
+        code.textContent = codeLines.join("\n");
+        pre.appendChild(code);
+        article.appendChild(pre);
+        codeLines = [];
+      }
+
+      lines.forEach(function (line) {
+        if (/^```/.test(line)) {
+          flushParagraph();
+          flushList();
+          if (inCode) flushCode();
+          inCode = !inCode;
+          return;
+        }
+        if (inCode) {
+          codeLines.push(line);
+          return;
+        }
+        if (!line.trim()) {
+          flushParagraph();
+          flushList();
+          return;
+        }
+        if (/^---+$/.test(line.trim())) {
+          flushParagraph();
+          flushList();
+          article.appendChild(document.createElement("hr"));
+          return;
+        }
+
+        var heading = line.match(/^(#{2,4})\s+(.+)$/);
+        if (heading) {
+          flushParagraph();
+          flushList();
+          appendInlineElement(heading[1].length === 2 ? "h4" : "h5", heading[2]);
+          return;
+        }
+
+        var quote = line.match(/^>\s?(.+)$/);
+        if (quote) {
+          flushParagraph();
+          flushList();
+          appendInlineElement("blockquote", quote[1]);
+          return;
+        }
+
+        var unordered = line.match(/^\s*[-*]\s+(.+)$/);
+        var ordered = line.match(/^\s*\d+\.\s+(.+)$/);
+        if (unordered || ordered) {
+          flushParagraph();
+          var desired = ordered ? "ol" : "ul";
+          if (!list || listType !== desired) {
+            flushList();
+            list = document.createElement(desired);
+            listType = desired;
+            article.appendChild(list);
+          }
+          var item = document.createElement("li");
+          appendInlineMarkdown(item, (ordered || unordered)[1]);
+          list.appendChild(item);
+          return;
+        }
+
+        paragraph.push(line.trim());
+      });
+
+      flushParagraph();
+      flushList();
+      if (inCode || codeLines.length) flushCode();
+    }
+
+    function renderTitle(markdown) {
+      title.replaceChildren();
+      appendInlineMarkdown(title, String(markdown || "").replace(/\s+/g, " ").trim());
+    }
+
+    function openItem(item, context) {
+      if (!modal || !item || !title || !meta || !article) {
+        return Promise.reject(new Error("Publication modal unavailable"));
+      }
+      return Promise.all([
+        loadText(item.title_md, context.baseUrl),
+        loadText(item.full_article_md, context.baseUrl)
+      ]).then(function (parts) {
+        var labels = context.manifest.labels || {};
+        renderTitle(parts[0]);
+        meta.textContent = "Article " + (labels.itemPrefix || "Item") + "-" +
+          String(item.id).padStart(3, "0") + " · " + (item.category || "Field note");
+        renderMarkdown(parts[1]);
+        if (typeof modal.showModal === "function") modal.showModal();
+        else modal.setAttribute("open", "");
+      });
+    }
+
+    function closeItem() {
+      if (!modal) return;
+      if (typeof modal.close === "function") modal.close();
+      else modal.removeAttribute("open");
+    }
+
+    root.addEventListener("click", function (event) {
+      var trigger = event.target.closest("[data-collection-open-item]");
+      if (trigger) {
+        event.preventDefault();
+        var id = Number(trigger.getAttribute("data-collection-open-item"));
+        loadCollection()
+          .then(function (context) {
+            var item = context.items.find(function (candidate) {
+              return Number(candidate.id) === id;
+            });
+            return openItem(item, context);
+          })
+          .catch(function () {
+            window.location.href = trigger.href;
+          });
+        return;
+      }
+      if (event.target === modal) closeItem();
+    });
+
+    if (closeButton) closeButton.addEventListener("click", closeItem);
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll('[data-collection][data-collection-mode="publication"]').forEach(initPublication);
   });
 }());

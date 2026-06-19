@@ -45,7 +45,7 @@ html {
 .catalog-carousel,
 .catalog-list-item,
 .catalog-panel,
-[data-catalog-item] {
+[data-collection-item] {
   scroll-margin-top: var(--pm-scroll-clearance) !important;
 }
 

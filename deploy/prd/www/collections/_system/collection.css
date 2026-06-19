@@ -1,3 +1,4 @@
+/* Shared Collection System: catalog profile */
 /* Shared catalog carousel stylesheet
    ------------------------------------------------------------
    Reusable carousel chrome for catalog-style components:
@@ -127,8 +128,8 @@
   white-space: nowrap;
 }
 
-.catalog-carousel-instructions [data-catalog-newer-slot],
-.catalog-carousel-instructions [data-catalog-previous-slot] {
+.catalog-carousel-instructions [data-collection-newer-slot],
+.catalog-carousel-instructions [data-collection-previous-slot] {
   min-width: 0;
   visibility: hidden;
   pointer-events: none;
@@ -266,10 +267,10 @@
   cursor: pointer;
 }
 
-[data-catalog-nav][hidden],
-[data-catalog-dots][hidden],
-.catalog-carousel.is-static-catalog [data-catalog-nav],
-.catalog-carousel.is-static-catalog [data-catalog-dots] {
+[data-collection-nav][hidden],
+[data-collection-dots][hidden],
+.catalog-carousel.is-static-catalog [data-collection-nav],
+.catalog-carousel.is-static-catalog [data-collection-dots] {
   display: none !important;
 }
 

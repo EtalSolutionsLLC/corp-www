@@ -330,13 +330,13 @@
   justify-self: center;
 }
 
-[data-catalog-newer-slot] {
+[data-collection-newer-slot] {
   grid-column: 1;
   justify-self: start;
   min-width: 0;
 }
 
-[data-catalog-previous-slot] {
+[data-collection-previous-slot] {
   grid-column: 3;
   justify-self: end;
   min-width: 0;
@@ -1167,7 +1167,7 @@
 #promotions .catalog-carousel-shell,
 #promotions .catalog-carousel-track,
 #promotions .catalog-panels,
-#promotions [data-catalog-carousel] {
+#promotions [data-collection-carousel] {
   background: transparent !important;
   background-color: transparent !important;
   box-shadow: none !important;
@@ -1199,7 +1199,7 @@ body.has-catalog-modal-open {
   overflow: hidden;
 }
 
-/* Shared carousel position dots and direction button styles moved to assets/css/carousel.css. */
+/* Shared carousel position dots and direction button styles moved to collections/_system/collection.css. */
 
 .catalog-details-toggle {
   display: inline-flex !important;
@@ -1323,7 +1323,7 @@ body.has-catalog-modal-open {
     padding-right: 0;
   }
 
-  /* Shared carousel chrome moved to assets/css/carousel.css. */
+  /* Shared carousel chrome moved to collections/_system/collection.css. */
 
   .catalog-carousel:not(.brand-catalog-carousel) .catalog-carousel-track {
     gap: 14px;
@@ -1401,10 +1401,10 @@ body.has-catalog-modal-open {
 
 /* Catalog affordance guardrail: do not suggest horizontal navigation when
    every catalog item already fits in the viewport. JS owns the measurement. */
-[data-catalog-nav][hidden],
-[data-catalog-dots][hidden],
-.catalog-carousel.is-static-catalog [data-catalog-nav],
-.catalog-carousel.is-static-catalog [data-catalog-dots] {
+[data-collection-nav][hidden],
+[data-collection-dots][hidden],
+.catalog-carousel.is-static-catalog [data-collection-nav],
+.catalog-carousel.is-static-catalog [data-collection-dots] {
   display: none !important;
 }
 
@@ -1599,7 +1599,7 @@ body.has-catalog-modal-open {
   }
 }
 
-/* Shared paged carousel layout moved to assets/css/carousel.css. */
+/* Shared paged carousel layout moved to collections/_system/collection.css. */
 
 /* Mobile catalog stack + sticky section headers
    ------------------------------------------------------------

@@ -3,7 +3,7 @@
 # Static runtime deploy tasks.
 #
 # Responsibilities:
-# - Render static HTML partials into deployable pages.
+# - Render static HTML partials and executable hooks into deployable pages.
 # - Keep deployed output fully static.
 # - Preserve Portmason marker comments for repeatable/idempotent rendering.
 # - Support page-specific partial tokens, including CASE_SUBTITLE.
@@ -16,6 +16,10 @@
 #   <!-- /PM:HEADER -->
 #
 # Markers are managed regions. They remain in production HTML.
+#
+# Renderer resolution order for PM:<NAME>:
+#   1. partials/hooks/<lowercase-name> when it is executable
+#   2. partials/<lowercase-name>.html as the static fallback
 #
 # Page-specific token model:
 #
@@ -50,6 +54,16 @@ pm_partial_name_to_file() {
     partial_slug="$(printf '%s' "$partial_name" | tr '[:upper:]' '[:lower:]')"
 
     printf -v "$__out" '%s/partials/%s.html' "${SITE_DIR}" "$partial_slug"
+}
+
+pm_partial_name_to_hook() {
+    local __out="$1"
+    local partial_name="$2"
+
+    local partial_slug=""
+    partial_slug="$(printf '%s' "$partial_name" | tr '[:upper:]' '[:lower:]')"
+
+    printf -v "$__out" '%s/partials/hooks/%s' "${SITE_DIR}" "$partial_slug"
 }
 
 pm_find_html_pages() {
@@ -354,6 +368,7 @@ render_page_partials() {
     local backup_file=""
     local partial_name=""
     local partial_file=""
+    local partial_hook=""
     local rc=0
 
     if ! pm_make_page_backup backup_file "$page"; then
@@ -371,8 +386,9 @@ render_page_partials() {
         fi
 
         pm_partial_name_to_file partial_file "$partial_name"
+        pm_partial_name_to_hook partial_hook "$partial_name"
 
-        if render_partial "$page" "$partial_name" "$partial_file"; then
+        if render_partial "$page" "$partial_name" "$partial_file" "$partial_hook"; then
             :
         else
             rc=$?
@@ -403,14 +419,39 @@ render_partial() {
     local page="$1"
     local partial_name="$2"
     local partial_file="$3"
+    local partial_hook="$4"
 
     if [[ ! -f "$page" ]]; then
         log ERROR "Page not found while rendering partial: ${page}"
         return 1
     fi
 
-    if [[ ! -f "$partial_file" ]]; then
-        log ERROR "Partial file not found for ${partial_name}: ${partial_file}"
+    local partial_source="$partial_file"
+    local partial_source_kind="partial"
+    local generated_source=""
+    local hook_rc=0
+
+    if [[ -f "$partial_hook" && -x "$partial_hook" ]]; then
+        generated_source="$(mktemp)"
+
+        if (
+            cd "$SITE_DIR"
+            SITE_DIR="$SITE_DIR" "$partial_hook"
+        ) > "$generated_source"; then
+            partial_source="$generated_source"
+            partial_source_kind="hook"
+        else
+            hook_rc=$?
+            rm -f "$generated_source"
+            log ERROR "Hook failed for ${partial_name}: ${partial_hook}; rc=${hook_rc}"
+            return "$hook_rc"
+        fi
+    elif [[ ! -f "$partial_file" ]]; then
+        if [[ -f "$partial_hook" ]]; then
+            log ERROR "Hook is not executable and no static partial exists for ${partial_name}: hook=${partial_hook}, partial=${partial_file}"
+        else
+            log ERROR "No hook or partial found for ${partial_name}: hook=${partial_hook}, partial=${partial_file}"
+        fi
         return 1
     fi
 
@@ -422,7 +463,7 @@ render_partial() {
 
     if awk \
         -v partial_name="$partial_name" \
-        -v partial_file="$partial_file" \
+        -v partial_file="$partial_source" \
         -v case_subtitle="$case_subtitle" '
         function render_template(input, output) {
             output = input
@@ -469,7 +510,7 @@ render_partial() {
         :
     else
         local rc=$?
-        rm -f "$tmp_file"
+        rm -f "$tmp_file" "$generated_source"
 
         case "$rc" in
             10)
@@ -483,6 +524,8 @@ render_partial() {
         return "$rc"
     fi
 
+    rm -f "$generated_source"
+
     if mv "$tmp_file" "$page"; then
         chmod 0644 "$page" || true
     else
@@ -492,7 +535,7 @@ render_partial() {
         return "$rc"
     fi
 
-    log INFO "Rendered partial ${partial_name} into ${page}"
+    log INFO "Rendered ${partial_source_kind} ${partial_name} into ${page}"
     return 0
 }
 

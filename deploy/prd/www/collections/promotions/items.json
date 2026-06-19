@@ -9,10 +9,6 @@
     "subtitle": "Find the repetitive work worth simplifying before adding another tool.",
     "audience": "Small teams and owner-led businesses",
     "summary": "A practical review for organizations that want to reduce recurring operational friction with focused automation and clearer workflows.",
-    "description": [
-      "We identify the recurring tasks, handoffs, delays, and information gaps that consume time without adding value.",
-      "The result is a prioritized improvement plan showing which problems can be simplified now, which may benefit from automation later, and which should remain intentionally human-led."
-    ],
     "price": "$495",
     "priceNote": "fixed price",
     "primaryAction": {
@@ -44,16 +40,6 @@
         "body": "Reduce recurring friction with a short list of practical, maintainable next steps."
       }
     ],
-    "sections": [
-      {
-        "title": "What this covers",
-        "body": "The review focuses on work that is repeated often enough to matter: recurring admin, customer follow-up, reporting, scheduling, handoffs, and routine information management."
-      },
-      {
-        "title": "What you receive",
-        "body": "A prioritized friction map and a concise improvement plan organized by effort, value, and implementation risk."
-      }
-    ],
     "sortOrder": 5
   },
   {
@@ -66,10 +52,6 @@
     "subtitle": "Find practical, low-disruption ways to apply A.I. inside a real business operation.",
     "audience": "Small to mid-sized businesses",
     "summary": "A practical A.I. assessment for business owners and operators who want to identify useful A.I. opportunities without chasing hype or disrupting the way their teams already work.",
-    "description": [
-      "We review the way the business currently serves customers, manages work, handles staffing pressure, tracks information, and responds to operational friction.",
-      "The result is a short, practical opportunity map showing where A.I. can help first, what should wait, and how to adopt it with the least amount of disruption."
-    ],
     "price": "$750",
     "priceNote": "fixed price",
     "primaryAction": {
@@ -101,16 +83,6 @@
         "body": "Identify practical A.I. use cases that improve responsiveness, accuracy, efficiency, and customer experience."
       }
     ],
-    "sections": [
-      {
-        "title": "What this covers",
-        "body": "The assessment looks for practical A.I. opportunities such as customer service automation, predictive staffing, inventory support, scheduling, maintenance alerts, personalization, operational reporting, and workflow simplification."
-      },
-      {
-        "title": "Inspired by the Industry A.I. series",
-        "body": "This promotion grew out of the industry-focused A.I. education series covering food service, healthcare, hospitality, manufacturing, and retail."
-      }
-    ],
     "sortOrder": 10
   },
   {
@@ -123,10 +95,6 @@
     "subtitle": "Turn scattered A.I. usage into a governed software delivery process.",
     "audience": "Software teams",
     "summary": "A focused assessment and design sprint for software teams that want to use A.I. across the SDLC without losing control of quality, security, or accountability.",
-    "description": [
-      "We evaluate the current delivery process, identify safe A.I. opportunities, define practical guardrails, and provide a short roadmap the team can actually use.",
-      "The goal is faster delivery with stronger process, review, and confidence."
-    ],
     "price": "$1,200",
     "priceNote": "fixed price",
     "primaryAction": {
@@ -158,16 +126,6 @@
         "body": "Faster delivery with stronger process, review, and confidence."
       }
     ],
-    "sections": [
-      {
-        "title": "What this covers",
-        "body": "A current-state review of how the team delivers software, where A.I. is already appearing, and where it can safely help."
-      },
-      {
-        "title": "What you receive",
-        "body": "A practical opportunity map, recommended guardrails, verification checkpoints, and a short roadmap for responsible adoption."
-      }
-    ],
     "sortOrder": 20
   },
   {
@@ -180,10 +138,6 @@
     "subtitle": "A friendly, practical A.I. session for everyday people who want useful help without the jargon.",
     "audience": "General consumers",
     "summary": "A plain-language A.I. discovery session for people who are curious about A.I. but do not know where to start.",
-    "description": [
-      "We help you find simple ways A.I. can support daily tasks, communication, reminders, photo sharing, planning, writing, organizing, and staying connected with the people who matter.",
-      "This is for people who want useful guidance without jargon, coding, or technical pressure."
-    ],
     "price": "$149",
     "priceNote": "fixed price",
     "primaryAction": {
@@ -213,16 +167,6 @@
       {
         "title": "Goal",
         "body": "Leave with a short personal A.I. plan you can actually use."
-      }
-    ],
-    "sections": [
-      {
-        "title": "Bring your real life",
-        "body": "The session starts with the tasks, questions, and frustrations you already have. Then we identify where A.I. can help simply and safely."
-      },
-      {
-        "title": "Inspired by the Series campaign",
-        "body": "This offer continues the same idea: making A.I. make sense for real people by focusing on connection, confidence, and practical everyday usefulness."
       }
     ],
     "sortOrder": 40

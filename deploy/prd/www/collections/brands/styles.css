@@ -33,13 +33,13 @@
   justify-self: center;
 }
 
-[data-catalog-newer-slot] {
+[data-collection-newer-slot] {
   grid-column: 1;
   justify-self: start;
   min-width: 0;
 }
 
-[data-catalog-previous-slot] {
+[data-collection-previous-slot] {
   grid-column: 3;
   justify-self: end;
   min-width: 0;
@@ -114,8 +114,8 @@
     grid-column: 1;
   }
 
-  [data-catalog-newer-slot],
-  [data-catalog-previous-slot] {
+  [data-collection-newer-slot],
+  [data-collection-previous-slot] {
     grid-column: 1;
     justify-self: center;
   }
