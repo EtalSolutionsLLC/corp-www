@@ -1,4 +1,0 @@
-project/www/assets/css/viewport-contract.css
-project/deploy/prd/www/assets/css/viewport-contract.css
-project/tests/test_home_hero_fold_fit.py
-project/011-corp-www-home-hero-fold-fit-chg.txt

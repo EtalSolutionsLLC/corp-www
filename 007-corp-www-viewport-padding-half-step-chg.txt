@@ -1,3 +1,0 @@
-project/www/assets/css/viewport-contract.css
-project/deploy/prd/www/assets/css/viewport-contract.css
-project/tests/test_viewport_contract.py

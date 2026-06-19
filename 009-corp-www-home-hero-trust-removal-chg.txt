@@ -1,4 +1,0 @@
-project/www/index.html
-project/deploy/prd/www/index.html
-project/tests/test_home_hero_trust_removed.py
-project/009-corp-www-home-hero-trust-removal-chg.txt
