@@ -56,14 +56,30 @@ payload = {
 path.parent.mkdir(parents=True, exist_ok=True)
 fd, temporary_name = tempfile.mkstemp(prefix=path.name + ".", dir=str(path.parent))
 try:
+    # mkstemp intentionally starts at 0600. The Pages artifact is archived by
+    # the host runner after this hook exits, so make the temporary file
+    # world-readable before the atomic replacement preserves its mode.
+    os.fchmod(fd, 0o644)
     with os.fdopen(fd, "w", encoding="utf-8") as handle:
         json.dump(payload, handle, indent=2, sort_keys=True)
         handle.write("\n")
     os.replace(temporary_name, path)
+    os.chmod(path, 0o644)
 finally:
     if os.path.exists(temporary_name):
         os.unlink(temporary_name)
 PY
+
+if [[ ! -r "${build_info_file}" ]]; then
+  printf 'ERROR: generated build metadata is not readable: %s\n' "${build_info_file}" >&2
+  exit 1
+fi
+
+mode="$(stat -c '%a' "${build_info_file}" 2>/dev/null || stat -f '%Lp' "${build_info_file}")"
+if [[ "${mode}" != "644" ]]; then
+  printf 'ERROR: generated build metadata has mode %s; expected 644: %s\n' "${mode}" "${build_info_file}" >&2
+  exit 1
+fi
 
 printf '<!-- ETAL_SITE_BUILD version="%s" details="/build-info.json" -->\n' "${version}"
 printf '<meta name="etal-site-build" content="%s" />\n' "${version}"

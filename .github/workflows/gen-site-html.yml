@@ -84,6 +84,39 @@ jobs:
             toolbox \
             portmason/pm-process-site-partials
 
+      - name: Verify Pages artifact readability
+        shell: bash
+        working-directory: .
+        run: |
+          artifact_root="deploy/prd/www"
+          build_info="${artifact_root}/build-info.json"
+
+          if [[ ! -f "$build_info" ]]; then
+            echo "Pages artifact is missing required build metadata: $build_info" >&2
+            exit 1
+          fi
+
+          if [[ ! -r "$build_info" ]]; then
+            echo "Pages build metadata is not readable by the GitHub runner:" >&2
+            stat "$build_info" >&2 || true
+            exit 1
+          fi
+
+          unreadable_files="$(find "$artifact_root" -type f ! -readable -print)"
+          if [[ -n "$unreadable_files" ]]; then
+            echo "Pages artifact contains unreadable files:" >&2
+            printf '%s\n' "$unreadable_files" >&2
+            exit 1
+          fi
+
+          mode="$(stat -c '%a' "$build_info")"
+          if [[ "$mode" != "644" ]]; then
+            echo "Pages build metadata has mode $mode; expected 644: $build_info" >&2
+            exit 1
+          fi
+
+          tar -C "$artifact_root" -cf /dev/null .
+
       - name: Report blog entry rotation
         run: ../../bin/report-blog-rotation
 

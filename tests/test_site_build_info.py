@@ -25,13 +25,13 @@ class SiteBuildInfoTests(unittest.TestCase):
         cls.workflow = (ROOT / ".github/workflows/gen-site-html.yml").read_text(encoding="utf-8")
 
     def test_version_file_declares_current_build(self):
-        self.assertEqual("026", (ROOT / "VERSION").read_text(encoding="utf-8").strip())
+        self.assertEqual("027", (ROOT / "VERSION").read_text(encoding="utf-8").strip())
 
     def test_html_contains_portmason_build_meta_region(self):
         self.assertIn("<!-- PM:SITE-BUILD-META -->", self.index)
         self.assertIn("<!-- /PM:SITE-BUILD-META -->", self.index)
-        self.assertIn('meta name="etal-site-build" content="026"', self.index)
-        self.assertIn('ETAL_SITE_BUILD version="026"', self.index)
+        self.assertIn('meta name="etal-site-build" content="027"', self.index)
+        self.assertIn('ETAL_SITE_BUILD version="027"', self.index)
 
     def test_footer_copyright_opens_accessible_build_dialog(self):
         for token in [
@@ -73,7 +73,7 @@ class SiteBuildInfoTests(unittest.TestCase):
             root = Path(temporary)
             site = root / "www"
             site.mkdir()
-            (root / "VERSION").write_text("026\n", encoding="utf-8")
+            (root / "VERSION").write_text("027\n", encoding="utf-8")
             (root / ".env.generated").write_text("DEPLOY_ENV=prd\n", encoding="utf-8")
 
             environment = os.environ.copy()
@@ -88,13 +88,24 @@ class SiteBuildInfoTests(unittest.TestCase):
                 check=True,
             )
 
-            self.assertIn('ETAL_SITE_BUILD version="026"', result.stdout)
-            self.assertIn('meta name="etal-site-build" content="026"', result.stdout)
-            payload = json.loads((site / "build-info.json").read_text(encoding="utf-8"))
-            self.assertEqual("026", payload["version"])
+            self.assertIn('ETAL_SITE_BUILD version="027"', result.stdout)
+            self.assertIn('meta name="etal-site-build" content="027"', result.stdout)
+            build_info = site / "build-info.json"
+            payload = json.loads(build_info.read_text(encoding="utf-8"))
+            self.assertEqual("027", payload["version"])
             self.assertEqual("github-pages", payload["target"])
             self.assertEqual("Et al Solutions LLC", payload["builder"])
             self.assertTrue(payload["built_at"].endswith("Z"))
+            self.assertEqual(0o644, build_info.stat().st_mode & 0o777)
+            self.assertTrue(os.access(build_info, os.R_OK))
+
+    def test_workflow_preflights_pages_artifact_permissions(self):
+        verify = self.workflow.index("- name: Verify Pages artifact readability")
+        upload = self.workflow.index("- name: Upload GitHub Pages artifact")
+        self.assertLess(verify, upload)
+        self.assertIn('find "$artifact_root" -type f ! -readable -print', self.workflow)
+        self.assertIn('tar -C "$artifact_root" -cf /dev/null .', self.workflow)
+        self.assertIn('expected 644', self.workflow)
 
     def test_build_modal_uses_site_visual_system(self):
         self.assertIn(".footer-build-trigger", self.styles)
