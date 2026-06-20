@@ -20,7 +20,7 @@
     "brand": "Portmason Platform\u2122",
     "kicker": "Portmason Platform\u2122 \u00b7 Live systems lab",
     "title": "The platform is the proof.",
-    "summary": "Portmason separates what a system is built from, how it is controlled, and how it is provisioned and run. The live tools below demonstrate combinations of those capabilities\u2014not one tool per product family.",
+    "summary": "Portmason separates a system’s foundations, control surface, and operational lifecycle. The live tools below demonstrate combinations of those capabilities.",
     "markNotice": "Portmason Platform\u2122, Portmason Operations\u2122, Portmason Foundations\u2122, Portmason Collections\u2122, and Portmason Tooling\u2122 are marks of Et al Solutions LLC.",
     "platformModel": {
       "relationship": "Foundations define the system. Tooling creates, validates, and controls it. Operations provisions, deploys, and runs it.",
