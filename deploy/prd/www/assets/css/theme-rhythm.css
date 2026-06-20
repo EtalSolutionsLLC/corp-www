@@ -10,7 +10,7 @@
 }
 
 #home[data-theme="dark"],
-#explore[data-theme="dark"],
+#lab[data-theme="dark"],
 #promotions[data-theme="dark"],
 #about[data-theme="dark"] {
   color: #ffffff;
@@ -24,7 +24,7 @@
   color: #091427;
 }
 
-/* Durable visible Brands correction: Explore -> Brands -> Promotions
+/* Durable visible Brands correction: Lab -> Brands -> Promotions
    must render dark -> light -> dark. */
 html body #brands.brand-catalog-section.catalog-home-section.section-light[data-theme="light"] {
   background:

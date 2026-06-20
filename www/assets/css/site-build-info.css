@@ -110,3 +110,25 @@
   z-index: 3 !important;
   margin: 0 !important;
 }
+
+.site-build-marks {
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(143, 178, 255, 0.18);
+}
+
+.site-build-marks h3 {
+  margin: 0 0 8px;
+  color: #8fb2ff;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.site-build-marks p {
+  margin: 6px 0 0;
+  color: rgba(255, 255, 255, 0.64);
+  font-size: 0.72rem;
+  line-height: 1.45;
+}

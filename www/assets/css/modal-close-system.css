@@ -1,13 +1,16 @@
 /* Site-wide modal close-control standard
    ------------------------------------------------------------
-   Every modal uses the same circular, icon-only close affordance. */
+   Every modal uses the same circular, icon-only close affordance.
+   Shell-hosted controls are pinned to the modal's upper-right corner.
+   Scrollable catalog controls remain sticky in that same position. */
 :root {
-  --modal-close-size: 32px;
-  --modal-close-border: rgba(143, 178, 255, 0.42);
-  --modal-close-bg: rgba(4, 15, 34, 0.84);
+  --modal-close-size: 36px;
+  --modal-close-border: rgba(255, 255, 255, 0.58);
+  --modal-close-bg: rgba(4, 15, 34, 0.92);
   --modal-close-bg-hover: #123bff;
   --modal-close-fg: #ffffff;
   --modal-close-focus: 0 0 0 3px rgba(18, 59, 255, 0.22);
+  --modal-close-inset: 10px;
 }
 
 .modal-close-circle,
@@ -17,6 +20,7 @@
 .explore-mesh-modal-close,
 .thread-article-modal-close,
 .home-quick-summary-modal-close,
+.workspace-modal-close,
 #cc-main .pm__close-btn {
   display: grid !important;
   width: var(--modal-close-size) !important;
@@ -27,12 +31,13 @@
   max-height: var(--modal-close-size) !important;
   padding: 0 !important;
   place-items: center !important;
+  isolation: isolate !important;
   border: 1px solid var(--modal-close-border) !important;
   border-radius: 50% !important;
   background: var(--modal-close-bg) !important;
   color: var(--modal-close-fg) !important;
   font-family: inherit !important;
-  font-size: 1.18rem !important;
+  font-size: 0 !important;
   font-weight: 700 !important;
   line-height: 1 !important;
   text-align: center !important;
@@ -40,7 +45,28 @@
   white-space: nowrap !important;
   aspect-ratio: 1 / 1 !important;
   cursor: pointer !important;
-  box-shadow: none !important;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.20) !important;
+}
+
+.modal-close-circle::before,
+.catalog-detail-close::before,
+.catalog-overview-close::before,
+.policy-modal-close-enhanced::before,
+.explore-mesh-modal-close::before,
+.thread-article-modal-close::before,
+.home-quick-summary-modal-close::before,
+.workspace-modal-close::before,
+#cc-main .pm__close-btn::before {
+  content: "×";
+  display: grid;
+  width: 100%;
+  height: 100%;
+  place-items: center;
+  color: #ffffff;
+  font-size: 1.34rem;
+  font-weight: 900;
+  line-height: 1;
+  transform: translateY(-0.5px);
 }
 
 .modal-close-circle:hover,
@@ -57,6 +83,8 @@
 .thread-article-modal-close:focus-visible,
 .home-quick-summary-modal-close:hover,
 .home-quick-summary-modal-close:focus-visible,
+.workspace-modal-close:hover,
+.workspace-modal-close:focus-visible,
 #cc-main .pm__close-btn:hover,
 #cc-main .pm__close-btn:focus-visible {
   background: var(--modal-close-bg-hover) !important;
@@ -65,127 +93,44 @@
   box-shadow: var(--modal-close-focus) !important;
 }
 
-.catalog-detail-modal .catalog-detail-close {
-  position: sticky !important;
-  top: 0 !important;
-  right: auto !important;
-  bottom: auto !important;
-  left: auto !important;
-  z-index: 3 !important;
-  align-self: flex-end !important;
-  margin: 0 0 12px auto !important;
-}
-
-.catalog-overview-close {
-  position: sticky !important;
-  top: 0 !important;
-  right: auto !important;
-  bottom: auto !important;
-  left: auto !important;
-  z-index: 3 !important;
-  margin: 0 0 18px auto !important;
-}
-
-.policy-modal-close-enhanced {
-  position: absolute !important;
-  top: 12px !important;
-  right: 12px !important;
-  bottom: auto !important;
-  left: auto !important;
-  z-index: 3 !important;
-  margin: 0 !important;
-}
-
-#cc-main .pm__close-btn {
-  position: absolute !important;
-  top: 14px !important;
-  right: 14px !important;
-  bottom: auto !important;
-  left: auto !important;
-  z-index: 3 !important;
-  margin: 0 !important;
-}
-
-#cc-main .pm__close-btn svg {
-  width: 15px !important;
-  height: 15px !important;
-}
-
-.thread-article-modal-close { position:absolute!important; top:14px!important; right:14px!important; bottom:auto!important; left:auto!important; z-index:3!important; margin:0!important; }
-.home-quick-summary-modal-close { position:absolute!important; top:14px!important; right:14px!important; bottom:auto!important; left:auto!important; z-index:3!important; margin:0!important; }
-
-/* 2026-06-16 intentional refinement: visible close controls
-   The icon is now rendered by CSS so missing/empty modal markup cannot hide the X. */
-.modal-close-circle,
-.catalog-detail-close,
-.catalog-overview-close,
-.policy-modal-close-enhanced,
+/* Modal shells establish the containing block; the close control is always
+   the first visual control in the upper-right corner. */
+.home-quick-summary-shell > .home-quick-summary-modal-close,
+.thread-article-modal-shell > .thread-article-modal-close,
+.workspace-modal-shell > .workspace-modal-close,
+.site-build-modal-shell > .modal-close-circle,
+.policy-modal-close-host > .policy-modal-close-enhanced,
+.policy-modal-close-enhanced[data-policy-modal-close-enhanced],
 .explore-mesh-modal-close,
-.thread-article-modal-close,
-.home-quick-summary-modal-close,
 #cc-main .pm__close-btn {
-  --modal-close-size: 36px;
-  position: relative !important;
-  isolation: isolate !important;
-  font-size: 0 !important;
-  background: rgba(4, 15, 34, 0.92) !important;
-  border-color: rgba(255, 255, 255, 0.58) !important;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.20) !important;
-}
-
-.modal-close-circle::before,
-.catalog-detail-close::before,
-.catalog-overview-close::before,
-.policy-modal-close-enhanced::before,
-.explore-mesh-modal-close::before,
-.thread-article-modal-close::before,
-.home-quick-summary-modal-close::before,
-#cc-main .pm__close-btn::before {
-  content: "×";
-  display: grid;
-  place-items: center;
-  width: 100%;
-  height: 100%;
-  color: #ffffff;
-  font-size: 1.34rem;
-  font-weight: 900;
-  line-height: 1;
-  transform: translateY(-0.5px);
-}
-
-#cc-main .pm__close-btn svg {
-  display: none !important;
-}
-
-.thread-article-modal-close,
-.home-quick-summary-modal-close,
-.explore-mesh-modal-close,
-.policy-modal-close-enhanced,
-#cc-main .pm__close-btn {
-  top: 10px !important;
-  right: 10px !important;
-}
-
-.catalog-detail-modal .catalog-detail-close,
-.catalog-overview-close {
-  top: 10px !important;
-  margin-bottom: 10px !important;
-}
-
-
-/* 008: keep external policy-modal close control pinned to the modal shell. */
-.policy-modal-close-host {
-  position: relative !important;
-}
-
-.policy-modal-close-host .policy-modal-close-enhanced,
-.policy-modal-close-enhanced[data-policy-modal-close-enhanced] {
   position: absolute !important;
-  top: 12px !important;
-  right: 12px !important;
+  top: var(--modal-close-inset) !important;
+  right: var(--modal-close-inset) !important;
   bottom: auto !important;
   left: auto !important;
   z-index: 50 !important;
   margin: 0 !important;
   transform: none !important;
+}
+
+.policy-modal-close-host {
+  position: relative !important;
+}
+
+/* Catalog details are custom scrollable dialogs. Sticky positioning keeps the
+   control in the same upper-right corner while the modal body scrolls. */
+.catalog-detail-modal .catalog-detail-close,
+.catalog-overview-close {
+  position: sticky !important;
+  top: var(--modal-close-inset) !important;
+  right: auto !important;
+  bottom: auto !important;
+  left: auto !important;
+  z-index: 50 !important;
+  align-self: flex-end !important;
+  margin: 0 0 10px auto !important;
+}
+
+#cc-main .pm__close-btn svg {
+  display: none !important;
 }

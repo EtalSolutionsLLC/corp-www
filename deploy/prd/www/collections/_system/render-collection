@@ -53,6 +53,46 @@ def render_collection_styles() -> str:
         links.append(f'    <link rel="stylesheet" href="{esc(href)}" />')
     return "\n".join(links) + "\n"
 
+def render_collection_scripts() -> str:
+    manifests: list[tuple[Path, dict[str, Any]]] = []
+    for collection_dir in sorted(
+        path for path in COLLECTIONS_ROOT.iterdir() if path.is_dir() and path.name != "_system"
+    ):
+        manifest_path = collection_dir / "collection.json"
+        if not manifest_path.is_file():
+            raise ValueError(f"Collection directory has no manifest: {collection_dir}")
+        manifest = load_json(manifest_path)
+        if manifest.get("id") != collection_dir.name:
+            raise ValueError(f"Collection id mismatch in {manifest_path}")
+        manifests.append((collection_dir, manifest))
+
+    lines = ['<script src="collections/_system/collection.js" defer></script>']
+    profile_order = ["catalog", "publication", "workspace"]
+    modes = {str(manifest.get("mode")) for _, manifest in manifests}
+    for mode in profile_order:
+        if mode not in modes:
+            continue
+        profile_path = COLLECTIONS_ROOT / "_system" / "profiles" / f"{mode}.js"
+        if not profile_path.is_file():
+            raise ValueError(f"Collection profile script not found: {profile_path}")
+        href = profile_path.relative_to(SITE_ROOT).as_posix()
+        lines.append(f'<script src="{esc(href)}" defer></script>')
+
+    for collection_dir, manifest in manifests:
+        script_file = manifest.get("scriptFile")
+        if not script_file:
+            continue
+        if not isinstance(script_file, str):
+            raise ValueError(f"Collection scriptFile must be a string: {collection_dir}")
+        script_path = resolve_within(collection_dir, script_file, "scriptFile")
+        if not script_path.is_file():
+            raise ValueError(f"Collection script not found: {script_path}")
+        href = script_path.relative_to(SITE_ROOT).as_posix()
+        lines.append(f'<script src="{esc(href)}" defer></script>')
+
+    return "\n".join(lines) + "\n"
+
+
 def collection_paths(collection_id: str) -> tuple[Path, dict[str, Any], list[dict[str, Any]]]:
     collection_dir = (COLLECTIONS_ROOT / collection_id).resolve()
     if collection_dir.parent != COLLECTIONS_ROOT.resolve():
@@ -352,6 +392,173 @@ def render_publication(collection_dir: Path, manifest: dict[str, Any], items: li
 '''
 
 
+def workspace_thumbnail_html(item: dict[str, Any]) -> str:
+    thumbnail = item.get("thumbnail") or {}
+    variant = str(thumbnail.get("variant") or "signal")
+    metrics = thumbnail.get("metrics") or []
+    metric_html = "".join(f"<span>{esc(metric)}</span>" for metric in metrics)
+    return f'''<div class="workspace-thumbnail workspace-thumbnail--{esc(variant)}" aria-hidden="true">
+              <div class="workspace-thumbnail-bar">
+                <span>{esc(thumbnail.get('eyebrow'))}</span>
+                <i></i><i></i><i></i>
+              </div>
+              <div class="workspace-thumbnail-display">
+                <strong>{esc(thumbnail.get('primary'))}</strong>
+                <small>{esc(thumbnail.get('secondary'))}</small>
+              </div>
+              <div class="workspace-thumbnail-metrics">{metric_html}</div>
+            </div>'''
+
+
+def render_workspace_section(collection_dir: Path, manifest: dict[str, Any], items: list[dict[str, Any]]) -> str:
+    collection_id = str(manifest["id"])
+    presentation = manifest.get("presentation") or {}
+    labels = manifest.get("labels") or {}
+    workspace = manifest.get("workspace") or {}
+    platform_model = presentation.get("platformModel") or {}
+    layers = platform_model.get("layers") or []
+
+    layer_by_id: dict[str, dict[str, Any]] = {}
+    for layer in layers:
+        layer_id = str(layer.get("id") or "")
+        if not layer_id or layer_id in layer_by_id:
+            raise ValueError(f"Invalid or duplicate Portmason platform layer in {collection_id}: {layer_id!r}")
+        layer_by_id[layer_id] = layer
+
+    expected_layers = {"foundations", "operations", "tooling"}
+    if set(layer_by_id) != expected_layers:
+        raise ValueError(
+            f"Portmason platform model for {collection_id} must define exactly: "
+            + ", ".join(sorted(expected_layers))
+        )
+
+    layer_parts: list[str] = []
+    for layer in layers:
+        layer_id = str(layer["id"])
+        includes = layer.get("includes") or []
+        includes_html = ""
+        if includes:
+            includes_html = (
+                '<div class="portmason-platform-includes"><span>Includes</span>'
+                + "".join(f"<strong>{esc(value)}</strong>" for value in includes)
+                + "</div>"
+            )
+        layer_parts.append(f'''        <article class="portmason-platform-layer portmason-platform-layer--{esc(layer_id)}">
+          <span class="portmason-platform-role">{esc(layer.get('role'))}</span>
+          <h3>{esc(layer.get('name'))}</h3>
+          <p>{esc(layer.get('summary'))}</p>
+          {includes_html}
+        </article>''')
+
+    tile_parts: list[str] = []
+    panel_parts: list[str] = []
+    for item in items:
+        slug = str(item.get("slug") or item.get("id") or "")
+        panel_file = item.get("panelFile")
+        if not isinstance(panel_file, str) or not panel_file:
+            raise ValueError(f"Workspace panelFile missing for {collection_id}/{slug}")
+        panel_path = resolve_within(collection_dir, panel_file, "panelFile")
+        if not panel_path.is_file():
+            raise ValueError(f"Workspace panel not found: {panel_path}")
+        panel_markup = panel_path.read_text(encoding="utf-8").strip()
+
+        demonstrates = item.get("demonstrates") or []
+        unknown_layers = [value for value in demonstrates if value not in layer_by_id]
+        if unknown_layers:
+            raise ValueError(
+                f"Workspace item {collection_id}/{slug} references unknown platform layers: "
+                + ", ".join(str(value) for value in unknown_layers)
+            )
+        demonstrate_tags = "".join(
+            f'<span title="{esc(layer_by_id[layer_id].get("name"))}">{esc(layer_by_id[layer_id].get("label"))}</span>'
+            for layer_id in demonstrates
+        )
+
+        tile_parts.append(f'''        <button class="workspace-tile" type="button" data-workspace-open="{esc(slug)}" aria-haspopup="dialog" aria-controls="{esc(collection_id)}-workspace-modal">
+          {workspace_thumbnail_html(item)}
+          <span class="workspace-tile-copy">
+            <span class="workspace-tile-kind">Live tool · {esc(item.get('label'))}</span>
+            <strong>{esc(item.get('shortTitle') or item.get('title'))}</strong>
+            <span class="workspace-tile-summary">{esc(item.get('summary'))}</span>
+            <span class="workspace-tile-demonstrates">
+              <b>Demonstrates</b>
+              <span>{demonstrate_tags}</span>
+            </span>
+          </span>
+          <span class="workspace-tile-action">{esc(labels.get('open', 'Open tool'))} <i aria-hidden="true">↗</i></span>
+        </button>''')
+        panel_parts.append(f'''              <section class="workspace-tool-panel" data-workspace-panel="{esc(slug)}" aria-hidden="true" hidden>
+{panel_markup}
+              </section>''')
+
+    return f'''  <section class="portmason-workspace panel pm-viewport-target pm-scroll-target collection collection--workspace" id="lab" data-theme="dark" aria-labelledby="{esc(collection_id)}-title" data-collection data-collection-id="{esc(collection_id)}" data-collection-mode="workspace" data-collection-config="/collections/{esc(collection_id)}/collection.json" data-workspace-query-parameter="{esc(workspace.get('queryParameter') or 'workspace')}">
+    <div class="container portmason-workspace-layout pm-viewport-target__inner">
+      <header class="portmason-workspace-intro">
+        <span class="portmason-wordmark">{esc(presentation.get('kicker'))}</span>
+        <h2 id="{esc(collection_id)}-title">{esc(presentation.get('title'))}</h2>
+        <p>{esc(presentation.get('summary'))}</p>
+      </header>
+
+      <section class="portmason-platform-map" aria-labelledby="portmason-platform-map-title">
+        <header>
+          <span>How the platform fits together</span>
+          <p id="portmason-platform-map-title">{esc(platform_model.get('relationship'))}</p>
+        </header>
+        <div class="portmason-platform-layers">
+{chr(10).join(layer_parts)}
+        </div>
+      </section>
+
+      <header class="workspace-gallery-heading">
+        <span>{esc(presentation.get('galleryKicker'))}</span>
+        <p>{esc(presentation.get('gallerySummary'))}</p>
+      </header>
+
+      <div class="workspace-gallery" aria-label="Portmason Platform live tools">
+{chr(10).join(tile_parts)}
+      </div>
+
+      <p class="portmason-mark-notice">{esc(presentation.get('markNotice'))}</p>
+      <noscript><p class="workspace-noscript">JavaScript powers the live tools. The public JSON contracts remain available under <code>/api/</code>.</p></noscript>
+    </div>
+
+    <dialog class="workspace-modal" id="{esc(collection_id)}-workspace-modal" data-workspace-modal aria-labelledby="{esc(collection_id)}-workspace-title">
+      <div class="workspace-modal-shell">
+        <button class="workspace-modal-close modal-close-circle" type="button" data-workspace-close aria-label="{esc(labels.get('close', 'Close tool'))}">×</button>
+        <header class="workspace-modal-header">
+          <span class="workspace-modal-brand">Portmason Platform™</span>
+          <span class="workspace-modal-demonstrates" data-workspace-demonstrates>Demonstrates Portmason Platform™</span>
+          <h2 id="{esc(collection_id)}-workspace-title" data-workspace-title>Live tool</h2>
+          <p data-workspace-summary></p>
+        </header>
+        <div class="workspace-modal-layout">
+          <div class="workspace-stage">
+{chr(10).join(panel_parts)}
+          </div>
+          <aside class="workspace-guide" aria-label="Tool usage">
+            <section class="workspace-guide-proof">
+              <span>{esc(labels.get('proof', 'What this proves'))}</span>
+              <p data-workspace-proof></p>
+            </section>
+            <section>
+              <span>{esc(labels.get('instructions', 'How to use it'))}</span>
+              <ol data-workspace-instructions></ol>
+            </section>
+            <section>
+              <span>{esc(labels.get('inputs', 'What you provide'))}</span>
+              <ul data-workspace-inputs></ul>
+            </section>
+            <section>
+              <span>{esc(labels.get('outputs', 'What it returns'))}</span>
+              <ul data-workspace-outputs></ul>
+            </section>
+          </aside>
+        </div>
+      </div>
+    </dialog>
+  </section>
+'''
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("collection_id")
@@ -360,6 +567,9 @@ def main() -> int:
 
     if args.collection_id == "_system" and args.region == "styles":
         sys.stdout.write(render_collection_styles())
+        return 0
+    if args.collection_id == "_system" and args.region == "scripts":
+        sys.stdout.write(render_collection_scripts())
         return 0
 
     collection_dir, manifest, items = collection_paths(args.collection_id)
@@ -370,6 +580,8 @@ def main() -> int:
         output = render_catalog_hero(manifest, items)
     elif mode == "publication" and args.region == "section":
         output = render_publication(collection_dir, manifest, items)
+    elif mode == "workspace" and args.region == "section":
+        output = render_workspace_section(collection_dir, manifest, items)
     else:
         raise ValueError(f"Unsupported collection region: {args.collection_id}/{args.region}")
     sys.stdout.write(output.rstrip() + "\n")

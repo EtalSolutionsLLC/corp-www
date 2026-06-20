@@ -30,8 +30,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <!-- PM:SITE-BUILD-META -->
-<!-- ETAL_SITE_BUILD version="027" details="/build-info.json" -->
-<meta name="etal-site-build" content="027" />
+<!-- ETAL_SITE_BUILD version="033" details="/build-info.json" -->
+<meta name="etal-site-build" content="033" />
 <meta name="etal-site-build-info" content="/build-info.json" />
 <!-- /PM:SITE-BUILD-META -->
   <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
@@ -42,10 +42,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <link rel="stylesheet" href="collections/_system/collection.css" />
     <link rel="stylesheet" href="collections/brands/styles.css" />
     <link rel="stylesheet" href="collections/promotions/styles.css" />
+    <link rel="stylesheet" href="collections/systems-lab/styles.css" />
     <link rel="stylesheet" href="collections/transformation-thread/styles.css" />
 <!-- /PM:COLLECTION-STYLES -->
     <link rel="stylesheet" href="assets/css/action-system.css" />
-    <link rel="stylesheet" href="assets/css/explore.css" />
     <link rel="stylesheet" href="assets/css/theme-rhythm.css" />
     <link rel="stylesheet" href="assets/css/cookie-consent-overrides.css" />
     <link rel="stylesheet" href="assets/css/viewport-contract.css" />
@@ -66,7 +66,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <nav class="nav" aria-label="Primary">
       <a href="/#home">Home</a>
       <a href="/#services">Services</a>
-      <a href="/#explore">Explore</a>
+      <a href="/#lab">Portmason</a>
       <a href="/#brands">Brands</a>
       <a href="/#promotions">Promotions</a>
       <a href="/#blog">Blog</a>
@@ -82,7 +82,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       <section class="hero panel pm-viewport-target pm-scroll-target" id="home" data-theme="dark">
         <div class="container pm-viewport-target__inner">
           <div class="hero-copy">
-            <p class="hero-kicker">Et al Solutions LLC</p>
+            <p class="hero-kicker">Et al Solutions LLC · Home of Portmason Platform™</p>
             <h1>Practical technology for work that has to keep moving.</h1>
           </div>
 
@@ -105,7 +105,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             </p>
 
             <div class="hero-actions">
-              <a class="hero-cta action action-primary" href="#explore">Find the Right First Step</a>
+              <a class="hero-cta action action-primary" href="#lab">See the systems in action</a>
               <a class="hero-cta secondary action action-secondary" href="#services">See What We Do</a>
             </div>
           </div>
@@ -165,7 +165,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 </div>
 
                 <div class="home-quick-summary-actions">
-                  <a class="action action-primary" href="#explore" data-home-quick-modal-action>Find the right first step →</a>
+                  <a class="action action-primary" href="#lab" data-home-quick-modal-action>See the systems in action →</a>
                   <a class="action action-secondary" href="#contact" data-home-quick-modal-action>Start a conversation →</a>
                 </div>
               </div>
@@ -225,187 +225,315 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </div>
       </section>
 
-<!-- PM:EXPLORE -->
-<section class="section-dark panel explore-section pm-viewport-target pm-scroll-target" id="explore" data-theme="dark" aria-labelledby="explore-title" data-explore-root data-explore-stage="pressure" data-explore-source="content/explore-decision-tree.json">
-  <div class="container explore-section-layout pm-viewport-target__inner">
-    <header class="explore-intro">
-      <div class="explore-title-row">
-        <span class="section-kicker light">Explore</span>
-        <span class="explore-title-divider" aria-hidden="true"></span>
-        <h2 id="explore-title">Find the right first step.</h2>
-      </div>
-    </header>
+<!-- PM:COLLECTION-SYSTEMS-LAB -->
+  <section class="portmason-workspace panel pm-viewport-target pm-scroll-target collection collection--workspace" id="lab" data-theme="dark" aria-labelledby="systems-lab-title" data-collection data-collection-id="systems-lab" data-collection-mode="workspace" data-collection-config="/collections/systems-lab/collection.json" data-workspace-query-parameter="lab">
+    <div class="container portmason-workspace-layout pm-viewport-target__inner">
+      <header class="portmason-workspace-intro">
+        <span class="portmason-wordmark">Portmason Platform™ · Live systems lab</span>
+        <h2 id="systems-lab-title">The platform is the proof.</h2>
+        <p>Portmason separates what a system is built from, how it is controlled, and how it is provisioned and run. The live tools below demonstrate combinations of those capabilities—not one tool per product family.</p>
+      </header>
 
-    <div class="explore-tool-stack">
-      <section class="explore-path-card explore-tool explore-tool-guided" aria-labelledby="explore-question-title" data-explore-guide>
-      <span class="explore-material-label explore-material-label-guided">
-        <span>Guided thinking</span>
-        <button class="explore-mesh-help" type="button" data-explore-mesh-help aria-haspopup="dialog" aria-controls="explore-mesh-modal" aria-label="Learn how this guided path works">?</button>
-      </span>
-      <span class="explore-guide-texture" aria-hidden="true"></span>
-      <div class="explore-guide-head">
-        <div>
-          <p class="explore-guide-copy">Answer four plain-language questions. The goal is not a diagnosis. It is a clearer first move.</p>
+      <section class="portmason-platform-map" aria-labelledby="portmason-platform-map-title">
+        <header>
+          <span>How the platform fits together</span>
+          <p id="portmason-platform-map-title">Foundations define the system. Tooling creates, validates, and controls it. Operations provisions, deploys, and runs it.</p>
+        </header>
+        <div class="portmason-platform-layers">
+        <article class="portmason-platform-layer portmason-platform-layer--foundations">
+          <span class="portmason-platform-role">Build plane</span>
+          <h3>Portmason Foundations™</h3>
+          <p>Reusable structures, contracts, schemas, and project foundations.</p>
+          <div class="portmason-platform-includes"><span>Includes</span><strong>Portmason Collections™</strong></div>
+        </article>
+        <article class="portmason-platform-layer portmason-platform-layer--operations">
+          <span class="portmason-platform-role">Run plane</span>
+          <h3>Portmason Operations™</h3>
+          <p>Provisioning, configuration, deployment, verification, and runtime adapters.</p>
+          
+        </article>
+        <article class="portmason-platform-layer portmason-platform-layer--tooling">
+          <span class="portmason-platform-role">Control plane</span>
+          <h3>Portmason Tooling™</h3>
+          <p>The pm-* command surface that creates, validates, deploys, and inspects both.</p>
+          
+        </article>
         </div>
-      </div>
-
-      <ol class="explore-thread explore-mesh-trail" aria-label="Guided path progress" data-explore-trail>
-        <li class="is-current" data-explore-trail-step="pressure">
-          <button class="explore-thread-action" type="button" data-explore-jump-to="pressure" disabled>
-            <span class="explore-thread-node" aria-hidden="true">1</span>
-            <span>What changed</span>
-          </button>
-        </li>
-        <li data-explore-trail-step="constraint">
-          <button class="explore-thread-action" type="button" data-explore-jump-to="constraint" disabled>
-            <span class="explore-thread-node" aria-hidden="true">2</span>
-            <span>What is in the way</span>
-          </button>
-        </li>
-        <li data-explore-trail-step="exposure">
-          <button class="explore-thread-action" type="button" data-explore-jump-to="exposure" disabled>
-            <span class="explore-thread-node" aria-hidden="true">3</span>
-            <span>Where it hurts</span>
-          </button>
-        </li>
-        <li data-explore-trail-step="move">
-          <button class="explore-thread-action" type="button" data-explore-jump-to="move" disabled>
-            <span class="explore-thread-node" aria-hidden="true">4</span>
-            <span>First step</span>
-          </button>
-        </li>
-        <li data-explore-trail-step="brief">
-          <button class="explore-thread-action" type="button" data-explore-jump-to="brief" disabled>
-            <span class="explore-thread-node" aria-hidden="true">✓</span>
-            <span>Summary</span>
-          </button>
-        </li>
-      </ol>
-
-      <div class="explore-mesh-board" data-explore-question-body>
-        <div class="explore-question-body explore-decision-card">
-          <p class="explore-eyebrow" data-explore-eyebrow>Card 1 of 4 · What changed</p>
-          <h3 id="explore-question-title" data-explore-prompt>What is making this conversation necessary now?</h3>
-          <div class="explore-options explore-mesh-options" role="group" aria-label="Choose the closest answer" data-explore-options>
-            <p class="explore-loading">Loading your choices…</p>
-          </div>
-        </div>
-
-        <aside class="explore-route-panel" aria-label="Your answers">
-          <span class="explore-panel-label">What you have told us</span>
-          <ol class="explore-route-list" data-explore-route-list>
-            <li>No answer yet.</li>
-          </ol>
-          <p class="explore-route-note" data-explore-signal-note>Nothing is submitted. Change any answer as you think it through.</p>
-        </aside>
-      </div>
-
-      <section class="explore-result explore-guidance-brief" aria-live="polite" aria-labelledby="explore-result-title" data-explore-result hidden>
-        <span class="explore-panel-label">A practical starting point</span>
-        <h3 id="explore-result-title" data-explore-result-title>Your answers will point to a practical first move.</h3>
-        <p data-explore-result-summary>Answer the four questions to see where we would start.</p>
-
-        <div class="explore-brief-grid">
-          <article>
-            <h4>What this suggests</h4>
-            <p data-explore-result-insight></p>
-          </article>
-          <article>
-            <h4>Why this matters now</h4>
-            <p data-explore-result-why></p>
-          </article>
-          <article>
-            <h4>Where we would start</h4>
-            <p data-explore-result-move></p>
-          </article>
-          <div class="explore-first-look" data-explore-first-look hidden>
-            <h4>What we would examine first</h4>
-            <ul data-explore-first-look-list></ul>
-          </div>
-        </div>
-
-        <div class="explore-route-summary">
-          <span class="explore-panel-label">What you have told us</span>
-          <p data-explore-route-summary></p>
-          <p class="explore-local-weight" data-explore-local-weight></p>
-        </div>
-
       </section>
 
-      <div class="explore-guide-actions">
-        <div class="explore-tertiary-actions" aria-label="Guided path controls">
-          <button class="action action-tertiary" type="button" data-explore-back hidden>← Back</button>
-          <button class="action action-tertiary" type="button" data-explore-reset hidden>↺ Start over</button>
-        </div>
-        <a class="action action-primary explore-conversation-action" href="mailto:info@etalsolutions.tech?subject=Technology%20Inquiry" data-explore-result-link hidden>Start a conversation <span aria-hidden="true">→</span></a>
+      <header class="workspace-gallery-heading">
+        <span>Live systems lab</span>
+        <p>Each tool demonstrates more than one Portmason capability. The labels show what the tool proves; they do not define a one-to-one product relationship.</p>
+      </header>
+
+      <div class="workspace-gallery" aria-label="Portmason Platform live tools">
+        <button class="workspace-tile" type="button" data-workspace-open="external-signal" aria-haspopup="dialog" aria-controls="systems-lab-workspace-modal">
+          <div class="workspace-thumbnail workspace-thumbnail--signal" aria-hidden="true">
+              <div class="workspace-thumbnail-bar">
+                <span>LIVE SIGNAL</span>
+                <i></i><i></i><i></i>
+              </div>
+              <div class="workspace-thumbnail-display">
+                <strong>Operational</strong>
+                <small>githubstatus.com</small>
+              </div>
+              <div class="workspace-thumbnail-metrics"><span>provider</span><span>state</span><span>latency</span></div>
+            </div>
+          <span class="workspace-tile-copy">
+            <span class="workspace-tile-kind">Live tool · API consumption</span>
+            <strong>External Signal</strong>
+            <span class="workspace-tile-summary">Call a live vendor API and turn its response into a stable, useful interface.</span>
+            <span class="workspace-tile-demonstrates">
+              <b>Demonstrates</b>
+              <span><span title="Portmason Operations™">Operations</span><span title="Portmason Tooling™">Tooling</span></span>
+            </span>
+          </span>
+          <span class="workspace-tile-action">Open tool <i aria-hidden="true">↗</i></span>
+        </button>
+        <button class="workspace-tile" type="button" data-workspace-open="published-interface" aria-haspopup="dialog" aria-controls="systems-lab-workspace-modal">
+          <div class="workspace-thumbnail workspace-thumbnail--contract" aria-hidden="true">
+              <div class="workspace-thumbnail-bar">
+                <span>OPENAPI 3.1</span>
+                <i></i><i></i><i></i>
+              </div>
+              <div class="workspace-thumbnail-display">
+                <strong>GET /v1/health</strong>
+                <small>200 OK</small>
+              </div>
+              <div class="workspace-thumbnail-metrics"><span>contract</span><span>route</span><span>payload</span></div>
+            </div>
+          <span class="workspace-tile-copy">
+            <span class="workspace-tile-kind">Live tool · API publication</span>
+            <strong>Published Interface</strong>
+            <span class="workspace-tile-summary">Select and call a public endpoint from a machine-readable contract.</span>
+            <span class="workspace-tile-demonstrates">
+              <b>Demonstrates</b>
+              <span><span title="Portmason Foundations™">Foundations</span><span title="Portmason Tooling™">Tooling</span></span>
+            </span>
+          </span>
+          <span class="workspace-tile-action">Open tool <i aria-hidden="true">↗</i></span>
+        </button>
+        <button class="workspace-tile" type="button" data-workspace-open="local-capability-match" aria-haspopup="dialog" aria-controls="systems-lab-workspace-modal">
+          <div class="workspace-thumbnail workspace-thumbnail--model" aria-hidden="true">
+              <div class="workspace-thumbnail-bar">
+                <span>LOCAL MODEL</span>
+                <i></i><i></i><i></i>
+              </div>
+              <div class="workspace-thumbnail-display">
+                <strong>Meaning → Match</strong>
+                <small>No text leaves device</small>
+              </div>
+              <div class="workspace-thumbnail-metrics"><span>prompt</span><span>vector</span><span>match</span></div>
+            </div>
+          <span class="workspace-tile-copy">
+            <span class="workspace-tile-kind">Live tool · Local language model</span>
+            <strong>Local Capability Match</strong>
+            <span class="workspace-tile-summary">Use a browser-local language model to match an operational problem to a capability.</span>
+            <span class="workspace-tile-demonstrates">
+              <b>Demonstrates</b>
+              <span><span title="Portmason Foundations™">Foundations</span></span>
+            </span>
+          </span>
+          <span class="workspace-tile-action">Open tool <i aria-hidden="true">↗</i></span>
+        </button>
+        <button class="workspace-tile" type="button" data-workspace-open="page-weight-evidence" aria-haspopup="dialog" aria-controls="systems-lab-workspace-modal">
+          <div class="workspace-thumbnail workspace-thumbnail--performance" aria-hidden="true">
+              <div class="workspace-thumbnail-bar">
+                <span>MEASURED</span>
+                <i></i><i></i><i></i>
+              </div>
+              <div class="workspace-thumbnail-display">
+                <strong>Page weight</strong>
+                <small>Evidence over claims</small>
+              </div>
+              <div class="workspace-thumbnail-metrics"><span>bytes</span><span>scripts</span><span>files</span></div>
+            </div>
+          <span class="workspace-tile-copy">
+            <span class="workspace-tile-kind">Live tool · Performance evidence</span>
+            <strong>Page Weight Evidence</strong>
+            <span class="workspace-tile-summary">Inspect this page&#x27;s transfer evidence and compare another public homepage using the same test.</span>
+            <span class="workspace-tile-demonstrates">
+              <b>Demonstrates</b>
+              <span><span title="Portmason Tooling™">Tooling</span><span title="Portmason Operations™">Operations</span></span>
+            </span>
+          </span>
+          <span class="workspace-tile-action">Open tool <i aria-hidden="true">↗</i></span>
+        </button>
       </div>
 
+      <p class="portmason-mark-notice">Portmason Platform™, Portmason Operations™, Portmason Foundations™, Portmason Collections™, and Portmason Tooling™ are marks of Et al Solutions LLC.</p>
+      <noscript><p class="workspace-noscript">JavaScript powers the live tools. The public JSON contracts remain available under <code>/api/</code>.</p></noscript>
+    </div>
 
-      <dialog class="explore-mesh-modal" id="explore-mesh-modal" data-explore-mesh-modal aria-labelledby="explore-mesh-modal-title">
-        <div class="explore-mesh-modal-shell">
-          <button class="explore-mesh-modal-close modal-close-circle" type="button" data-explore-mesh-modal-close aria-label="Close guided-path explanation">×</button>
-          <span class="explore-panel-label">Guided thinking</span>
-          <h3 id="explore-mesh-modal-title">A clear way to choose a first move.</h3>
-          <p>This guided path asks four practical questions and turns the pattern into a starting point.</p>
-          <p>Your choices stay visible, reversible, and local to this browser. Nothing is submitted unless you decide to start a conversation.</p>
-        </div>
-      </dialog>
-
-      <noscript><p class="explore-noscript">JavaScript is optional. You can still <a class="action-link" href="mailto:info@etalsolutions.tech?subject=Technology%20Inquiry">start a conversation</a> and tell us what is getting in the way.</p></noscript>
-      </section>
-
-      <details class="explore-performance-tool explore-tool" aria-label="Live page-size tools">
-        <summary class="explore-performance-summary"><span>Built to stay light.</span><small>Optional page-size proof</small></summary>
-        <span class="explore-material-label explore-material-label-performance">A quick size check</span>
-        <aside class="explore-proof-strip" aria-labelledby="explore-proof-title">
-      <div class="explore-proof-copy">
-        <h3 id="explore-proof-title">Built to stay light.</h3>
-        <p><strong>What this shows:</strong> This is how much data your browser can see being downloaded when you opened this site just now.</p>
-        <p><strong>Why it matters:</strong> Every extra byte has to travel across the network and be handled by your device. Smaller pages usually mean less waiting.</p>
+    <dialog class="workspace-modal" id="systems-lab-workspace-modal" data-workspace-modal aria-labelledby="systems-lab-workspace-title">
+      <div class="workspace-modal-shell">
+        <button class="workspace-modal-close modal-close-circle" type="button" data-workspace-close aria-label="Close tool">×</button>
+        <header class="workspace-modal-header">
+          <span class="workspace-modal-brand">Portmason Platform™</span>
+          <span class="workspace-modal-demonstrates" data-workspace-demonstrates>Demonstrates Portmason Platform™</span>
+          <h2 id="systems-lab-workspace-title" data-workspace-title>Live tool</h2>
+          <p data-workspace-summary></p>
+        </header>
+        <div class="workspace-modal-layout">
+          <div class="workspace-stage">
+              <section class="workspace-tool-panel" data-workspace-panel="external-signal" aria-hidden="true" hidden>
+<article class="portmason-tool" data-lab-status-card>
+  <header class="portmason-tool-head">
+    <div>
+      <span class="portmason-tool-kicker">Live systems lab · API consumption</span>
+      <h3>External signal, normalized.</h3>
+    </div>
+    <span class="lab-live-indicator" data-lab-status-indicator>Ready</span>
+  </header>
+  <p>We call GitHub's public status API, normalize the vendor response, and expose a stable result with response timing.</p>
+  <dl class="lab-metrics">
+    <div><dt>Provider</dt><dd data-lab-status-provider>GitHub</dd></div>
+    <div><dt>Status</dt><dd data-lab-status-value>Not checked</dd></div>
+    <div><dt>Response</dt><dd data-lab-status-time>—</dd></div>
+  </dl>
+  <div class="lab-actions">
+    <button class="action action-primary" type="button" data-lab-status-refresh>Run live check</button>
+    <details class="lab-response-details">
+      <summary>Inspect normalized JSON</summary>
+      <pre data-lab-status-json>{}</pre>
+    </details>
+  </div>
+</article>
+              </section>
+              <section class="workspace-tool-panel" data-workspace-panel="published-interface" aria-hidden="true" hidden>
+<article class="portmason-tool" data-lab-api-card>
+  <header class="portmason-tool-head">
+    <div>
+      <span class="portmason-tool-kicker">Live systems lab · API publication</span>
+      <h3>A versioned interface, published live.</h3>
+    </div>
+    <span class="lab-contract-badge">OpenAPI 3.1</span>
+  </header>
+  <p>This interface consumes the site's public machine-readable contract. Static endpoints work on Pages; the edge adapter exposes the same contract dynamically.</p>
+  <form class="lab-api-form" data-lab-api-form>
+    <label for="lab-api-endpoint">Endpoint</label>
+    <div class="lab-api-form-row">
+      <select id="lab-api-endpoint" data-lab-api-endpoint aria-describedby="lab-api-config-note" disabled>
+        <option value="">Loading endpoint contract…</option>
+      </select>
+      <button class="action action-primary" type="submit" data-lab-api-run disabled>Run request</button>
+    </div>
+  </form>
+  <p class="lab-api-config-note" id="lab-api-config-note">Endpoint choices are loaded from <code>/api/endpoints.json</code>.</p>
+  <div class="lab-api-result" aria-live="polite">
+    <div class="lab-api-result-meta">
+      <span data-lab-api-status>Loading contract</span>
+      <span data-lab-api-time>—</span>
+      <span data-lab-api-mode>Pages contract</span>
+    </div>
+    <details class="lab-response-details lab-api-response-details">
+      <summary>Inspect response JSON</summary>
+      <pre data-lab-api-json>{}</pre>
+    </details>
+  </div>
+</article>
+              </section>
+              <section class="workspace-tool-panel" data-workspace-panel="local-capability-match" aria-hidden="true" hidden>
+<article class="portmason-tool" data-lab-model-card>
+  <header class="portmason-tool-head">
+    <div>
+      <span class="portmason-tool-kicker">Live systems lab · Local language model</span>
+      <h3>Describe the friction. Let the browser find the fit.</h3>
+    </div>
+    <span class="lab-local-badge">Text stays local</span>
+  </header>
+  <div class="lab-model-layout">
+    <div class="lab-model-input">
+      <label for="lab-model-prompt">What is getting in the way?</label>
+      <textarea id="lab-model-prompt" rows="7" data-lab-model-prompt placeholder="Example: Our staff keeps copying information between three systems and nobody trusts the reports."></textarea>
+      <div class="lab-actions">
+        <button class="action action-primary" type="button" data-lab-model-run>Run the local model</button>
+        <span class="lab-model-status" data-lab-model-status>Model loads only when requested.</span>
       </div>
-      <dl class="performance-proof-grid explore-proof-grid" aria-label="What your browser downloaded when this page opened" data-performance-proof>
-        <div><dt>Data downloaded</dt><dd data-performance-transfer>Measuring…</dd></div>
-        <div><dt>JavaScript downloaded</dt><dd data-performance-js>Measuring…</dd></div>
-        <div><dt>Files loaded</dt><dd data-performance-resources>Measuring…</dd></div>
+    </div>
+    <div class="lab-model-result" data-lab-model-result hidden aria-live="polite">
+      <span class="lab-panel-label">Strongest capability match</span>
+      <h4 data-lab-model-title>—</h4>
+      <p data-lab-model-summary></p>
+      <dl>
+        <div><dt>Confidence</dt><dd data-lab-model-score>—</dd></div>
+        <div><dt>Runtime</dt><dd data-lab-model-runtime>Browser</dd></div>
+        <div><dt>Processing</dt><dd>Local to this device</dd></div>
       </dl>
-        </aside>
-
-        <section class="site-size-compare" aria-labelledby="site-size-compare-title" data-site-size-compare data-site-size-self-url="https://www.etal.solutions/" data-site-size-config-url="config.generated.json">
-      <div class="site-size-compare-intro">
-        <span class="explore-panel-label">Compare your homepage</span>
-        <h3 id="site-size-compare-title">See the difference for yourself.</h3>
-        <p>Enter your homepage address. Google PageSpeed will run the same desktop page-size check for your site and ours, side by side. Nothing is stored.</p>
-      </div>
-
-      <form class="site-size-form" data-site-size-form>
-        <label for="site-size-url">Your homepage address</label>
-        <div class="site-size-form-row">
-          <input id="site-size-url" name="url" type="text" inputmode="url" autocomplete="url" placeholder="your-site.com" required data-site-size-url>
-          <button class="action action-primary" type="submit" data-site-size-submit>Check my site <span aria-hidden="true">→</span></button>
-        </div>
-      </form>
-
-      <p class="site-size-status" aria-live="polite" data-site-size-status></p>
-
-      <section class="site-size-result" aria-live="polite" data-site-size-result hidden>
-        <span class="explore-panel-label">Your two-page comparison</span>
-        <h4>Google PageSpeed checked both homepages using the same desktop test.</h4>
-        <dl class="site-size-result-grid">
-          <div><dt>Your homepage</dt><dd data-site-size-theirs>—</dd></div>
-          <div><dt>This homepage</dt><dd data-site-size-ours>—</dd></div>
-          <div><dt>Typical desktop homepage</dt><dd>2.86 MB</dd></div>
-        </dl>
-        <p class="site-size-result-summary" data-site-size-summary></p>
-        <p class="site-size-result-context" data-site-size-context></p>
-        <p class="site-size-result-note">This is a practical page-size comparison, not a full performance audit. Results can vary as page content changes.</p>
-        <p class="site-size-result-source">Typical-homepage benchmark: <a href="https://almanac.httparchive.org/en/2025/page-weight" target="_blank" rel="noopener noreferrer">HTTP Archive, 2025 Web Almanac</a>.</p>
-      </section>
-        </section>
-      </details>
     </div>
   </div>
-</section>
-<!-- /PM:EXPLORE -->
+</article>
+              </section>
+              <section class="workspace-tool-panel" data-workspace-panel="page-weight-evidence" aria-hidden="true" hidden>
+<article class="portmason-tool">
+  <header class="portmason-tool-head">
+    <div>
+      <span class="portmason-tool-kicker">Live systems lab · Performance evidence</span>
+      <h3>Built to stay light—and measured.</h3>
+    </div>
+    <span class="lab-contract-badge">Live browser data</span>
+  </header>
+  <p>This is what the browser can observe being transferred now, plus an optional Google PageSpeed comparison against another public homepage.</p>
+  <dl class="performance-proof-grid lab-proof-grid" aria-label="What your browser downloaded when this page opened" data-performance-proof>
+    <div><dt>Data downloaded</dt><dd data-performance-transfer>Measuring…</dd></div>
+    <div><dt>JavaScript downloaded</dt><dd data-performance-js>Measuring…</dd></div>
+    <div><dt>Files loaded</dt><dd data-performance-resources>Measuring…</dd></div>
+  </dl>
+
+  <section class="site-size-compare" aria-labelledby="site-size-compare-title" data-site-size-compare data-site-size-self-url="https://www.etal.solutions/" data-site-size-config-url="config.generated.json">
+    <div class="site-size-compare-intro">
+      <span class="lab-panel-label">Compare your homepage</span>
+      <h4 id="site-size-compare-title">Run the same desktop page-size check side by side.</h4>
+      <p>Enter a public homepage address. Nothing is stored by this site.</p>
+    </div>
+    <form class="site-size-form" data-site-size-form>
+      <label for="site-size-url">Homepage address</label>
+      <div class="site-size-form-row">
+        <input id="site-size-url" name="url" type="text" inputmode="url" autocomplete="url" placeholder="your-site.com" required data-site-size-url>
+        <button class="action action-primary" type="submit" data-site-size-submit>Check both pages <span aria-hidden="true">→</span></button>
+      </div>
+    </form>
+    <p class="site-size-status" aria-live="polite" data-site-size-status></p>
+    <section class="site-size-result" aria-live="polite" data-site-size-result hidden>
+      <span class="lab-panel-label">Two-page comparison</span>
+      <h4>Google PageSpeed checked both homepages using the same desktop test.</h4>
+      <dl class="site-size-result-grid">
+        <div><dt>Your homepage</dt><dd data-site-size-theirs>—</dd></div>
+        <div><dt>This homepage</dt><dd data-site-size-ours>—</dd></div>
+        <div><dt>Typical desktop homepage</dt><dd>2.86 MB</dd></div>
+      </dl>
+      <p class="site-size-result-summary" data-site-size-summary></p>
+      <p class="site-size-result-context" data-site-size-context></p>
+      <p class="site-size-result-note">This is a practical page-size comparison, not a full performance audit. Results can vary as content changes.</p>
+      <p class="site-size-result-source">Typical-homepage benchmark: <a href="https://almanac.httparchive.org/en/2025/page-weight" target="_blank" rel="noopener noreferrer">HTTP Archive, 2025 Web Almanac</a>.</p>
+    </section>
+  </section>
+</article>
+              </section>
+          </div>
+          <aside class="workspace-guide" aria-label="Tool usage">
+            <section class="workspace-guide-proof">
+              <span>What this proves</span>
+              <p data-workspace-proof></p>
+            </section>
+            <section>
+              <span>How to use it</span>
+              <ol data-workspace-instructions></ol>
+            </section>
+            <section>
+              <span>What you provide</span>
+              <ul data-workspace-inputs></ul>
+            </section>
+            <section>
+              <span>What it returns</span>
+              <ul data-workspace-outputs></ul>
+            </section>
+          </aside>
+        </div>
+      </div>
+    </dialog>
+  </section>
+<!-- /PM:COLLECTION-SYSTEMS-LAB -->
 
 <!-- PM:COLLECTION-BRANDS -->
       <section class="section-light panel catalog-home-section brand-catalog-section pm-viewport-target pm-scroll-target" id="brands" data-theme="light" aria-labelledby="brands-title">
@@ -430,7 +558,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </div>
 
         <div class="catalog-carousel-track" data-collection-track>
-      <section class="catalog-carousel-item is-featured" data-collection-item data-collection-slug="simplifai" data-collection-title="SIMPLIFAI">
+      <section class="catalog-carousel-item is-featured" data-collection-item data-collection-slug="simplifai" data-collection-title="SIMPLIFAI℠">
         <div class="catalog-item-panels">
           <article class="catalog-card catalog-panel catalog-panel-summary is-featured" aria-label="Practical A.I. education for everyday work. summary">
             <div class="catalog-summary-brand-header">
@@ -439,7 +567,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             </div>
             <h2>Practical A.I. education for everyday work.</h2>
             <p class="catalog-subtitle">Practical A.I. education for everyday work.</p>
-            <p>SIMPLIFAI helps people and smaller businesses use A.I. with plain-language training and practical workflows.</p>
+            <p>SIMPLIFAI℠ helps people and smaller businesses use A.I. with plain-language training and practical workflows.</p>
             <ul class="catalog-tag-list" aria-label="Tags">
               <li>Training</li>
               <li>Accessible A.I.</li>
@@ -448,10 +576,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           </article>
           <aside class="catalog-detail-panel catalog-panel catalog-panel-detail" id="simplifai-details" aria-label="Practical A.I. education for everyday work. details">
             <span class="catalog-badge">A.I. Training &amp; Enablement</span>
-            <h3>SIMPLIFAI</h3>
+            <h3>SIMPLIFAI℠</h3>
             <p class="catalog-subtitle">Practical A.I. education for everyday work.</p>
             <img class="catalog-detail-logo" src="https://public.etal.solutions/assets/simplifai/logos/SIMPLIFAI-SILVER.png" alt="SIMPLIFAI logo" />
-            <p class="catalog-detail-summary">Practical A.I. education that helps people use new tools with confidence.</p>
+            <p class="catalog-detail-summary">SIMPLIFAI℠ practical A.I. education that helps people use new tools with confidence.</p>
             <div class="catalog-attribute-grid">
               <div class="catalog-attribute">
                 <strong>For</strong>
@@ -632,13 +760,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           </aside>
         </div>
       </section>
-      <section class="catalog-carousel-item" data-collection-item data-collection-slug="industry-ai-fusion-assessment" data-collection-title="Industry A.I. Assessment">
+      <section class="catalog-carousel-item" data-collection-item data-collection-slug="industry-ai-fusion-assessment" data-collection-title="A.I. Fusion℠ Assessment">
         <div class="catalog-item-panels">
-          <article class="catalog-card catalog-panel catalog-panel-summary" aria-label="Industry A.I. Fusion Assessment summary">
+          <article class="catalog-card catalog-panel catalog-panel-summary" aria-label="Industry A.I. Fusion℠ Assessment summary">
             <span class="catalog-badge">Available Offer</span>
-            <h2>Industry A.I. Fusion Assessment</h2>
+            <h2>Industry A.I. Fusion℠ Assessment</h2>
             <p class="catalog-subtitle">Find practical, low-disruption ways to apply A.I. inside a real business operation.</p>
-            <p>A practical A.I. assessment for business owners and operators who want to identify useful A.I. opportunities without chasing hype or disrupting the way their teams already work.</p>
+            <p>An A.I. Fusion℠ assessment for business owners and operators who want to identify useful A.I. opportunities without chasing hype or disrupting the way their teams already work.</p>
             <div class="catalog-price">$750 <small>fixed price</small></div>
             <ul class="catalog-tag-list" aria-label="Tags">
               <li>Industry A.I.</li>
@@ -647,12 +775,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               <li>Operator-friendly</li>
             </ul>
           </article>
-          <aside class="catalog-detail-panel catalog-panel catalog-panel-detail" id="industry-ai-fusion-assessment-details" aria-label="Industry A.I. Fusion Assessment details">
+          <aside class="catalog-detail-panel catalog-panel catalog-panel-detail" id="industry-ai-fusion-assessment-details" aria-label="Industry A.I. Fusion℠ Assessment details">
             <span class="catalog-badge">Available Offer</span>
-            <h3>Industry A.I. Assessment</h3>
+            <h3>A.I. Fusion℠ Assessment</h3>
             <p class="catalog-subtitle">Find practical, low-disruption ways to apply A.I. inside a real business operation.</p>
             <div class="catalog-price">$750 <small>fixed price</small></div>
-            <p class="catalog-detail-summary">A practical A.I. assessment for business owners and operators who want to identify useful A.I. opportunities without chasing hype or disrupting the way their teams already work.</p>
+            <p class="catalog-detail-summary">An A.I. Fusion℠ assessment for business owners and operators who want to identify useful A.I. opportunities without chasing hype or disrupting the way their teams already work.</p>
             <div class="catalog-attribute-grid">
               <div class="catalog-attribute">
                 <strong>Business-use review</strong>
@@ -964,6 +1092,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       <dt>Target</dt>
       <dd data-site-build-target>Loading…</dd>
     </dl>
+    <section class="site-build-marks" aria-labelledby="site-build-marks-title">
+      <h3 id="site-build-marks-title">Marks</h3>
+      <p>A.I. Fusion℠ and SIMPLIFAI℠ are service marks of Et al Solutions LLC, registered with the California Secretary of State.</p>
+      <p>Portmason Platform™, Portmason Operations™, Portmason Foundations™, Portmason Collections™, and Portmason Tooling™ are marks of Et al Solutions LLC.</p>
+    </section>
   </div>
 </dialog>
 
@@ -981,9 +1114,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <script src="https://cdn.jsdelivr.net/gh/orestbida/cookieconsent@3.1.0/dist/cookieconsent.umd.js"></script>
 <script src="assets/js/cookie-consent.js"></script>
 
+<!-- PM:COLLECTION-SCRIPTS -->
 <script src="collections/_system/collection.js" defer></script>
-<script src="assets/js/explore-decision-tree.js" defer></script>
-<script src="assets/js/site-size-compare.js" defer></script>
+<script src="collections/_system/profiles/catalog.js" defer></script>
+<script src="collections/_system/profiles/publication.js" defer></script>
+<script src="collections/_system/profiles/workspace.js" defer></script>
+<script src="collections/systems-lab/workspace.js" defer></script>
+<!-- /PM:COLLECTION-SCRIPTS -->
 <script src="assets/js/viewport-targets.js" defer></script>
 <script src="assets/js/visual-polish.js" defer></script>
 </body>

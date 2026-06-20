@@ -25,13 +25,13 @@ class SiteBuildInfoTests(unittest.TestCase):
         cls.workflow = (ROOT / ".github/workflows/gen-site-html.yml").read_text(encoding="utf-8")
 
     def test_version_file_declares_current_build(self):
-        self.assertEqual("027", (ROOT / "VERSION").read_text(encoding="utf-8").strip())
+        self.assertEqual("033", (ROOT / "VERSION").read_text(encoding="utf-8").strip())
 
     def test_html_contains_portmason_build_meta_region(self):
         self.assertIn("<!-- PM:SITE-BUILD-META -->", self.index)
         self.assertIn("<!-- /PM:SITE-BUILD-META -->", self.index)
-        self.assertIn('meta name="etal-site-build" content="027"', self.index)
-        self.assertIn('ETAL_SITE_BUILD version="027"', self.index)
+        self.assertIn('meta name="etal-site-build" content="033"', self.index)
+        self.assertIn('ETAL_SITE_BUILD version="033"', self.index)
 
     def test_footer_copyright_opens_accessible_build_dialog(self):
         for token in [
@@ -48,6 +48,20 @@ class SiteBuildInfoTests(unittest.TestCase):
             self.assertIn(token, self.footer)
         self.assertIn('/assets/css/site-build-info.css', self.footer)
         self.assertIn('/assets/js/site-build-info.js', self.footer)
+
+    def test_build_dialog_identifies_registered_and_claimed_marks(self):
+        self.assertIn("A.I. Fusion℠ and SIMPLIFAI℠", self.footer)
+        self.assertIn("registered with the California Secretary of State", self.footer)
+        for mark in [
+            "Portmason Platform™",
+            "Portmason Operations™",
+            "Portmason Foundations™",
+            "Portmason Collections™",
+            "Portmason Tooling™",
+        ]:
+            self.assertIn(mark, self.footer)
+        self.assertNotIn("®", self.footer)
+        self.assertNotIn("Patent Pending", self.footer)
 
     def test_browser_controller_fetches_uncached_build_metadata(self):
         self.assertIn('fetch(endpoint, { cache: "no-store" })', self.script)
@@ -73,7 +87,7 @@ class SiteBuildInfoTests(unittest.TestCase):
             root = Path(temporary)
             site = root / "www"
             site.mkdir()
-            (root / "VERSION").write_text("027\n", encoding="utf-8")
+            (root / "VERSION").write_text("033\n", encoding="utf-8")
             (root / ".env.generated").write_text("DEPLOY_ENV=prd\n", encoding="utf-8")
 
             environment = os.environ.copy()
@@ -88,11 +102,11 @@ class SiteBuildInfoTests(unittest.TestCase):
                 check=True,
             )
 
-            self.assertIn('ETAL_SITE_BUILD version="027"', result.stdout)
-            self.assertIn('meta name="etal-site-build" content="027"', result.stdout)
+            self.assertIn('ETAL_SITE_BUILD version="033"', result.stdout)
+            self.assertIn('meta name="etal-site-build" content="033"', result.stdout)
             build_info = site / "build-info.json"
             payload = json.loads(build_info.read_text(encoding="utf-8"))
-            self.assertEqual("027", payload["version"])
+            self.assertEqual("033", payload["version"])
             self.assertEqual("github-pages", payload["target"])
             self.assertEqual("Et al Solutions LLC", payload["builder"])
             self.assertTrue(payload["built_at"].endswith("Z"))

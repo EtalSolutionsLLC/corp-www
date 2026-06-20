@@ -105,6 +105,15 @@ obsolete_paths=(
   "www/partials/brand-header.html"
   "www/partials/promotion-header.html"
   "tests/portmason"
+  "www/content/explore-decision-tree.json"
+  "www/assets/css/explore.css"
+  "www/assets/js/explore-decision-tree.js"
+  "www/partials/explore.html"
+  "tests/test_explore_decision_tree.py"
+  "www/partials/lab.html"
+  "www/assets/css/lab.css"
+  "www/assets/js/systems-lab.js"
+  "www/assets/js/site-size-compare.js"
 )
 
 # Generated/local workspace residue. Existing deploy/* snapshots are excluded.

@@ -23,7 +23,7 @@ class SectionThemeAlternationTests(unittest.TestCase):
         expected = [
             ('home', 'dark'),
             ('services', 'light'),
-            ('explore', 'dark'),
+            ('lab', 'dark'),
             ('brands', 'light'),
             ('promotions', 'dark'),
             ('blog', 'light'),
@@ -53,7 +53,7 @@ class SectionThemeAlternationTests(unittest.TestCase):
         self.assertIn('#blog[data-theme="light"],', THEME_CSS)
         self.assertIn('#contact[data-theme="light"] {', THEME_CSS)
         self.assertIn('#home[data-theme="dark"],', THEME_CSS)
-        self.assertIn('#explore[data-theme="dark"],', THEME_CSS)
+        self.assertIn('#lab[data-theme="dark"],', THEME_CSS)
         self.assertIn('#promotions[data-theme="dark"],', THEME_CSS)
         self.assertIn('#about[data-theme="dark"] {', THEME_CSS)
 

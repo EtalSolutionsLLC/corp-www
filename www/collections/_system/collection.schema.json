@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://www.etal.solutions/collections/_system/collection.schema.json",
-  "title": "Et al Solutions Collection Manifest",
+  "title": "Portmason Collections Manifest",
   "type": "object",
   "required": [
     "id",
@@ -18,7 +18,11 @@
       "pattern": "^[a-z0-9-]+$"
     },
     "mode": {
-      "enum": ["catalog", "publication"]
+      "enum": [
+        "catalog",
+        "publication",
+        "workspace"
+      ]
     },
     "layout": {
       "type": "string",
@@ -32,12 +36,19 @@
       "type": "string",
       "minLength": 1
     },
+    "scriptFile": {
+      "type": "string",
+      "minLength": 1
+    },
     "sectionHref": {
       "type": "string",
       "pattern": "^/#"
     },
     "defaultItem": {
-      "type": ["string", "null"]
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "labels": {
       "type": "object"
@@ -47,7 +58,10 @@
       "minProperties": 1,
       "properties": {
         "theme": {
-          "enum": ["light", "dark"]
+          "enum": [
+            "light",
+            "dark"
+          ]
         },
         "extraClasses": {
           "type": "array",
@@ -96,9 +110,16 @@
         "logoAlt": {
           "type": "string"
         },
+        "markNotice": {
+          "type": "string",
+          "minLength": 1
+        },
         "primaryAction": {
           "type": "object",
-          "required": ["label", "href"],
+          "required": [
+            "label",
+            "href"
+          ],
           "properties": {
             "label": {
               "type": "string",
@@ -113,16 +134,94 @@
             }
           },
           "additionalProperties": false
+        },
+        "platformModel": {
+          "type": "object",
+          "required": [
+            "relationship",
+            "layers"
+          ],
+          "properties": {
+            "relationship": {
+              "type": "string",
+              "minLength": 1
+            },
+            "layers": {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 3,
+              "items": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "name",
+                  "label",
+                  "role",
+                  "summary"
+                ],
+                "properties": {
+                  "id": {
+                    "enum": [
+                      "foundations",
+                      "operations",
+                      "tooling"
+                    ]
+                  },
+                  "name": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "label": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "role": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "summary": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "includes": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  }
+                },
+                "additionalProperties": false
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "galleryKicker": {
+          "type": "string",
+          "minLength": 1
+        },
+        "gallerySummary": {
+          "type": "string",
+          "minLength": 1
         }
       },
       "additionalProperties": false
     },
     "selection": {
       "type": "object",
-      "required": ["strategy", "visibleItems", "timezone", "outputFile"],
+      "required": [
+        "strategy",
+        "visibleItems",
+        "timezone",
+        "outputFile"
+      ],
       "properties": {
         "strategy": {
-          "enum": ["weekday-week-of-month"]
+          "enum": [
+            "weekday-week-of-month"
+          ]
         },
         "visibleItems": {
           "type": "integer",
@@ -135,6 +234,32 @@
         "outputFile": {
           "type": "string",
           "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "workspace": {
+      "type": "object",
+      "required": [
+        "activation",
+        "queryParameter",
+        "initialization"
+      ],
+      "properties": {
+        "activation": {
+          "enum": [
+            "modal"
+          ]
+        },
+        "queryParameter": {
+          "type": "string",
+          "pattern": "^[a-zA-Z][a-zA-Z0-9_-]*$"
+        },
+        "initialization": {
+          "enum": [
+            "on-open",
+            "eager"
+          ]
         }
       },
       "additionalProperties": false
@@ -167,10 +292,17 @@
       "then": {
         "properties": {
           "presentation": {
-            "required": ["theme", "kicker", "title", "summary"]
+            "required": [
+              "theme",
+              "kicker",
+              "title",
+              "summary"
+            ]
           },
           "regions": {
-            "required": ["section"]
+            "required": [
+              "section"
+            ]
           }
         }
       }
@@ -184,13 +316,58 @@
         }
       },
       "then": {
-        "required": ["selection"],
+        "required": [
+          "selection"
+        ],
         "properties": {
           "presentation": {
-            "required": ["brand", "kicker", "titleLines", "summary"]
+            "required": [
+              "brand",
+              "kicker",
+              "titleLines",
+              "summary"
+            ]
           },
           "regions": {
-            "required": ["section"]
+            "required": [
+              "section"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "mode": {
+            "const": "workspace"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "workspace",
+          "scriptFile",
+          "defaultItem"
+        ],
+        "properties": {
+          "presentation": {
+            "required": [
+              "theme",
+              "brand",
+              "kicker",
+              "title",
+              "summary",
+              "platformModel",
+              "galleryKicker",
+              "gallerySummary",
+              "markNotice"
+            ]
+          },
+          "regions": {
+            "required": [
+              "section"
+            ]
           }
         }
       }

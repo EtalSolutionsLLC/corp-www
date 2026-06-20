@@ -17,7 +17,7 @@ class TransformationThreadDeliveryTests(unittest.TestCase):
         cls.posts = json.loads((COLLECTION / "items.json").read_text(encoding="utf-8"))
         cls.selection = json.loads((COLLECTION / "generated/selection.json").read_text(encoding="utf-8"))
         cls.index = (SITE / "index.html").read_text(encoding="utf-8")
-        cls.js = (SITE / "collections/_system/collection.js").read_text(encoding="utf-8")
+        cls.js = (SITE / "collections/_system/profiles/publication.js").read_text(encoding="utf-8")
         cls.css = (COLLECTION / "styles.css").read_text(encoding="utf-8")
         cls.modal = (SITE / "assets/css/modal-close-system.css").read_text(encoding="utf-8")
 

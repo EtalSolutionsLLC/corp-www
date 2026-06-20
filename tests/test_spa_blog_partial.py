@@ -13,10 +13,10 @@ HEADER = (SITE / "partials/header.html").read_text(encoding="utf-8")
 HOOK = SITE / "partials/hooks/collection-transformation-thread"
 
 EXPECTED_LINKS = [
-    "/#home", "/#services", "/#explore", "/#brands",
+    "/#home", "/#services", "/#lab", "/#brands",
     "/#promotions", "/#blog", "/#about", "/#contact",
 ]
-EXPECTED_PANEL_IDS = ["home", "services", "explore", "brands", "promotions", "blog", "about", "contact"]
+EXPECTED_PANEL_IDS = ["home", "services", "lab", "brands", "promotions", "blog", "about", "contact"]
 
 
 def section_position(section_id: str) -> int:
@@ -53,7 +53,7 @@ class SpaBlogCollectionTests(unittest.TestCase):
 
     def test_counter_selector_and_collection_assets_remain(self):
         self.assertIn("data-performance-proof", INDEX)
-        self.assertIn("data-explore-root", INDEX)
+        self.assertIn('data-collection-id="systems-lab"', INDEX)
         self.assertIn("assets/js/visual-polish.js", INDEX)
         self.assertIn("collections/_system/collection.js", INDEX)
         self.assertIn("collections/_system/collection.css", INDEX)

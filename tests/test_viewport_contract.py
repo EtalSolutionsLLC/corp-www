@@ -8,7 +8,7 @@ import unittest
 ROOT = Path(__file__).resolve().parents[1]
 WWW = ROOT / "www"
 
-PRIMARY_TARGETS = ["home", "services", "explore", "brands", "promotions", "blog", "about", "contact"]
+PRIMARY_TARGETS = ["home", "services", "lab", "brands", "promotions", "blog", "about", "contact"]
 
 
 class ViewportContractTests(unittest.TestCase):
@@ -17,10 +17,10 @@ class ViewportContractTests(unittest.TestCase):
 
     def test_viewport_contract_is_loaded_after_section_css(self) -> None:
         index = self.read("index.html")
-        explore_pos = index.index('href="assets/css/explore.css"')
+        lab_pos = index.index('href="collections/systems-lab/styles.css"')
         rhythm_pos = index.index('href="assets/css/theme-rhythm.css"')
         contract_pos = index.index('href="assets/css/viewport-contract.css"')
-        self.assertGreater(contract_pos, explore_pos)
+        self.assertGreater(contract_pos, lab_pos)
         self.assertGreater(contract_pos, rhythm_pos)
 
     def test_deploy_snapshots_are_not_part_of_root_contract_assertions(self) -> None:
@@ -95,13 +95,13 @@ class ViewportContractTests(unittest.TestCase):
         self.assertIn('--header-h', js)
         self.assertIn('--footer-h', js)
 
-    def test_catalog_and_explore_heights_are_neutralized_inside_targets(self) -> None:
+    def test_catalog_and_lab_heights_are_neutralized_inside_targets(self) -> None:
         css = self.read("assets/css/viewport-contract.css")
         self.assertIn(".catalog-item-panels,", css)
-        self.assertIn(".explore-tool,", css)
-        self.assertIn(".explore-route-panel,", css)
+        self.assertIn(".workspace-tile,", css)
+        self.assertIn(".workspace-tool-panel,", css)
         self.assertIn("min-height: auto !important;", css)
-        self.assertIn("#explore.pm-viewport-target:target", css)
+        self.assertIn("#lab.pm-viewport-target:target", css)
         self.assertIn("transform: none !important;", css)
 
 

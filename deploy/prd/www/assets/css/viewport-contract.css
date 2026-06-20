@@ -51,7 +51,7 @@ html {
 
 .pm-viewport-target,
 .pm-viewport-target:target,
-#explore.pm-viewport-target:target,
+#lab.pm-viewport-target:target,
 body:not(:has(.pm-scroll-target:target)) #home.pm-viewport-target {
   min-height: var(--pm-visible-panel-height) !important;
   padding-top: var(--pm-viewport-block) !important;
@@ -115,7 +115,7 @@ body:not(:has(.pm-scroll-target:target)) #home.pm-viewport-target {
 /* Visual rhythm: the contract owns vertical pacing; individual bands own personality. */
 .section-light,
 .thread-blog,
-.explore-section,
+.portmason-workspace,
 .catalog-home-section,
 .brand-catalog-section,
 .promotions-archive,
@@ -126,6 +126,7 @@ body:not(:has(.pm-scroll-target:target)) #home.pm-viewport-target {
 }
 
 #services,
+#lab,
 #brands,
 #promotions,
 #blog,
@@ -136,6 +137,7 @@ body:not(:has(.pm-scroll-target:target)) #home.pm-viewport-target {
 }
 
 .pm-viewport-target#services,
+.pm-viewport-target#lab,
 .pm-viewport-target#brands,
 .pm-viewport-target#promotions,
 .pm-viewport-target#blog,
@@ -149,7 +151,7 @@ body:not(:has(.pm-scroll-target:target)) #home.pm-viewport-target {
 .founder-band,
 .catalog-page-layout,
 .thread-blog-showcase,
-.explore-section-layout {
+.portmason-workspace-layout {
   gap: var(--pm-target-gap) !important;
 }
 
@@ -183,6 +185,20 @@ body:not(:has(.pm-scroll-target:target)) #home.pm-viewport-target {
 .about-card,
 .contact-card {
   padding: var(--pm-card-block) !important;
+}
+
+/* Systems Lab: live demonstrations size naturally inside the viewport target. */
+#lab.pm-viewport-target,
+#lab.pm-viewport-target:target {
+  transform: none !important;
+}
+
+.workspace-tile,
+.workspace-tool-panel,
+.lab-api-result,
+.lab-model-result,
+.site-size-result {
+  min-height: auto !important;
 }
 
 /* Explore: keep the guided idea, remove the dashboard/full-screen behavior. */

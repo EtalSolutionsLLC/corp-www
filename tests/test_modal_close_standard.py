@@ -11,7 +11,7 @@ class ModalCloseStandardTests(unittest.TestCase):
     def setUpClass(cls):
         cls.index = (SITE / "index.html").read_text(encoding="utf-8")
         cls.footer = (SITE / "partials/footer.html").read_text(encoding="utf-8")
-        cls.collection = (SITE / "collections/_system/collection.js").read_text(encoding="utf-8")
+        cls.collection = (SITE / "collections/_system/profiles/catalog.js").read_text(encoding="utf-8")
         cls.policy = (SITE / "assets/js/policy-modal-close.js").read_text(encoding="utf-8")
         cls.system = (SITE / "assets/css/modal-close-system.css").read_text(encoding="utf-8")
         cls.action = (SITE / "assets/css/action-system.css").read_text(encoding="utf-8")
@@ -43,12 +43,35 @@ class ModalCloseStandardTests(unittest.TestCase):
     def test_every_known_modal_family_is_in_shared_circle_standard(self):
         for selector in [
             '.catalog-detail-close', '.catalog-overview-close', '.policy-modal-close-enhanced',
-            '.explore-mesh-modal-close', '.thread-article-modal-close',
+            '.thread-article-modal-close', '.workspace-modal-close',
             '.home-quick-summary-modal-close', '#cc-main .pm__close-btn',
         ]:
             self.assertIn(selector, self.system)
         self.assertIn('border-radius: 50% !important;', self.system)
         self.assertIn('aspect-ratio: 1 / 1 !important;', self.system)
+
+    def test_shell_modal_closers_are_pinned_to_upper_right_corner(self):
+        block_start = self.system.index(".home-quick-summary-shell > .home-quick-summary-modal-close")
+        block_end = self.system.index(".policy-modal-close-host {", block_start)
+        block = self.system[block_start:block_end]
+        for token in [
+            "position: absolute !important;",
+            "top: var(--modal-close-inset) !important;",
+            "right: var(--modal-close-inset) !important;",
+            "bottom: auto !important;",
+            "left: auto !important;",
+        ]:
+            self.assertIn(token, block)
+        self.assertIn(".workspace-modal-shell > .workspace-modal-close", block)
+        self.assertIn(".thread-article-modal-shell > .thread-article-modal-close", block)
+        self.assertIn(".site-build-modal-shell > .modal-close-circle", block)
+
+    def test_shared_close_geometry_does_not_override_positioning(self):
+        shared_start = self.system.index(".modal-close-circle,")
+        shared_end = self.system.index(".modal-close-circle::before", shared_start)
+        shared = self.system[shared_start:shared_end]
+        self.assertNotIn("position: relative", shared)
+        self.assertNotIn("position: absolute", shared)
 
     def test_component_sources_no_longer_define_close_pills(self):
         overview = self.brands[self.brands.index('.catalog-overview-close {'):self.brands.index('.catalog-overview-close:hover,')]

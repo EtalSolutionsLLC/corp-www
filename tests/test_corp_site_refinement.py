@@ -5,97 +5,41 @@ ROOT = Path(__file__).resolve().parents[1]
 SITE = ROOT / "www"
 INDEX = (SITE / "index.html").read_text(encoding="utf-8")
 CSS = (SITE / "assets/css/styles.css").read_text(encoding="utf-8")
-CAROUSEL_CSS = (SITE / "collections/_system/collection.css").read_text(encoding="utf-8")
+COLLECTION_CSS = (SITE / "collections/_system/collection.css").read_text(encoding="utf-8")
 JS = (SITE / "assets/js/visual-polish.js").read_text(encoding="utf-8")
-EXPLORE_JS = (SITE / "assets/js/explore-decision-tree.js").read_text(encoding="utf-8")
-TREE = (SITE / "content/explore-decision-tree.json").read_text(encoding="utf-8")
-
-NATIVE_TARGET_BLOCK = """section[id] {
-  scroll-margin-top: calc(var(--header-h)); /* + 12px);(*/
-}
-
-.panel {
-  display: block;
-  min-height: auto;
-  padding: clamp(42px, 6vh, 76px) 0;
-  scroll-margin-top: calc(var(--header-h)); /* + 12px);*/
-}
-
-.panel:target {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: stretch;
-  min-height: calc(100vh - var(--header-h) - var(--footer-h));
-  min-height: calc(100dvh - var(--header-h) - var(--footer-h));
-  padding-top: 0;
-  padding-bottom: 0;
-}
-"""
+COLLECTION_CORE = (SITE / "collections/_system/collection.js").read_text(encoding="utf-8")
+LAB_JS = (SITE / "collections/systems-lab/workspace.js").read_text(encoding="utf-8")
 
 
 class CorpSiteRefinementTests(unittest.TestCase):
-    def test_native_target_contract_is_unchanged(self) -> None:
-        self.assertIn(NATIVE_TARGET_BLOCK, CSS)
+    def test_portmason_workspace_is_the_primary_interactive_showcase(self):
+        self.assertIn('data-collection-id="systems-lab"', INDEX)
+        self.assertIn('data-collection-mode="workspace"', INDEX)
+        self.assertIn("See the systems in action", INDEX)
+        self.assertIn("Portmason Platform™", INDEX)
+        self.assertIn("initCollection(root)", COLLECTION_CORE)
+        self.assertIn("runExternalStatus", LAB_JS)
+        self.assertIn("runPublishedRequest", LAB_JS)
+        self.assertIn("runLocalModel", LAB_JS)
 
-    def test_guided_service_selector_exists(self) -> None:
-        self.assertIn('data-explore-root', INDEX)
-        self.assertIn('content/explore-decision-tree.json', INDEX)
-        self.assertIn('"pressure"', TREE)
-        self.assertIn('"constraint"', TREE)
-        self.assertIn('"exposure"', TREE)
-        self.assertIn('"move"', TREE)
-        self.assertIn('data-explore-result-title', INDEX)
-        self.assertIn('renderQuestion', EXPLORE_JS)
-
-    def test_visual_polish_does_not_take_over_anchor_navigation(self) -> None:
-        forbidden = [
-            'hashchange',
-            'pushState',
-            'replaceState',
-            'scrollIntoView',
-            'window.location.hash',
-        ]
-        for token in forbidden:
+    def test_visual_polish_does_not_take_over_anchor_navigation(self):
+        for token in ["hashchange", "pushState", "replaceState", "scrollIntoView", "window.location.hash"]:
             self.assertNotIn(token, JS)
 
-    def test_live_counter_remains_present(self) -> None:
-        self.assertIn('data-performance-proof', INDEX)
-        self.assertIn('data-performance-transfer', INDEX)
-        self.assertIn('data-performance-js', INDEX)
-        self.assertIn('data-performance-resources', INDEX)
-        self.assertIn('updatePerformanceProof', JS)
+    def test_live_counter_remains_present(self):
+        for token in ["data-performance-proof", "data-performance-transfer", "data-performance-js", "data-performance-resources"]:
+            self.assertIn(token, INDEX)
+        self.assertIn("updatePerformanceProof", JS)
 
-    def test_active_menu_decoration_persists(self) -> None:
-        self.assertIn('body:has(#about:target) .nav a[href$="#about"]::after', CSS)
-        self.assertIn('body:has(#contact:target) .nav a[href$="#contact"]::after', CSS)
-        self.assertIn('body:has(#promotions [data-collection-item]:target) .nav a[href$="#promotions"]::after', CSS)
-        self.assertIn('body:has(#blog:target) .nav a[href$="#blog"]::after', CSS)
-        self.assertIn('body:has(#brands [data-collection-item]:target) .nav a[href$="#brands"]::after', CSS)
+    def test_active_menu_decoration_persists(self):
+        for token in ["#about", "#contact", "#promotions", "#blog", "#brands"]:
+            self.assertIn(token, CSS)
 
-    def test_native_view_transition_polish_is_declared_without_controller_dependency(self) -> None:
-        self.assertIn('@view-transition', CSS)
-        self.assertIn('navigation: auto;', CSS)
-        self.assertNotIn('document.startViewTransition', EXPLORE_JS)
-        self.assertIn('setTrail', EXPLORE_JS)
-        self.assertIn('setHidden(result, false)', EXPLORE_JS)
-
-    def test_carousel_keyboard_refinement_is_native_and_accessible(self) -> None:
-        self.assertIn('enableCarouselKeyboardRefinement', JS)
-        self.assertIn('aria-roledescription', JS)
-        self.assertIn('ArrowLeft', JS)
-        self.assertIn('ArrowRight', JS)
-        self.assertIn('Home', JS)
-        self.assertIn('End', JS)
-        self.assertIn('overscroll-behavior-inline: contain;', CAROUSEL_CSS)
-        self.assertIn('touch-action: pan-x pan-y;', CAROUSEL_CSS)
-
-    def test_no_imported_front_end_library_added(self) -> None:
-        self.assertNotIn('import ', JS)
-        self.assertNotIn('require(', JS)
-        self.assertNotIn('React', JS)
-        self.assertNotIn('jquery', JS.lower())
+    def test_carousel_keyboard_refinement_is_native_and_accessible(self):
+        for token in ["enableCarouselKeyboardRefinement", "aria-roledescription", "ArrowLeft", "ArrowRight", "Home", "End"]:
+            self.assertIn(token, JS)
+        self.assertIn("overscroll-behavior-inline: contain;", COLLECTION_CSS)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

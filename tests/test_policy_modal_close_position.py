@@ -13,7 +13,7 @@ class PolicyModalClosePositionTests(unittest.TestCase):
         cls.system_css = (WWW / "assets/css/modal-close-system.css").read_text(encoding="utf-8")
         cls.js = (WWW / "assets/js/policy-modal-close.js").read_text(encoding="utf-8")
 
-    def test_close_button_is_pinned_to_upper_right(self):
+    def test_policy_override_pins_close_button_to_upper_right(self):
         for token in [
             "position: absolute !important;",
             "top: 12px !important;",
@@ -22,14 +22,21 @@ class PolicyModalClosePositionTests(unittest.TestCase):
             "left: auto !important;",
         ]:
             self.assertIn(token, self.override_css)
-            self.assertIn(token, self.system_css)
 
-    def test_policy_close_position_is_restored_after_shared_icon_rule(self):
-        relative_rule = self.system_css.index("position: relative !important;")
-        late_guard = self.system_css.index("008: keep external policy-modal close control pinned")
-        absolute_after_guard = self.system_css.index("position: absolute !important;", late_guard)
-        self.assertGreater(late_guard, relative_rule)
-        self.assertGreater(absolute_after_guard, late_guard)
+    def test_shared_system_keeps_policy_close_in_canonical_corner_rule(self):
+        start = self.system_css.index(".home-quick-summary-shell > .home-quick-summary-modal-close")
+        end = self.system_css.index(".policy-modal-close-host {", start)
+        corner_rule = self.system_css[start:end]
+        for token in [
+            ".policy-modal-close-host > .policy-modal-close-enhanced",
+            ".policy-modal-close-enhanced[data-policy-modal-close-enhanced]",
+            "position: absolute !important;",
+            "top: var(--modal-close-inset) !important;",
+            "right: var(--modal-close-inset) !important;",
+            "bottom: auto !important;",
+            "left: auto !important;",
+        ]:
+            self.assertIn(token, corner_rule)
         self.assertIn("policy-modal-close-host", self.system_css)
         self.assertIn("policy-modal-close-host", self.js)
 

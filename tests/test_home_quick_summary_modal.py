@@ -34,7 +34,7 @@ class HomeQuickSummaryModalTests(unittest.TestCase):
             "data-home-quick-modal",
             "data-home-quick-close",
             "Better decisions. Lighter systems. Clearer next steps.",
-            "Find the right first step",
+            "See the systems in action",
             "Start a conversation",
         ]:
             self.assertIn(token, self.index)

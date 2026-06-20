@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://www.etal.solutions/collections/_system/publication-item.schema.json",
+  "title": "Portmason Collections Publication Item",
+  "allOf": [
+    { "$ref": "item-base.schema.json" },
+    {
+      "type": "object",
+      "required": ["slot", "category", "title_md", "excerpt_md", "full_article_md"],
+      "properties": {
+        "slot": { "type": "integer", "minimum": 1 },
+        "category": { "type": "string", "minLength": 1 },
+        "title_md": { "type": "string", "pattern": "\\.md$" },
+        "excerpt_md": { "type": "string", "pattern": "\\.md$" },
+        "full_article_md": { "type": "string", "pattern": "\\.md$" }
+      }
+    }
+  ]
+}

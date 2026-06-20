@@ -16,13 +16,6 @@ class StylingCommentsRedBatch3Tests(unittest.TestCase):
         self.assertIn("color: #2f6bff !important;", batch)
         self.assertIn("border-top-color: #2f6bff !important;", batch)
 
-    def test_explore_decision_card_is_the_clipping_boundary(self):
-        batch = self.read_css().split("017: styling comments in red, batch 3", 1)[1]
-        self.assertIn("#explore .explore-question-body.explore-decision-card", batch)
-        self.assertIn("overflow: hidden !important;", batch)
-        self.assertIn("contain: paint !important;", batch)
-        self.assertIn("isolation: isolate !important;", batch)
-
 
 if __name__ == "__main__":
     unittest.main()

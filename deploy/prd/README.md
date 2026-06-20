@@ -9,7 +9,7 @@ This site is rendered through Portmason. Source HTML, structural partials, colle
 From the site root:
 
 ```bash
-./portmason/pm-setup
+pm-setup
 ```
 
 Then serve locally:
@@ -50,16 +50,18 @@ Registered collections
   collections/<collection-id>/generated/     # optional generated collection state
 
 Non-collection content
-  content/*.json
+  api/**/*.json
+  edge/capability-api/
 
 Rendered SPA targets
   index.html
+  index.html#lab
   index.html#brands
   index.html#promotions
   index.html#blog
 ```
 
-Collection data and configuration belong only under `collections/`. The `content/` directory is reserved for data that is not a reusable collection, such as the Explore decision tree.
+Collection data and configuration belong only under `collections/`. The Systems Lab publishes static JSON contracts under `www/api/` and includes an optional Cloudflare Worker adapter under `edge/capability-api/`.
 
 ## Environment values
 
@@ -142,31 +144,67 @@ materialization.
 The footer copyright remains visually unchanged; selecting it opens the build
 information dialog.
 
-## Collection System
+## Portmason Platform™ Systems Lab
 
-Brands, Promotions, and The Transformation Thread use one reusable Collection System. Catalog and publication are behavior profiles of the same foundation, not separate storage models.
+The SPA target `/#lab` is the first public Portmason Platform™ product surface and a working part of the site. It is implemented as the `workspace` profile of Portmason Collections™.
+
+The platform model is explicit:
+
+```text
+Portmason Platform™
+├── Portmason Foundations™     # what systems are built from
+│   └── Portmason Collections™ # one named Foundation
+├── Portmason Operations™      # how systems are provisioned, deployed, and run
+└── Portmason Tooling™         # the cross-cutting pm-* control surface
+```
+
+Foundations define the system. Tooling creates, validates, and controls it. Operations provisions, deploys, and runs it. Collections is not a fourth peer layer; it is a named Foundation.
+
+The Lab tools demonstrate combinations of those capabilities rather than mapping one tool to one product family:
+
+- consumption of GitHub's public status API;
+- publication and browser consumption of versioned JSON/OpenAPI contracts;
+- browser-local sentence-embedding inference using Transformers.js; and
+- the existing PageSpeed/page-weight comparison.
+
+The default Pages deployment requires no separate service. Static public
+contracts live under `www/api/`. The optional `edge/capability-api/` adapter
+publishes extensionless dynamic endpoints and normalizes the external status
+response. All local development and deployment commands for the adapter run in
+containers.
+
+The language model is loaded only after the visitor selects **Run the local
+model**. The visitor's text is processed on that device and is not submitted to
+Et al.
+
+## Portmason Collections™
+
+Brands, Promotions, The Transformation Thread, and the Systems Lab use one reusable Portmason Collections™ runtime. Catalog, publication, and workspace are behavior profiles of the same foundation, not separate storage models.
 
 ```text
 collections/
 ├── _system/
-│   ├── collection.js
+│   ├── collection.js                 # shared registry and initCollection(root)
 │   ├── collection.css
 │   ├── collection.schema.json
+│   ├── item-base.schema.json
+│   ├── catalog-item.schema.json
+│   ├── publication-item.schema.json
+│   ├── workspace-item.schema.json
+│   ├── profiles/
+│   │   ├── catalog.js
+│   │   ├── publication.js
+│   │   └── workspace.js
 │   └── render-collection
-├── brands/
-│   ├── collection.json
-│   ├── items.json
-│   └── styles.css
-├── promotions/
-│   ├── collection.json
-│   ├── items.json
-│   └── styles.css
-└── transformation-thread/
+├── brands/                            # catalog instance
+├── promotions/                        # catalog instance
+├── transformation-thread/             # publication instance
+└── systems-lab/                       # workspace instance
     ├── collection.json
     ├── items.json
     ├── styles.css
-    ├── items/<permanent-id>/*.md
-    └── generated/selection.json
+    ├── workspace.js
+    └── tools/*.html
 ```
 
 Every manifest declares a stable collection id, behavior mode, layout, data file, style file, presentation, labels, and Portmason render regions. Catalog manifests own their entire SPA section heading and wrapper; the entry page contains only collection render markers.
@@ -191,7 +229,13 @@ Every manifest declares a stable collection id, behavior mode, layout, data file
 }
 ```
 
-The shared browser controller is `collections/_system/collection.js`. Catalog profile behavior includes paging, hash state, details, keyboard handling, and responsive controls. Publication profile behavior includes manifest-driven item loading and safe Markdown article rendering inside the SPA.
+The shared browser runtime is `collections/_system/collection.js`. Every rendered collection root enters through `initCollection(root)`, which resolves a registered profile and supplies a common runtime context. Profile modules contain behavior only:
+
+- catalog: paging, hash state, details, keyboard handling, and responsive controls;
+- publication: manifest-driven item loading and safe Markdown article rendering;
+- workspace: tile activation, modal lifecycle, focus management, deep-link state, and lazy instance activation.
+
+Collection-specific executable behavior remains with the instance. The Systems Lab registers its adapter from `collections/systems-lab/workspace.js`; the neutral workspace profile does not know about GitHub, OpenAPI, local models, or PageSpeed.
 
 The shared catalog carousel chrome is `collections/_system/collection.css`. Each collection keeps its visual identity in its own `styles.css`. The `COLLECTION-STYLES` render hook discovers registered manifests and materializes the stylesheet links, so collection style configuration is not duplicated in `index.html`.
 
@@ -207,6 +251,8 @@ PM:COLLECTION-BRANDS
 PM:COLLECTION-PROMOTIONS-HERO-TEASER
 PM:COLLECTION-PROMOTIONS
 PM:COLLECTION-TRANSFORMATION-THREAD
+PM:COLLECTION-SYSTEMS-LAB
+PM:COLLECTION-SCRIPTS
 ```
 
 After changing a collection manifest, item registry, Markdown item, or collection style, run:
@@ -214,6 +260,25 @@ After changing a collection manifest, item registry, Markdown item, or collectio
 ```bash
 pm-setup
 ```
+
+
+### Workspace profile
+
+The Systems Lab uses `mode: workspace` and `layout: tile-gallery`. The page first renders the Portmason platform relationship, then lightweight visual launch tiles. Each tile declares the platform layers it demonstrates; it does not impersonate or define a product family. Selecting a tile opens one shared modal workspace with a 70/30 tool-to-guidance layout. Tool panels are loaded from the instance's `tools/*.html` files and initialized only when first opened.
+
+The runtime lifecycle is:
+
+```text
+discover → open → initialize → interact → preserve/reset → close
+```
+
+The `lab` query parameter supports direct links to a specific tool without creating a separate page.
+
+### Portmason and mark notices
+
+Et al Solutions LLC is the company and Portmason Platform™ is the named technology platform. Portmason Foundations™ and Portmason Operations™ are the build and run planes. Portmason Tooling™ is the cross-cutting `pm-*` control surface. Portmason Collections™ is a named Foundation. A.I. Fusion℠ and SIMPLIFAI℠ are California-registered service marks of Et al Solutions LLC. The working evidence ledger is `docs/ip/PORTMASON_FIRST_USE_LEDGER.md`.
+
+Do not use ® without a federal registration. Do not use “Patent Pending” unless a qualifying patent application has actually been filed and remains pending.
 
 ### Catalog profile
 
@@ -289,57 +354,8 @@ grep -RIn --exclude-dir=.git --exclude-dir=deploy --exclude-dir=capture \
 Run Portmason:
 
 ```bash
-./portmason/pm-setup
-```
-
-## Explore decision tree
-
-The corp-site Explore panel is a first-class SPA section at:
-
-```text
-/#explore
-```
-
-Its Portmason-managed structural source is:
-
-```text
-partials/explore.html
-```
-
-The main SPA owns the render region:
-
-```html
-<!-- PM:EXPLORE -->
-...
-<!-- /PM:EXPLORE -->
-```
-
-The two-level conditional tree data lives in:
-
-```text
-content/explore-decision-tree.json
-```
-
-The native browser controller lives in:
-
-```text
-assets/js/explore-decision-tree.js
-```
-
-The shared action-anchor design system and Explore-specific presentation live in:
-
-```text
-assets/css/action-system.css
-assets/css/explore.css
-```
-
-Do not hand-edit the rendered `PM:EXPLORE` block in `index.html`. Update the partial or JSON source, then run:
-
-```bash
 pm-setup
 ```
-
-The performance counter is intentionally browser-observed and lives inside Explore. It does not claim a Lighthouse or Core Web Vitals score.
 
 ## Homepage 60-second summary
 
