@@ -1,42 +1,12 @@
 {
   "generated_by": "bin/rotate-transformation-thread",
   "collection": "transformation-thread",
-  "selection_date": "2026-06-20",
+  "selection_date": "2026-06-15",
   "rotation_timezone": "America/New_York",
-  "active_slot": 6,
+  "active_slot": 1,
   "week_of_month": 3,
-  "source_sha256": "2a6e51ab1d54531807c3546e89d3bdca2010378afe2c478d6fe31639eabff7e2",
+  "source_sha256": "5d9845621815d7b9924e1af8281700f612294926e806bc445617c70a01c0affe",
   "visibleItems": [
-    {
-      "id": 6,
-      "slug": "tt-006",
-      "slot": 6,
-      "category": "A.I. Risk",
-      "status": "Draft",
-      "title_md": "items/006/title.md",
-      "excerpt_md": "items/006/excerpt.md",
-      "full_article_md": "items/006/full-article.md",
-      "title": "Is it too late for a Skynet scenario?",
-      "title_html": "Is it too late for a Skynet scenario?",
-      "excerpt": "A grounded reflection on whether A.I. has already become too embedded to control, and why the real risk may be less about machines waking up and more about people surrendering judgment too casually.",
-      "excerpt_html": "A grounded reflection on whether A.I. has already become too embedded to control, and why the real risk may be less about machines waking up and more about people surrendering judgment too casually.",
-      "url": "mailto:info@etalsolutions.tech?subject=Transformation%20Thread%20article%20request%20%5BTT-006%5D&body=Please%20send%20Transformation%20Thread%20article%20TT-006%3A%20Is%20it%20too%20late%20for%20a%20Skynet%20scenario%3F"
-    },
-    {
-      "id": 7,
-      "slug": "tt-007",
-      "slot": 7,
-      "category": "A.I. Governance",
-      "status": "Draft",
-      "title_md": "items/007/title.md",
-      "excerpt_md": "items/007/excerpt.md",
-      "full_article_md": "items/007/full-article.md",
-      "title": "Automation needs accountability before scale",
-      "title_html": "Automation needs accountability before scale",
-      "excerpt": "A reminder that the safest transformation plans do not begin with speed; they begin with ownership, review paths, exception handling, and clear decisions about where human judgment must remain in the loop.",
-      "excerpt_html": "A reminder that the safest transformation plans do not begin with speed; they begin with ownership, review paths, exception handling, and clear decisions about where human judgment must remain in the loop.",
-      "url": "mailto:info@etalsolutions.tech?subject=Transformation%20Thread%20article%20request%20%5BTT-007%5D&body=Please%20send%20Transformation%20Thread%20article%20TT-007%3A%20Automation%20needs%20accountability%20before%20scale"
-    },
     {
       "id": 1,
       "slug": "tt-001",
@@ -51,6 +21,36 @@
       "excerpt": "Transformation is a practical sequence of choices about what to simplify, what to preserve, and where technology can reduce friction without creating new confusion.",
       "excerpt_html": "Transformation is a practical sequence of choices about what to simplify, what to preserve, and where technology can reduce friction without creating new confusion.",
       "url": "mailto:info@etalsolutions.tech?subject=Transformation%20Thread%20article%20request%20%5BTT-001%5D&body=Please%20send%20Transformation%20Thread%20article%20TT-001%3A%20What%20transformation%20actually%20asks%20of%20a%20business"
+    },
+    {
+      "id": 8,
+      "slug": "tt-008",
+      "slot": 1,
+      "category": "Website Modernization",
+      "status": "Draft",
+      "title_md": "items/008/title.md",
+      "excerpt_md": "items/008/excerpt.md",
+      "full_article_md": "items/008/full-article.md",
+      "title": "Speed Is Not a Technical Detail",
+      "title_html": "Speed Is Not a Technical Detail",
+      "excerpt": "A fast website is not merely an engineering achievement. It is part of the experience, and often the first thing a visitor notices.",
+      "excerpt_html": "A fast website is not merely an engineering achievement. It is part of the experience, and often the first thing a visitor notices.",
+      "url": "mailto:info@etalsolutions.tech?subject=Transformation%20Thread%20article%20request%20%5BTT-008%5D&body=Please%20send%20Transformation%20Thread%20article%20TT-008%3A%20Speed%20Is%20Not%20a%20Technical%20Detail"
+    },
+    {
+      "id": 2,
+      "slug": "tt-002",
+      "slot": 2,
+      "category": "A.I. Adoption",
+      "status": "Draft",
+      "title_md": "items/002/title.md",
+      "excerpt_md": "items/002/excerpt.md",
+      "full_article_md": "items/002/full-article.md",
+      "title": "Start with the work, not the tool",
+      "title_html": "Start with the work, not the tool",
+      "excerpt": "Durable A.I. adoption begins with workflows, decisions, and pain points before selecting platforms.",
+      "excerpt_html": "Durable A.I. adoption begins with workflows, decisions, and pain points before selecting platforms.",
+      "url": "mailto:info@etalsolutions.tech?subject=Transformation%20Thread%20article%20request%20%5BTT-002%5D&body=Please%20send%20Transformation%20Thread%20article%20TT-002%3A%20Start%20with%20the%20work%2C%20not%20the%20tool"
     }
   ]
 }
