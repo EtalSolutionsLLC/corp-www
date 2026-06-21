@@ -72,16 +72,30 @@ can_mkdir_p() {
 }
 
 cleanup_tail() {
-  if declare -F live_tail_stop >/dev/null 2>&1; then
-    live_tail_stop || true
-  else
-    local pid="${__LIVE_TAIL_PID:-${PM_TAIL_PID:-${TAIL_PID:-}}}"
-    if [[ -n "$pid" ]] && kill -0 "$pid" 2>/dev/null; then
-      kill -- -"${pid}" 2>/dev/null || true
-      kill "${pid}" 2>/dev/null || true
+    local owner="${__LIVE_TAIL_OWNER_BASHPID:-}"
+
+    # An executed child pm-* script inherits the PIDs but does not own them.
+    if [[ -n "$owner" && "$owner" != "${BASHPID}" ]]; then
+        return 0
     fi
-  fi
-  unset __LIVE_TAIL_PID __LIVE_TAIL_GUARD_PID PM_TAIL_PID TAIL_PID
+
+    if declare -F live_tail_stop >/dev/null 2>&1; then
+        live_tail_stop || true
+    else
+        local pid="${__LIVE_TAIL_PID:-${PM_TAIL_PID:-${TAIL_PID:-}}}"
+
+        if [[ -n "$pid" ]] && kill -0 "$pid" 2>/dev/null; then
+            kill -- "-${pid}" 2>/dev/null || true
+            kill "${pid}" 2>/dev/null || true
+        fi
+    fi
+
+    unset \
+        __LIVE_TAIL_OWNER_BASHPID \
+        __LIVE_TAIL_PID \
+        __LIVE_TAIL_GUARD_PID \
+        PM_TAIL_PID \
+        TAIL_PID
 }
 
 trap cleanup_tail EXIT INT TERM
@@ -628,81 +642,89 @@ have() {
 info() { log INFO "$@"; }
 
 live_tail_autostart() {
-  : "${LIVE_TAIL:=1}"
-  [[ "${LIVE_TAIL}" == "1" ]] || return 0
-  [[ -n "${LOG_FILE:-}" ]] || return 0
+    : "${LIVE_TAIL:=1}"
+    [[ "${LIVE_TAIL}" == "1" ]] || return 0
+    [[ -n "${LOG_FILE:-}" ]] || return 0
+    [[ "${__HAS_TTY_BEFORE_REDIRECT:-0}" == "1" ]] || return 0
+    [[ -w /dev/tty ]] || return 0
 
-  [[ "${__HAS_TTY_BEFORE_REDIRECT:-0}" == "1" ]] || return 0
-  [[ -w /dev/tty ]] || return 0
+    if [[ -n "${__LIVE_TAIL_GUARD_PID:-}" ]] &&
+       kill -0 "${__LIVE_TAIL_GUARD_PID}" 2>/dev/null; then
+        return 0
+    fi
 
-  # Already running?
-  if [[ -n "${__LIVE_TAIL_GUARD_PID:-}" ]] && kill -0 "${__LIVE_TAIL_GUARD_PID}" 2>/dev/null; then
-    return 0
-  fi
-  unset __LIVE_TAIL_PID __LIVE_TAIL_GUARD_PID
+    unset __LIVE_TAIL_PID __LIVE_TAIL_GUARD_PID
 
-  local parent_pid="$$"
+    export __LIVE_TAIL_OWNER_BASHPID="${BASHPID}"
 
-  (
-    set +e
+    local parent_pid="$$"
 
-    # Start tail
-    tail -n 200 -F "$LOG_FILE" > /dev/tty 2>&1 &
-    tail_pid=$!
+    (
+        set +e
 
-    # Publish PIDs back into environment via a temp file (cannot export back to parent directly)
+        tail -n 200 -F "$LOG_FILE" > /dev/tty 2>&1 &
+        tail_pid=$!
+
+        pidfile="/tmp/pm-live-tail.${parent_pid}.pid"
+        printf '%s\n' "$tail_pid" > "$pidfile" 2>/dev/null || true
+
+        while kill -0 "$parent_pid" 2>/dev/null; do
+            sleep 0.25
+        done
+
+        kill -- "-$tail_pid" 2>/dev/null || true
+        kill "$tail_pid" 2>/dev/null || true
+        wait "$tail_pid" 2>/dev/null || true
+
+        rm -f "$pidfile" 2>/dev/null || true
+        exit 0
+    ) &
+
+    guard_pid=$!
+    export __LIVE_TAIL_GUARD_PID="$guard_pid"
+
     pidfile="/tmp/pm-live-tail.${parent_pid}.pid"
-    printf '%s\n' "$tail_pid" > "$pidfile" 2>/dev/null || true
 
-    # Watch parent; when it dies, stop tail
-    while kill -0 "$parent_pid" 2>/dev/null; do
-      sleep 0.25
+    for _ in 1 2 3 4 5; do
+        if [[ -s "$pidfile" ]]; then
+            __LIVE_TAIL_PID="$(cat "$pidfile" 2>/dev/null || true)"
+            export __LIVE_TAIL_PID
+            break
+        fi
+
+        sleep 0.05
     done
 
-    kill -- "-$tail_pid" 2>/dev/null || true
-    kill "$tail_pid" 2>/dev/null || true
-    wait "$tail_pid" 2>/dev/null || true
-
-    rm -f "$pidfile" 2>/dev/null || true
-    exit 0
-  ) &
-
-  guard_pid=$!
-  export __LIVE_TAIL_GUARD_PID="$guard_pid"
-
-  # Best-effort: read tail pid
-  pidfile="/tmp/pm-live-tail.${parent_pid}.pid"
-  for _ in 1 2 3 4 5; do
-    if [[ -s "$pidfile" ]]; then
-      __LIVE_TAIL_PID="$(cat "$pidfile" 2>/dev/null || true)"
-      export __LIVE_TAIL_PID
-      break
-    fi
-    sleep 0.05
-  done
-
-  return 0
+    return 0
 }
 
 live_tail_stop() {
-  # Stop guard (which stops tail), plus best-effort direct kill.
-  local guard="${__LIVE_TAIL_GUARD_PID:-}"
-  local tailp="${__LIVE_TAIL_PID:-}"
+    local owner="${__LIVE_TAIL_OWNER_BASHPID:-}"
 
-  unset __LIVE_TAIL_GUARD_PID __LIVE_TAIL_PID
+    if [[ -n "$owner" && "$owner" != "${BASHPID}" ]]; then
+        return 0
+    fi
 
-  if [[ -n "$guard" ]] && kill -0 "$guard" 2>/dev/null; then
-    kill "$guard" 2>/dev/null || true
-    wait "$guard" 2>/dev/null || true
-  fi
+    local guard="${__LIVE_TAIL_GUARD_PID:-}"
+    local tailp="${__LIVE_TAIL_PID:-}"
 
-  if [[ -n "$tailp" ]] && kill -0 "$tailp" 2>/dev/null; then
-    kill -- "-$tailp" 2>/dev/null || true
-    kill "$tailp" 2>/dev/null || true
-    wait "$tailp" 2>/dev/null || true
-  fi
+    unset \
+        __LIVE_TAIL_OWNER_BASHPID \
+        __LIVE_TAIL_GUARD_PID \
+        __LIVE_TAIL_PID
 
-  return 0
+    if [[ -n "$guard" ]] && kill -0 "$guard" 2>/dev/null; then
+        kill "$guard" 2>/dev/null || true
+        wait "$guard" 2>/dev/null || true
+    fi
+
+    if [[ -n "$tailp" ]] && kill -0 "$tailp" 2>/dev/null; then
+        kill -- "-$tailp" 2>/dev/null || true
+        kill "$tailp" 2>/dev/null || true
+        wait "$tailp" 2>/dev/null || true
+    fi
+
+    return 0
 }
 
 load_adapter_helper() {

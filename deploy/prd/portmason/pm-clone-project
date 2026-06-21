@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+: "${CUR_SCRIPT:=$(basename "${BASH_SOURCE[0]:-${0:-}}")}"
+export CUR_SCRIPT
+
+: "${PORTMASON_SHARE:="$(cd -- "$(dirname -- "${BASH_SOURCE[0]:-${0:-}}")" && pwd -P)"}"
+. "${PORTMASON_SHARE}/pm-helpers" "$@"
+
 if [ "$#" -ne 1 ]; then
   echo "Usage: $0 NEW_FOLDER_NAME" >&2
   exit 1

@@ -1,12 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-export DEPLOY_ENV="${DEPLOY_ENV:-${DEPLOY_ENV:-}}"
-
-#. "/usr/local/bin/sys-cd-project-root"
-
 : "${CUR_SCRIPT:=$(basename "${BASH_SOURCE[0]:-${0:-}}")}" 
 export CUR_SCRIPT
+: "${PORTMASON_SHARE:="$(cd -- "$(dirname -- "${BASH_SOURCE[0]:-${0:-}}")" && pwd -P)"}"
+. "${PORTMASON_SHARE}/pm-helpers" "$@"
 
 is_deploy_snapshot_dir() {
     [[ "$(basename -- "$(dirname -- "$PWD")")" == "deploy" ]]
@@ -15,13 +13,9 @@ is_deploy_snapshot_dir() {
 main() {
     export PROJECT_SERVICES=
 
-    : "${PORTMASON_SHARE:="$(cd -- "$(dirname -- "${BASH_SOURCE[0]:-${0:-}}")" && pwd -P)"}"
-
     local deploy_sync_active=0
     local deploy_sync_force=0
     local sync_owner_host=""
-    local arg
-    local -a setup_args=()
     local -a sync_args=(--prepare)
 
     case "${PM_DEPLOY_SYNC_FORCE:-}" in
@@ -30,18 +24,7 @@ main() {
             ;;
     esac
 
-    for arg in "$@"; do
-        case "$arg" in
-            --refresh-from-root|--force-deploy-sync)
-                deploy_sync_force=1
-                ;;
-            *)
-                setup_args+=("$arg")
-                ;;
-        esac
-    done
-
-    . "${PORTMASON_SHARE}/pm-helpers" "${setup_args[@]}"
+    [[ ${REFRESH_FROM_ROOT:-0} == 1 || ${FORCE_DEPLOY_SYNC:-0} == 1 ]] && deploy_sync_force=1
 
     if is_deploy_snapshot_dir; then
         sync_owner_host="$(hostname 2>/dev/null || printf 'unknown')"
@@ -57,27 +40,38 @@ main() {
         die "--refresh-from-root is only valid from deploy/<env>"
     fi
 
-    "${PORTMASON_SHARE}/pm-generate-config"
+    #"${PORTMASON_SHARE}/pm-generate-config"
+    log INFO "pm-setup: generating project configuration"
+log INFO "pm-setup: ENV_FILE=${ENV_FILE:-<unset>}"
+log INFO "pm-setup: SITE_DIR=${SITE_DIR:-<unset>}"
+log INFO "pm-setup: generator=${PORTMASON_SHARE}/pm-generate-config"
+
+if "${PORTMASON_SHARE}/pm-generate-config"; then
+    log INFO "pm-setup: project configuration generated"
+else
+    rc=$?
+    fatal_error "pm-generate-config failed with exit code ${rc}" "$rc"
+fi
 
     stage_portmason "archive" "cagent" "*cosign*" "*log" # Exclude archive/, cagent, cosign files, log files
 
     # run the adapter provisioning script, if it exists
     local file="${PORTMASON_SHARE}/pm-provision-${ADAPTER_CODE}"
-    [[ -r "$file" ]] && . "$file" "${setup_args[@]}"
+    [[ -r "$file" ]] && . "$file" "$@"
 
     # run the optional adapter setup script
     file="${PORTMASON_SHARE}/pm-setup-${ADAPTER_CODE}"
-    [[ -r "$file" ]] && . "$file" "${setup_args[@]}"
+    [[ -r "$file" ]] && . "$file" "$@"
 
     # run the optional runtime setup script
     file="${PORTMASON_SHARE}/pm-setup-${RUNTIME_CODE}"
-    [[ -r "$file" ]] && . "$file" "${setup_args[@]}"
+    [[ -r "$file" ]] && . "$file" "$@"
 
     # if a custom setup file exists, it must handle all deployment tasks for the project,
     # Otherwise, run the standard runtime deploy followed by the standard adapter deploy
     file="${SCRIPT_DIR}/setup"
     if [[ -r "$file" ]]; then
-        . "$file" "${setup_args[@]}"
+        . "$file" "$@"
         local rc=$?
 
         case "$rc" in
@@ -97,15 +91,15 @@ main() {
     else
         # run the optional runtime deploy script
         file="${PORTMASON_SHARE}/pm-deploy-${RUNTIME_CODE}"
-        [[ -r "$file" ]] && . "$file" "${setup_args[@]}"
+        [[ -r "$file" ]] && . "$file" "$@"
 
         # run the optional adapter deploy script
         if declare -F pm_bridge_deploy >/dev/null 2>&1; then
             log INFO "pm-setup: using bridge deploy hook: pm_bridge_deploy"
-            pm_bridge_deploy "${setup_args[@]}"
+            pm_bridge_deploy "$@"
         else
             file="${PORTMASON_SHARE}/pm-deploy-${ADAPTER_CODE}"
-            [[ -r "$file" ]] && . "$file" "${setup_args[@]}"
+            [[ -r "$file" ]] && . "$file" "$@"
         fi
     fi
 
@@ -115,5 +109,9 @@ main() {
             "${PORTMASON_SHARE}/pm-sync-deploy-from-root" --finalize
     fi
 }
+
+pm_setup_arg REFRESH_FROM_ROOT "--refresh-from-root" export
+pm_setup_arg FORCE_DEPLOY_SYNC "--force-deploy-sync" export
+pm_commit_args "$@"
 
 main "$@"

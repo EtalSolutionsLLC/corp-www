@@ -1,9 +1,14 @@
 #!/usr/bin/env bash
+set -euo pipefail
+
+: "${CUR_SCRIPT:=$(basename "${BASH_SOURCE[0]:-${0:-}}")}"
+export CUR_SCRIPT
+
+: "${PORTMASON_SHARE:="$(cd -- "$(dirname -- "${BASH_SOURCE[0]:-${0:-}}")" && pwd -P)"}"
+. "${PORTMASON_SHARE}/pm-helpers" "$@"
 # Purpose: Recover a missing static partial from one managed HTML region.
 # Usage:   pm-recover-static-partial-from-page PAGE MARKER [OUTPUT_FILE]
 # Example: pm-recover-static-partial-from-page index.html CATALOG-BRANDS-FULL-LIST
-
-set -euo pipefail
 
 usage() {
   cat >&2 <<'USAGE'
