@@ -1,4 +1,0 @@
-# Catalog typography source fix
-# Repo-relative paths; blank lines and comments are ignored.
-project/www/collections/_system/collection.css
-project/www/assets/css/viewport-contract.css
