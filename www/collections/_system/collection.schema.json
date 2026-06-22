@@ -205,6 +205,46 @@
         "gallerySummary": {
           "type": "string",
           "minLength": 1
+        },
+        "sectionId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "wrapperClass": {
+          "type": "string",
+          "minLength": 1
+        },
+        "leadClass": {
+          "type": "string",
+          "minLength": 1
+        },
+        "gridClass": {
+          "type": "string",
+          "minLength": 1
+        },
+        "cardClass": {
+          "type": "string",
+          "minLength": 1
+        },
+        "labelClass": {
+          "type": "string",
+          "minLength": 1
+        },
+        "actionContainerClass": {
+          "type": "string",
+          "minLength": 1
+        },
+        "buttonClass": {
+          "type": "string",
+          "minLength": 1
+        },
+        "noteClass": {
+          "type": "string",
+          "minLength": 1
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1
         }
       },
       "additionalProperties": false
@@ -278,6 +318,9 @@
         }
       },
       "additionalProperties": false
+    },
+    "interactive": {
+      "type": "boolean"
     }
   },
   "allOf": [

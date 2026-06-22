@@ -73,6 +73,15 @@ jobs:
 
           ../../bin/rotate-transformation-thread "${rotation_args[@]}"
 
+      - name: Verify shared legacy Portmason contract
+        shell: bash
+        working-directory: .
+        run: |
+          tests/verify-compose-contract
+          tests/verify-production-entrypoints
+          tests/verify-portmason-alignment
+          tests/verify-portmason-shared-contract
+
       - name: Generate production site HTML
         run: |
           docker compose \
@@ -82,7 +91,7 @@ jobs:
             -e GITHUB_ACTIONS=true \
             -e GITHUB_SHA="${GITHUB_SHA}" \
             toolbox \
-            portmason/pm-process-site-partials
+            sh -lc 'test -x "$REPO_ROOT/portmason/pm-process-site-partials" || { echo "ERROR: missing or non-executable: $REPO_ROOT/portmason/pm-process-site-partials" >&2; exit 1; }; exec "$REPO_ROOT/portmason/pm-process-site-partials"'
 
       - name: Verify Pages artifact readability
         shell: bash

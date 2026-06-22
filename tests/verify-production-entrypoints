@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+test -x deploy/prd/portmason/pm-process-site-partials
+test -x deploy/prd/portmason/pm-setup
+test -x deploy/prd/portmason/pm-sync-deploy-from-root
+workflow=.github/workflows/gen-site-html.yml
+grep -Fq '$REPO_ROOT/portmason/pm-process-site-partials' "$workflow"
+! grep -Eq 'toolbox[[:space:]]+\\?[[:space:]]*portmason/pm-process-site-partials' "$workflow"

@@ -68,7 +68,11 @@ def render_collection_scripts() -> str:
 
     lines = ['<script src="collections/_system/collection.js" defer></script>']
     profile_order = ["catalog", "publication", "workspace"]
-    modes = {str(manifest.get("mode")) for _, manifest in manifests}
+    active_manifests = [(collection_dir, manifest) for collection_dir, manifest in manifests if manifest.get("interactive", True) is not False]
+    if not active_manifests:
+        return ""
+
+    modes = {str(manifest.get("mode")) for _, manifest in active_manifests}
     for mode in profile_order:
         if mode not in modes:
             continue
@@ -78,7 +82,7 @@ def render_collection_scripts() -> str:
         href = profile_path.relative_to(SITE_ROOT).as_posix()
         lines.append(f'<script src="{esc(href)}" defer></script>')
 
-    for collection_dir, manifest in manifests:
+    for collection_dir, manifest in active_manifests:
         script_file = manifest.get("scriptFile")
         if not script_file:
             continue
@@ -199,7 +203,7 @@ def render_catalog_item(item: dict[str, Any], default_slug: str) -> str:
         summary_header,
         f'            <h2>{esc(title)}</h2>',
         f'            <p class="catalog-subtitle">{esc(subtitle)}</p>',
-        f'            <p>{esc(summary)}</p>',
+        f'            <div class="catalog-summary-content">{trusted_html(item, "summary")}</div>'
     ]
     if summary_price:
         parts.append(summary_price)
@@ -216,7 +220,7 @@ def render_catalog_item(item: dict[str, Any], default_slug: str) -> str:
     )
     if detail_media:
         parts.append(detail_media)
-    parts.append(f'            <p class="catalog-detail-summary">{esc(detail_summary)}</p>')
+    parts.append(f'            <div class="catalog-detail-summary">{trusted_html(item, "detailSummary", "summary")}</div>')
     if attrs:
         parts.append(attrs)
     if action_block:
@@ -249,6 +253,78 @@ def render_catalog_full(manifest: dict[str, Any], items: list[dict[str, Any]]) -
       </section>
 '''
 
+
+
+def visible_catalog_items(items: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    hidden_statuses = {"hidden", "draft", "archived", "retired"}
+    return [item for item in items if str(item.get("status", "")).lower() not in hidden_statuses]
+
+
+def render_card_grid_section(manifest: dict[str, Any], items: list[dict[str, Any]]) -> str:
+    collection_id = str(manifest["id"])
+    presentation = manifest.get("presentation") or {}
+    section_id = str(presentation.get("sectionId") or collection_id)
+    wrapper_class = str(presentation.get("wrapperClass") or "wrap")
+    lead_class = str(presentation.get("leadClass") or "section-lead")
+    grid_class = str(presentation.get("gridClass") or "grid-2")
+    grid_id = str(presentation.get("contentId") or f"{collection_id}-grid")
+    card_class = str(presentation.get("cardClass") or "card")
+    label_class = str(presentation.get("labelClass") or "")
+    action_container_class = str(presentation.get("actionContainerClass") or "")
+    button_class = str(presentation.get("buttonClass") or "btn btn-secondary")
+    note = presentation.get("note")
+    note_class = str(presentation.get("noteClass") or "portfolio-note")
+
+    rendered_cards: list[str] = []
+    for item in visible_catalog_items(items):
+        card_lines = [f'          <div class="{esc(card_class)}">']
+        label = item.get("label")
+        if label and label_class:
+            card_lines.append(f'            <span class="{esc(label_class)}">{esc(label)}</span>')
+        card_lines.append(f'            <h3>{esc(item.get("title"))}</h3>')
+        card_lines.append(f'            <p>{trusted_html(item, "summary")}</p>')
+
+        highlights = item.get("highlights") or []
+        if highlights:
+            card_lines.append('                <ul>')
+            card_lines.extend(f'                  <li>{esc(value)}</li>' for value in highlights)
+            card_lines.append('                </ul>')
+
+        action = item.get("primaryAction")
+        if action:
+            attrs = ''
+            if action.get("openInNewTab"):
+                attrs = ' target="_blank" rel="noopener noreferrer"'
+            link = f'<a class="{esc(button_class)}" href="{esc(action.get("href"))}"{attrs}>{esc(action.get("label"))}</a>'
+            if action_container_class:
+                card_lines.append(f'            <div class="{esc(action_container_class)}">{link}</div>')
+            else:
+                card_lines.append(f'            {link}')
+
+        card_lines.append('          </div>')
+        rendered_cards.append("\n".join(card_lines))
+
+    section_lines = [
+        f'    <section id="{esc(section_id)}" data-collection data-collection-id="{esc(collection_id)}" data-collection-mode="catalog">',
+        f'      <div class="{esc(wrapper_class)}">',
+        f'        <h2>{esc(presentation.get("title"))}</h2>',
+        f'        <p class="{esc(lead_class)}">',
+        f'          {esc(presentation.get("summary"))}',
+        '        </p>',
+        '',
+        f'        <div id="{esc(grid_id)}" class="{esc(grid_class)}">',
+        "\n".join(rendered_cards),
+        '        </div>',
+    ]
+    if note:
+        section_lines.extend([
+            '',
+            f'        <div class="{esc(note_class)}">',
+            f'          {esc(note)}',
+            '        </div>',
+        ])
+    section_lines.extend(['      </div>', '    </section>', ''])
+    return "\n".join(section_lines)
 
 
 def render_catalog_section(manifest: dict[str, Any], items: list[dict[str, Any]]) -> str:
@@ -558,6 +634,22 @@ def render_workspace_section(collection_dir: Path, manifest: dict[str, Any], ite
     </dialog>
   </section>
 '''
+def trusted_html(
+    item: dict[str, Any],
+    field: str,
+    fallback_field: str | None = None,
+) -> str:
+    html_field = f"{field}Html"
+    value = item.get(html_field)
+
+    if value is not None:
+        return str(value)
+
+    raw_value = item.get(field)
+    if raw_value is None and fallback_field:
+        return trusted_html(item, fallback_field)
+
+    return esc(raw_value)
 
 def main() -> int:
     parser = argparse.ArgumentParser()
@@ -575,7 +667,10 @@ def main() -> int:
     collection_dir, manifest, items = collection_paths(args.collection_id)
     mode = manifest.get("mode")
     if mode == "catalog" and args.region == "section":
-        output = render_catalog_section(manifest, items)
+        if manifest.get("layout") == "card-grid":
+            output = render_card_grid_section(manifest, items)
+        else:
+            output = render_catalog_section(manifest, items)
     elif mode == "catalog" and args.region == "heroTeaser":
         output = render_catalog_hero(manifest, items)
     elif mode == "publication" and args.region == "section":

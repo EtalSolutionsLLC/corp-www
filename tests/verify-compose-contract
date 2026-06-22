@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -euo pipefail
+for file in docker-compose.yml deploy/prd/docker-compose.yml; do
+  [[ -f "$file" ]] || { echo "Missing Compose file: $file" >&2; exit 1; }
+  if grep -Eq '^[[:space:]]*-[[:space:]]+\.:("|\x27)?\$\{CONTAINER_ROOT\}' "$file"; then
+    echo "Invalid short bind syntax remains in $file" >&2; exit 1
+  fi
+  grep -Fq 'type: bind' "$file" || { echo "Long bind syntax missing in $file" >&2; exit 1; }
+  grep -Fq 'target: ${CONTAINER_ROOT}' "$file" || { echo "Container-root target missing in $file" >&2; exit 1; }
+done

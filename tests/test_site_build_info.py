@@ -25,13 +25,13 @@ class SiteBuildInfoTests(unittest.TestCase):
         cls.workflow = (ROOT / ".github/workflows/gen-site-html.yml").read_text(encoding="utf-8")
 
     def test_version_file_declares_current_build(self):
-        self.assertEqual("033", (ROOT / "VERSION").read_text(encoding="utf-8").strip())
+        self.assertEqual("034", (ROOT / "VERSION").read_text(encoding="utf-8").strip())
 
     def test_html_contains_portmason_build_meta_region(self):
         self.assertIn("<!-- PM:SITE-BUILD-META -->", self.index)
         self.assertIn("<!-- /PM:SITE-BUILD-META -->", self.index)
-        self.assertIn('meta name="etal-site-build" content="033"', self.index)
-        self.assertIn('ETAL_SITE_BUILD version="033"', self.index)
+        self.assertIn('meta name="etal-site-build" content="034"', self.index)
+        self.assertIn('ETAL_SITE_BUILD version="034"', self.index)
 
     def test_footer_copyright_opens_accessible_build_dialog(self):
         for token in [
@@ -87,7 +87,7 @@ class SiteBuildInfoTests(unittest.TestCase):
             root = Path(temporary)
             site = root / "www"
             site.mkdir()
-            (root / "VERSION").write_text("033\n", encoding="utf-8")
+            (root / "VERSION").write_text("034\n", encoding="utf-8")
             (root / ".env.generated").write_text("DEPLOY_ENV=prd\n", encoding="utf-8")
 
             environment = os.environ.copy()
@@ -102,11 +102,11 @@ class SiteBuildInfoTests(unittest.TestCase):
                 check=True,
             )
 
-            self.assertIn('ETAL_SITE_BUILD version="033"', result.stdout)
-            self.assertIn('meta name="etal-site-build" content="033"', result.stdout)
+            self.assertIn('ETAL_SITE_BUILD version="034"', result.stdout)
+            self.assertIn('meta name="etal-site-build" content="034"', result.stdout)
             build_info = site / "build-info.json"
             payload = json.loads(build_info.read_text(encoding="utf-8"))
-            self.assertEqual("033", payload["version"])
+            self.assertEqual("034", payload["version"])
             self.assertEqual("github-pages", payload["target"])
             self.assertEqual("Et al Solutions LLC", payload["builder"])
             self.assertTrue(payload["built_at"].endswith("Z"))

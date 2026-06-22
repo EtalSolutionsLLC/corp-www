@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+set -euo pipefail
+sha256sum --check PORTMASON_SITE_CONTRACT.sha256
