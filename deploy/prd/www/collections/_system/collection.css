@@ -504,3 +504,43 @@
 .catalog-panel-detail h3 {
   text-wrap: balance;
 }
+
+/* Catalog typography contract
+   ------------------------------------------------------------
+   Shared catalog headings, introductions, and summary copy use one body
+   rhythm regardless of the collection theme. Collection-specific files own
+   color accents and surfaces; this layer owns readable copy spacing and scale. */
+.collection--catalog,
+.catalog-home-section {
+  --catalog-intro-font-size: clamp(0.98rem, 1.05vw, 1.05rem);
+  --catalog-summary-font-size: clamp(0.98rem, 1.05vw, 1.05rem);
+  --catalog-summary-gap: 0.7rem;
+  --catalog-card-body-ink: #4f5d70;
+}
+
+.catalog-page-head p {
+  font-family: inherit;
+  font-size: var(--catalog-intro-font-size);
+  font-weight: 400;
+  line-height: 1.48;
+  letter-spacing: normal;
+}
+
+.catalog-panel-summary .catalog-summary-content {
+  margin-top: var(--catalog-summary-gap);
+  color: var(--catalog-card-body-ink);
+  font-family: inherit;
+  font-size: var(--catalog-summary-font-size);
+  font-weight: 400;
+  line-height: 1.48;
+  letter-spacing: normal;
+}
+
+@media (max-width: 760px) {
+  .collection--catalog,
+  .catalog-home-section {
+    --catalog-intro-font-size: 0.96rem;
+    --catalog-summary-font-size: 0.96rem;
+    --catalog-summary-gap: 0.62rem;
+  }
+}

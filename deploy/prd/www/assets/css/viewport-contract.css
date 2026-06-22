@@ -690,9 +690,9 @@ body.has-js-active-nav .site-header .nav a:not([aria-current="page"]):not(:hover
   }
 
   #brands .catalog-page-head p {
-    margin-top: 7px !important;
-    font-size: 0.88rem !important;
-    line-height: 1.32 !important;
+    margin-top: 0.65rem !important;
+    font-size: var(--catalog-intro-font-size) !important;
+    line-height: 1.48 !important;
   }
 
   #brands .catalog-carousel-page {
