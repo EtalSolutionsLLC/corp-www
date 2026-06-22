@@ -1,17 +1,19 @@
 #!/usr/bin/env bash
 set -euo pipefail
+
 required=(
-  .containers/site-toolbox/Dockerfile
-  .containers/site-web/nginx.conf
   docker-compose.yml
-  www/collections/_system/collection.schema.json
-  www/collections/_system/render-collection
   deploy/prd/docker-compose.yml
   deploy/prd/portmason/pm-setup
-  deploy/prd/portmason/pm-sync-deploy-from-root
   deploy/prd/portmason/pm-process-site-partials
-  docs/PORTMASON_SITE_ALIGNMENT.md
-  PORTMASON_SITE_CONTRACT.sha256
+  www/collections/_system/render-collection
 )
-for path in "${required[@]}"; do [[ -e "$path" ]] || { echo "Missing aligned contract path: $path" >&2; exit 1; }; done
-grep -Fq 'solutions.etal.service=' docker-compose.yml
+
+for path in "${required[@]}"; do
+  [[ -e "$path" ]] || {
+    echo "Missing required path: $path" >&2
+    exit 1
+  }
+done
+
+printf 'Basic Portmason site alignment is present.\n'

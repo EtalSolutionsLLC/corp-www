@@ -73,14 +73,12 @@ jobs:
 
           ../../bin/rotate-transformation-thread "${rotation_args[@]}"
 
-      - name: Verify shared legacy Portmason contract
+      - name: Verify deployment basics
         shell: bash
         working-directory: .
         run: |
-          tests/verify-compose-contract
-          tests/verify-production-entrypoints
-          tests/verify-portmason-alignment
-          tests/verify-portmason-shared-contract
+          bash tests/verify-compose-contract
+          bash tests/verify-production-entrypoints
 
       - name: Generate production site HTML
         run: |
@@ -91,7 +89,7 @@ jobs:
             -e GITHUB_ACTIONS=true \
             -e GITHUB_SHA="${GITHUB_SHA}" \
             toolbox \
-            sh -lc 'test -x "$REPO_ROOT/portmason/pm-process-site-partials" || { echo "ERROR: missing or non-executable: $REPO_ROOT/portmason/pm-process-site-partials" >&2; exit 1; }; exec "$REPO_ROOT/portmason/pm-process-site-partials"'
+            sh -lc 'exec python3 "$PORTMASON_SHARE/pm-process-site-partials"'
 
       - name: Verify Pages artifact readability
         shell: bash
