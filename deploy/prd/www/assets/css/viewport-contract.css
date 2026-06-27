@@ -75,6 +75,19 @@ body:not(:has(.pm-scroll-target:target)) #home.pm-viewport-target {
   margin-right: auto;
 }
 
+/* Explicit start-aligned targets must keep their leading edge below the live
+   header. This is used for content-rich panels such as the Systems Lab where
+   centering can hide the introduction and cause above-the-fold drift. */
+.pm-viewport-target[data-pm-viewport-align="start"],
+.pm-viewport-target[data-pm-viewport-align="start"]:target {
+  align-items: start !important;
+}
+
+#lab.pm-viewport-target[data-pm-viewport-align="start"],
+#lab.pm-viewport-target[data-pm-viewport-align="start"]:target {
+  padding-top: var(--pm-viewport-block-tight) !important;
+}
+
 .hero .container {
   align-items: center !important;
   gap: clamp(18px, 3.4vw, 46px) clamp(28px, 5.2vw, 72px) !important;
@@ -146,14 +159,14 @@ body:not(:has(.pm-scroll-target:target)) #home.pm-viewport-target {
   min-height: var(--pm-visible-panel-height) !important;
 }
 
-.services-band,
+/*.services-band,
 .about-layout,
 .founder-band,
 .catalog-page-layout,
 .thread-blog-showcase,
 .portmason-workspace-layout {
   gap: var(--pm-target-gap) !important;
-}
+}*/
 
 .services-stack {
   gap: clamp(16px, 2vw, 24px) !important;

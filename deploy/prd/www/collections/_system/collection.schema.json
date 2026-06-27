@@ -7,7 +7,6 @@
     "id",
     "mode",
     "layout",
-    "dataFile",
     "styleFile",
     "presentation",
     "regions"
@@ -347,7 +346,10 @@
               "section"
             ]
           }
-        }
+        },
+        "required": [
+          "dataFile"
+        ]
       }
     },
     {
@@ -389,6 +391,7 @@
       },
       "then": {
         "required": [
+          "dataFile",
           "workspace",
           "scriptFile",
           "defaultItem"

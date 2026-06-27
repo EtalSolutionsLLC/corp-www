@@ -57,7 +57,8 @@ required_paths=(
   ".project_timestamp"
   ".env"
   ".env.generated"
-  "config.generated.json"
+  "RELEASE_VERSION"
+  "BUILD_NUMBER"
   "VERSION"
   "deploy"
   "www"
@@ -72,8 +73,8 @@ remove_path() {
   [[ -e "${path}" || -L "${path}" ]] || return 0
 
   case "${path}" in
-    deploy|deploy/*)
-      die "Refusing to alter deployment snapshot path: ${path}"
+    "config.generated.json"|deploy|deploy/*)
+      die "Refusing to alter protected Portmason path: ${path}"
       ;;
   esac
 
@@ -92,6 +93,9 @@ obsolete_paths=(
   "www/content/transformation-thread"
   "www/content/transformation-thread-posts.json"
   "www/content/transformation-thread-selection.json"
+  "www/collections/transformation-thread/items.json"
+  "www/collections/transformation-thread/_deprecated_items.json"
+  "www/collections/move-meta"
   "www/assets/css/carousel.css"
   "www/assets/css/transformation-thread.css"
   "www/assets/js/catalog-carousel.js"

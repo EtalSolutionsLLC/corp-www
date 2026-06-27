@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import html
 import json
+import re
 import sys
 from pathlib import Path
 from typing import Any
@@ -19,6 +20,142 @@ def esc(value: object) -> str:
 
 def load_json(path: Path) -> Any:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+INLINE_TOKEN = re.compile(r"(`[^`]+`|\*\*[^*]+\*\*|\*[^*]+\*|\[[^\]]+\]\([^)]+\))")
+
+
+def safe_href(value: str) -> str | None:
+    href = value.strip()
+    return href if href.lower().startswith(("https://", "http://", "mailto:")) else None
+
+
+def render_inline_markdown(text: str) -> str:
+    output: list[str] = []
+    cursor = 0
+    for match in INLINE_TOKEN.finditer(text):
+        output.append(html.escape(text[cursor:match.start()]))
+        token = match.group(0)
+        if token.startswith("`"):
+            output.append(f"<code>{html.escape(token[1:-1])}</code>")
+        elif token.startswith("**"):
+            output.append(f"<strong>{html.escape(token[2:-2])}</strong>")
+        elif token.startswith("*"):
+            output.append(f"<em>{html.escape(token[1:-1])}</em>")
+        else:
+            link = re.fullmatch(r"\[([^\]]+)\]\(([^)]+)\)", token)
+            if not link:
+                output.append(html.escape(token))
+            else:
+                label, raw_href = link.groups()
+                href = safe_href(raw_href)
+                output.append(
+                    f'<a href="{html.escape(href, quote=True)}">{html.escape(label)}</a>'
+                    if href else html.escape(label)
+                )
+        cursor = match.end()
+    output.append(html.escape(text[cursor:]))
+    return "".join(output)
+
+
+def render_markdown(text: str) -> str:
+    lines = text.replace("\r\n", "\n").replace("\r", "\n").split("\n")
+    output: list[str] = []
+    paragraph: list[str] = []
+    list_type: str | None = None
+    list_items: list[str] = []
+    quote_lines: list[str] = []
+    code_lines: list[str] = []
+    in_code = False
+
+    def flush_paragraph() -> None:
+        if paragraph:
+            output.append(f"<p>{render_inline_markdown(' '.join(paragraph))}</p>")
+            paragraph.clear()
+
+    def flush_list() -> None:
+        nonlocal list_type
+        if list_type:
+            items = "".join(f"<li>{render_inline_markdown(item)}</li>" for item in list_items)
+            output.append(f"<{list_type}>{items}</{list_type}>")
+            list_items.clear()
+            list_type = None
+
+    def flush_quote() -> None:
+        if quote_lines:
+            output.append(f"<blockquote>{render_markdown(chr(10).join(quote_lines))}</blockquote>")
+            quote_lines.clear()
+
+    def flush_code() -> None:
+        if code_lines:
+            output.append(f"<pre><code>{html.escape(chr(10).join(code_lines))}</code></pre>")
+            code_lines.clear()
+
+    for line in lines:
+        if line.startswith("```"):
+            flush_paragraph()
+            flush_list()
+            flush_quote()
+            if in_code:
+                flush_code()
+            in_code = not in_code
+            continue
+        if in_code:
+            code_lines.append(line)
+            continue
+
+        quote = re.match(r"^>\s?(.*)$", line)
+        if quote:
+            flush_paragraph()
+            flush_list()
+            quote_lines.append(quote.group(1))
+            continue
+        flush_quote()
+
+        stripped = line.strip()
+        if not stripped:
+            flush_paragraph()
+            flush_list()
+            continue
+        if re.fullmatch(r"---+", stripped):
+            flush_paragraph()
+            flush_list()
+            output.append("<hr>")
+            continue
+
+        heading = re.match(r"^(#{1,6})\s+(.+)$", stripped)
+        if heading:
+            flush_paragraph()
+            flush_list()
+            tag = "h4" if len(heading.group(1)) <= 2 else "h5"
+            output.append(f"<{tag}>{render_inline_markdown(heading.group(2))}</{tag}>")
+            continue
+
+        unordered = re.match(r"^\s*[-*]\s+(.+)$", line)
+        ordered = re.match(r"^\s*\d+\.\s+(.+)$", line)
+        if unordered or ordered:
+            flush_paragraph()
+            desired = "ol" if ordered else "ul"
+            if list_type and list_type != desired:
+                flush_list()
+            list_type = desired
+            list_items.append((ordered or unordered).group(1))
+            continue
+
+        flush_list()
+        paragraph.append(stripped)
+
+    flush_paragraph()
+    flush_list()
+    flush_quote()
+    if in_code or code_lines:
+        flush_code()
+    return "\n".join(output)
+
+
+def indent_html(value: str, spaces: int) -> str:
+    prefix = " " * spaces
+    return "\n".join(prefix + line if line else line for line in value.splitlines())
 
 
 def resolve_within(root: Path, relative_path: str, label: str) -> Path:
@@ -106,6 +243,8 @@ def collection_paths(collection_id: str) -> tuple[Path, dict[str, Any], list[dic
     if manifest.get("id") != collection_id:
         raise ValueError(f"Collection id mismatch in {manifest_path}")
     data_file = manifest.get("dataFile")
+    if data_file is None and manifest.get("mode") == "publication":
+        return collection_dir, manifest, []
     if not isinstance(data_file, str) or not data_file:
         raise ValueError(f"Collection dataFile missing in {manifest_path}")
     data_path = resolve_within(collection_dir, data_file, "dataFile")
@@ -387,6 +526,26 @@ def render_catalog_hero(manifest: dict[str, Any], items: list[dict[str, Any]]) -
 '''
 
 
+def publication_article_template(collection_dir: Path, item: dict[str, Any], item_prefix: str) -> str:
+    title_path = resolve_within(collection_dir, str(item.get("title_md") or ""), "title_md")
+    article_path = resolve_within(collection_dir, str(item.get("full_article_md") or ""), "full_article_md")
+    if not title_path.is_file() or not article_path.is_file():
+        raise ValueError(f"Publication Markdown is missing for item {item.get('id')}")
+    title_html = render_inline_markdown(title_path.read_text(encoding="utf-8").strip())
+    article_source = article_path.read_text(encoding="utf-8").strip()
+    article_source = re.sub(r"^#\s+[^\n]+\n+", "", article_source, count=1)
+    article_html = render_markdown(article_source)
+    item_id = int(item.get("id") or 0)
+    meta = f"Article {item_prefix}-{item_id:03d} · {item.get('category') or 'Field note'}"
+    return f'''        <template data-collection-article-template data-collection-item-id="{esc(item_id)}">
+          <span data-collection-article-title>{title_html}</span>
+          <span data-collection-article-meta>{esc(meta)}</span>
+          <div data-collection-article-body>
+{indent_html(article_html, 12)}
+          </div>
+        </template>'''
+
+
 def render_publication(collection_dir: Path, manifest: dict[str, Any], items: list[dict[str, Any]]) -> str:
     selection_cfg = manifest.get("selection") or {}
     selection_path = resolve_within(
@@ -418,6 +577,9 @@ def render_publication(collection_dir: Path, manifest: dict[str, Any], items: li
               <a class="thread-post-link" href="{esc(item.get('url'))}" data-collection-open-item="{esc(item.get('id'))}">{esc(labels.get('openItem', 'Read article →'))}</a>
             </article>'''
         )
+
+    item_prefix = str(labels.get("itemPrefix") or "Item")
+    templates = "\n".join(publication_article_template(collection_dir, item, item_prefix) for item in visible)
 
     return f'''  <section class="thread-blog panel pm-viewport-target pm-scroll-target collection collection--publication" id="blog" data-theme="light" aria-labelledby="thread-blog-title" data-collection data-collection-id="{esc(collection_id)}" data-collection-mode="publication" data-collection-config="/collections/{esc(collection_id)}/collection.json">
 
@@ -462,6 +624,7 @@ def render_publication(collection_dir: Path, manifest: dict[str, Any], items: li
             <div class="thread-article-modal-body" data-collection-modal-body></div>
           </div>
         </dialog>
+{templates}
       </div>
     </div>
   </section>
@@ -567,7 +730,7 @@ def render_workspace_section(collection_dir: Path, manifest: dict[str, Any], ite
 {panel_markup}
               </section>''')
 
-    return f'''  <section class="portmason-workspace panel pm-viewport-target pm-scroll-target collection collection--workspace" id="lab" data-theme="dark" aria-labelledby="{esc(collection_id)}-title" data-collection data-collection-id="{esc(collection_id)}" data-collection-mode="workspace" data-collection-config="/collections/{esc(collection_id)}/collection.json" data-workspace-query-parameter="{esc(workspace.get('queryParameter') or 'workspace')}">
+    return f'''  <section class="portmason-workspace panel pm-viewport-target pm-scroll-target collection collection--workspace" id="lab" data-theme="dark" data-pm-viewport-align="start" aria-labelledby="{esc(collection_id)}-title" data-collection data-collection-id="{esc(collection_id)}" data-collection-mode="workspace" data-collection-config="/collections/{esc(collection_id)}/collection.json" data-workspace-query-parameter="{esc(workspace.get('queryParameter') or 'workspace')}">
     <div class="container portmason-workspace-layout pm-viewport-target__inner">
       <header class="portmason-workspace-intro">
         <span class="portmason-wordmark">{esc(presentation.get('kicker'))}</span>

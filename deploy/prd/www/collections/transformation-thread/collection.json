@@ -2,7 +2,6 @@
   "id": "transformation-thread",
   "mode": "publication",
   "layout": "featured-grid",
-  "dataFile": "items.json",
   "styleFile": "styles.css",
   "sectionHref": "/#blog",
   "labels": {

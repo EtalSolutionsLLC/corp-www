@@ -44,9 +44,9 @@ Structural HTML
 
 Registered collections
   collections/<collection-id>/collection.json
-  collections/<collection-id>/items.json
+  collections/<collection-id>/items.json     # catalog/workspace registry
   collections/<collection-id>/styles.css
-  collections/<collection-id>/items/         # optional long-form item content
+  collections/<collection-id>/items/         # publication item directories
   collections/<collection-id>/generated/     # optional generated collection state
 
 Non-collection content
@@ -126,11 +126,36 @@ Do not remove PM marker pairs unless the page is being intentionally detached fr
 
 ## Release, build, and deployment identity
 
-The site exposes its served identity through the footer easter egg, HTML metadata, and three static JSON records: `build-info.json`, `deploy-info.json`, and `artifact-manifest.json`.
+The site exposes its served identity in three ways:
 
-`RELEASE_VERSION` identifies the marketed feature collection. `BUILD_NUMBER` identifies the sequential deployable artifact. `VERSION` remains only as a compatibility alias and is maintained by `bin/pm-version`.
+```text
+Footer copyright → About this build dialog
+View Source      → ETAL_SITE_RELEASE comment and meta tags
+Automation       → /build-info.json, /deploy-info.json, /artifact-manifest.json
+```
 
-`bin/pm-version` is the sole writer. Build allocation occurs in serialized CI before generation, build finalization seals the content manifest, deployment recording verifies the exact build and digest, and provisioning never changes application identity.
+Versioning has three distinct layers:
+
+```text
+RELEASE_VERSION  Product/marketing feature collection, for example 1.0.0
+BUILD_NUMBER     Sequential immutable deployable build, for example 035
+VERSION          Temporary compatibility alias maintained from BUILD_NUMBER
+```
+
+`bin/pm-version` is the only writer for release, build, and deployment metadata.
+No lifecycle script independently edits version files.
+
+- `pm-version release bump major|minor|patch` calculates the next release; nobody types a version number manually.
+- GitHub Actions calls `pm-version build allocate --ci`, commits the allocation before building, and never reuses an already committed build number.
+- Portmason rendering calls `pm-version build finalize` to write and seal `build-info.json`, produce `artifact-manifest.json`, and record `deploy-info.json`.
+- Deployment recording verifies release, build, source commit, and artifact digest agree.
+- Provisioning does not alter product or build identity.
+
+Local materializations do not consume official build numbers. Their `buildId` is a development identifier derived from the source revision; official GitHub Pages artifacts use the allocated numeric build.
+
+The artifact SHA-256 is a canonical manifest digest covering all served files except the three metadata records themselves, plus the canonical build identity. This avoids an impossible self-referential file digest while still identifying the exact served content set. The deployment record is intentionally separate so one immutable build may be promoted to multiple environments.
+
+The footer copyright remains visually unchanged; selecting it opens the release/build/deployment dialog. If build and deployment metadata disagree, the dialog displays a visible verification warning.
 
 ## Portmason Platform™ Systems Lab
 
@@ -153,7 +178,7 @@ The Lab tools demonstrate combinations of those capabilities rather than mapping
 - consumption of GitHub's public status API;
 - publication and browser consumption of versioned JSON/OpenAPI contracts;
 - browser-local sentence-embedding inference using Transformers.js; and
-- the existing PageSpeed/page-weight comparison.
+- the PageSpeed page-weight and visual-load comparison using Lighthouse Speed Index.
 
 The default Pages deployment requires no separate service. Static public
 contracts live under `www/api/`. The optional `edge/capability-api/` adapter
@@ -187,6 +212,11 @@ collections/
 ├── brands/                            # catalog instance
 ├── promotions/                        # catalog instance
 ├── transformation-thread/             # publication instance
+│   ├── collection.json
+│   ├── styles.css
+│   ├── items/<id>/meta.json
+│   ├── items/<id>/*.md
+│   └── generated/selection.json
 └── systems-lab/                       # workspace instance
     ├── collection.json
     ├── items.json
@@ -195,7 +225,7 @@ collections/
     └── tools/*.html
 ```
 
-Every manifest declares a stable collection id, behavior mode, layout, data file, style file, presentation, labels, and Portmason render regions. Catalog manifests own their entire SPA section heading and wrapper; the entry page contains only collection render markers.
+Every manifest declares a stable collection id, behavior mode, layout, style file, presentation, labels, and Portmason render regions. Catalog and workspace manifests also declare a data file; publication items are discovered from their item directories during the build. Catalog manifests own their entire SPA section heading and wrapper; the entry page contains only collection render markers.
 
 ```json
 {
@@ -212,7 +242,6 @@ Every manifest declares a stable collection id, behavior mode, layout, data file
   "id": "transformation-thread",
   "mode": "publication",
   "layout": "featured-grid",
-  "dataFile": "items.json",
   "styleFile": "styles.css"
 }
 ```
@@ -220,7 +249,7 @@ Every manifest declares a stable collection id, behavior mode, layout, data file
 The shared browser runtime is `collections/_system/collection.js`. Every rendered collection root enters through `initCollection(root)`, which resolves a registered profile and supplies a common runtime context. Profile modules contain behavior only:
 
 - catalog: paging, hash state, details, keyboard handling, and responsive controls;
-- publication: manifest-driven item loading and safe Markdown article rendering;
+- publication: build-time item discovery and safe Markdown rendering, with lightweight modal behavior in the browser;
 - workspace: tile activation, modal lifecycle, focus management, deep-link state, and lazy instance activation.
 
 Collection-specific executable behavior remains with the instance. The Systems Lab registers its adapter from `collections/systems-lab/workspace.js`; the neutral workspace profile does not know about GitHub, OpenAPI, local models, or PageSpeed.
@@ -243,7 +272,7 @@ PM:COLLECTION-SYSTEMS-LAB
 PM:COLLECTION-SCRIPTS
 ```
 
-After changing a collection manifest, item registry, Markdown item, or collection style, run:
+After changing a collection manifest, item registry or metadata, Markdown item, or collection style, run:
 
 ```bash
 pm-setup
@@ -252,7 +281,7 @@ pm-setup
 
 ### Workspace profile
 
-The Systems Lab uses `mode: workspace` and `layout: tile-gallery`. The page first renders the Portmason platform relationship, then lightweight visual launch tiles. Each tile declares the platform layers it demonstrates; it does not impersonate or define a product family. Selecting a tile opens one shared modal workspace with a 70/30 tool-to-guidance layout. Tool panels are loaded from the instance's `tools/*.html` files and initialized only when first opened.
+The Systems Lab uses `mode: workspace` and `layout: tile-gallery`. On wide screens, the approved composition presents a broad hero row, a shallow vertical stack for Portmason Foundations™, Portmason Operations™, and Portmason Tooling™, and a four-column live-tool gallery immediately below it so the first tool row enters above the fold. Smaller screens progressively collapse the gallery and platform model. Each tile declares the platform layers it demonstrates; it does not impersonate or define a product family. Selecting a tile opens one shared modal workspace with a 70/30 tool-to-guidance layout. Tool panels are loaded from the instance's `tools/*.html` files and initialized only when first opened.
 
 The runtime lifecycle is:
 
@@ -278,21 +307,37 @@ Catalog sections land directly on the configured default item. A separate overvi
 
 The Transformation Thread uses `mode: publication` and remains inside the main SPA at `/#blog`. It has no standalone page, header, footer, or redirect shell.
 
-Its manifest owns presentation and selection policy. Its `items.json` registry owns permanent ids, editorial slots, categories, status, and Markdown references. Long-form files live under the same collection:
+Its manifest owns presentation and selection policy. Each article directory owns a small `meta.json` file plus its Markdown content. The build derives the permanent id, slug, and Markdown paths from the three-digit directory name, so no publication-level `items.json` registry is maintained.
 
 ```text
+collections/transformation-thread/items/008/meta.json
 collections/transformation-thread/items/008/title.md
 collections/transformation-thread/items/008/excerpt.md
 collections/transformation-thread/items/008/full-article.md
 ```
 
-Daily rotation writes only the generated selection state:
+Publication metadata includes durable display history and optional predecessor rules:
+
+```json
+{
+  "slot": 4,
+  "category": "A.I. Adoption",
+  "status": "Draft",
+  "dateFirstDisplayed": null,
+  "displayAfter": ["010"]
+}
+```
+
+`dateFirstDisplayed` is set once, using `YYYY-MM-DD`, when the rotation agent first selects the article. It is never overwritten by later rotations. An article with `displayAfter` is eligible only when every referenced predecessor already had a non-null `dateFirstDisplayed` before the current rotation began. This prevents later parts of a series from appearing during the same rotation that first introduces their predecessor. References must use three-digit article ids; missing ids, self-references, duplicates, and dependency cycles fail the build.
+
+Daily rotation updates newly selected article metadata and writes the generated selection state:
 
 ```text
+collections/transformation-thread/items/<id>/meta.json
 collections/transformation-thread/generated/selection.json
 ```
 
-The collection renderer reads that selection when `pm-setup` materializes the SPA. The rotation command no longer edits an HTML partial.
+The collection renderer reads that selection when `pm-setup` materializes the SPA. Selected full articles are rendered into inert HTML templates at build time; browser JavaScript only opens and closes the modal. The rotation command no longer edits an HTML partial.
 
 Manual local rotation:
 
@@ -303,7 +348,7 @@ bin/rotate-transformation-thread \
 pm-setup
 ```
 
-Manual GitHub rotation remains available under **Actions → Generate site HTML → Run workflow**. Leave **Rotation date** blank to use the current date in the configured timezone, or enter an ISO date such as `2026-06-19`. Scheduled runs retain the local-midnight guard.
+Manual GitHub rotation remains available under **Actions → Generate site HTML → Run workflow**. Leave **Rotation date** blank to use the current date in the configured timezone, or enter an ISO date such as `2026-06-19`. Scheduled runs retain the local-midnight guard. The workflow commits both the generated selection and any `meta.json` files whose `dateFirstDisplayed` value was established by that rotation.
 
 ### Ownership rule
 
@@ -361,3 +406,5 @@ The dialog uses the shared circular `×` modal-close standard and supports its c
 ### Viewport composition practice
 
 When composing a screen between the shared header and footer, preserve approximately half an inch of visible breathing room at the top and bottom whenever practical. Treat this as a design-review judgment, not as a global CSS rule.
+
+Hash navigation is owned by `assets/js/viewport-targets.js`. It measures the live bottom edge of the fixed header and the live top edge of the fixed footer, then applies a self-correcting scroll delta after layout and font settlement. Content-rich targets that must preserve their leading edge use `data-pm-viewport-align="start"`; the Systems Lab uses this mode so its introduction cannot drift beneath the header while the live tools remain as high in the visible slot as practical.

@@ -92,26 +92,51 @@
     return target.querySelector(":scope > .pm-viewport-target__inner") || target;
   }
 
+  function visibleSlotBounds() {
+    const liveViewportHeight = viewportHeight();
+    const header = document.querySelector(".site-header");
+    const footer = document.querySelector(".site-footer");
+    const headerRect = header ? header.getBoundingClientRect() : null;
+    const footerRect = footer ? footer.getBoundingClientRect() : null;
+    const fallbackHeaderHeight = measuredHeight(".site-header", "--header-h");
+    const fallbackFooterHeight = measuredHeight(".site-footer", "--footer-h");
+    const top = Math.max(0, headerRect ? headerRect.bottom : fallbackHeaderHeight);
+    const footerTop = footerRect ? footerRect.top : liveViewportHeight - fallbackFooterHeight;
+    const bottom = Math.max(top, Math.min(liveViewportHeight, footerTop));
+
+    return {
+      top,
+      bottom,
+      height: Math.max(0, bottom - top),
+      center: top + (Math.max(0, bottom - top) / 2),
+    };
+  }
+
+  function alignmentMode(target) {
+    return target && target.getAttribute
+      ? (target.getAttribute("data-pm-viewport-align") || "auto")
+      : "auto";
+  }
+
   function alignmentTopForTarget(target) {
-    // Measure immediately before each alignment pass. This avoids stale offsets
-    // when fixed chrome, fonts, visual viewport, or component hydration settle
-    // after the browser's native hash handling.
+    // Recalculate from live viewport coordinates immediately before every pass.
+    // Applying the current delta to pageYOffset is self-correcting when fonts,
+    // fixed chrome, or generated collection content settle after native hash navigation.
     updateMeasurements();
 
-    const headerHeight = measuredHeight(".site-header", "--header-h");
-    const footerHeight = measuredHeight(".site-footer", "--footer-h");
-    const liveViewportHeight = viewportHeight();
-    const visiblePanelHeight = Math.max(0, liveViewportHeight - headerHeight - footerHeight);
-    const slotCenter = headerHeight + (visiblePanelHeight / 2);
+    const slot = visibleSlotBounds();
+    const targetRect = target.getBoundingClientRect();
     const subject = alignmentSubject(target);
     const subjectRect = subject.getBoundingClientRect();
+    const mustStartAlign = alignmentMode(target) === "start";
+    let delta = targetRect.top - slot.top;
 
-    if (visiblePanelHeight > 0 && subjectRect.height > 0 && subjectRect.height <= visiblePanelHeight) {
-      const subjectCenter = subjectRect.top + window.pageYOffset + (subjectRect.height / 2);
-      return subjectCenter - slotCenter;
+    if (!mustStartAlign && slot.height > 0 && subjectRect.height > 0 && subjectRect.height <= slot.height) {
+      const subjectCenter = subjectRect.top + (subjectRect.height / 2);
+      delta = subjectCenter - slot.center;
     }
 
-    return target.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+    return window.pageYOffset + delta;
   }
 
   function alignCurrentHashTarget() {
@@ -261,12 +286,17 @@
     });
   }
 
+  function requestChromeMeasurement() {
+    pendingHashAlignment = Boolean(hashTarget());
+    requestMeasurement();
+  }
+
   function observeChrome() {
     if (!("ResizeObserver" in window)) {
       return;
     }
 
-    const observer = new ResizeObserver(requestMeasurement);
+    const observer = new ResizeObserver(requestChromeMeasurement);
     watchedSelectors.forEach((selector) => {
       const element = document.querySelector(selector);
       if (element) {
@@ -288,5 +318,10 @@
 
   enableControlledHashLinks();
   observeChrome();
+
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(requestHashAlignment).catch(() => {});
+  }
+
   requestHashAlignment();
 })();
