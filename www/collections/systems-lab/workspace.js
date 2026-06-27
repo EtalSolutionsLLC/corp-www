@@ -299,7 +299,10 @@
     var result = qs("[data-site-size-result]", root);
     var theirs = qs("[data-site-size-theirs]", root);
     var ours = qs("[data-site-size-ours]", root);
+    var theirSpeed = qs("[data-site-speed-theirs]", root);
+    var ourSpeed = qs("[data-site-speed-ours]", root);
     var summary = qs("[data-site-size-summary]", root);
+    var speedSummary = qs("[data-site-speed-summary]", root);
     var context = qs("[data-site-size-context]", root);
     var apiKeyPromise = null;
     var defaultSubmitHtml = submit ? submit.innerHTML : 'Check both pages <span aria-hidden="true">→</span>';
@@ -329,6 +332,11 @@
       if (bytes < 1024 * 1024) return String(Math.round(bytes / 1024)) + " KB";
       return (bytes / (1024 * 1024)).toFixed(2) + " MB";
     }
+    function formatSeconds(milliseconds) {
+      if (!Number.isFinite(milliseconds) || milliseconds < 0) return "Not available";
+      var seconds = milliseconds / 1000;
+      return (seconds < 10 ? seconds.toFixed(1) : seconds.toFixed(0)) + " s";
+    }
     function formatMultiplier(value) {
       if (!Number.isFinite(value) || value <= 0) return "";
       if (value >= 10) return value.toFixed(0) + "×";
@@ -338,6 +346,15 @@
       if (theirBytes === ourBytes) return "The two homepages downloaded about the same amount of data in this test.";
       if (theirBytes > ourBytes) return "Your homepage downloaded about " + formatMultiplier(theirBytes / ourBytes) + " more data than this homepage in the same PageSpeed desktop test.";
       return "Your homepage downloaded about " + formatMultiplier(ourBytes / theirBytes) + " less data than this homepage in the same PageSpeed desktop test.";
+    }
+    function describeVisualLoad(theirMilliseconds, ourMilliseconds) {
+      var difference = Math.abs(theirMilliseconds - ourMilliseconds);
+      var comparison = difference < 100
+        ? "The two results were effectively the same."
+        : (theirMilliseconds > ourMilliseconds
+          ? "Your homepage took " + formatSeconds(difference) + " longer."
+          : "Your homepage was " + formatSeconds(difference) + " faster.");
+      return "Visual load: your homepage " + formatSeconds(theirMilliseconds) + "; this homepage " + formatSeconds(ourMilliseconds) + ". " + comparison;
     }
     function describeComparedToMedian(theirBytes) {
       if (Math.abs(theirBytes - medianDesktopBytes) < 0.05 * medianDesktopBytes) return "For context, that is close to the typical desktop homepage: about 2.86 MB.";
@@ -371,11 +388,20 @@
     function readApiMessage(payload) {
       return payload && payload.error && payload.error.message || payload && payload.lighthouseResult && payload.lighthouseResult.runtimeError && payload.lighthouseResult.runtimeError.message || "";
     }
-    function extractTotalBytes(payload, label) {
-      var audit = payload && payload.lighthouseResult && payload.lighthouseResult.audits && payload.lighthouseResult.audits["total-byte-weight"];
-      var bytes = audit && Number(audit.numericValue);
-      if (!Number.isFinite(bytes) || bytes <= 0) throw new Error(label + " did not return a page-size measurement.");
-      return bytes;
+    function extractAuditValue(payload, auditId, label, metricName) {
+      var audits = payload && payload.lighthouseResult && payload.lighthouseResult.audits;
+      var audit = audits && audits[auditId];
+      var value = audit && Number(audit.numericValue);
+      if (!Number.isFinite(value) || value < 0) throw new Error(label + " did not return a " + metricName + " measurement.");
+      return value;
+    }
+    function extractPageSpeedMeasurement(payload, label) {
+      var bytes = extractAuditValue(payload, "total-byte-weight", label, "page-size");
+      if (bytes <= 0) throw new Error(label + " did not return a page-size measurement.");
+      return {
+        bytes: bytes,
+        speedIndexMilliseconds: extractAuditValue(payload, "speed-index", label, "visual-load")
+      };
     }
     function runPageSpeed(url, label, apiKey) {
       return fetch(buildRequest(url, apiKey), { method: "GET", mode: "cors" }).then(function (response) {
@@ -383,7 +409,7 @@
           if (!response.ok) throw new Error(label + " could not be checked. " + (readApiMessage(payload) || "Google PageSpeed returned an error."));
           var apiMessage = readApiMessage(payload);
           if (apiMessage) throw new Error(label + " could not be checked. " + apiMessage);
-          return extractTotalBytes(payload, label);
+          return extractPageSpeedMeasurement(payload, label);
         });
       });
     }
@@ -391,11 +417,14 @@
       text(status, message || "We could not complete the comparison. Please try again in a moment.");
       if (result) result.hidden = true;
     }
-    function showResult(theirBytes, ourBytes) {
-      text(theirs, formatBytes(theirBytes));
-      text(ours, formatBytes(ourBytes));
-      text(summary, describeComparedToOurs(theirBytes, ourBytes));
-      text(context, describeComparedToMedian(theirBytes));
+    function showResult(theirMeasurement, ourMeasurement) {
+      text(theirs, formatBytes(theirMeasurement.bytes));
+      text(ours, formatBytes(ourMeasurement.bytes));
+      text(theirSpeed, formatSeconds(theirMeasurement.speedIndexMilliseconds));
+      text(ourSpeed, formatSeconds(ourMeasurement.speedIndexMilliseconds));
+      text(summary, describeComparedToOurs(theirMeasurement.bytes, ourMeasurement.bytes));
+      text(speedSummary, describeVisualLoad(theirMeasurement.speedIndexMilliseconds, ourMeasurement.speedIndexMilliseconds));
+      text(context, describeComparedToMedian(theirMeasurement.bytes));
       text(status, "Done. Both homepages were checked with the same desktop test.");
       if (result) result.hidden = false;
     }

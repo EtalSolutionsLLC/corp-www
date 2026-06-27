@@ -3,84 +3,15 @@ set -euo pipefail
 
 site_dir="${SITE_DIR:-$(pwd -P)}"
 repo_root="$(cd -- "${site_dir}/.." && pwd -P)"
-version_file="${repo_root}/VERSION"
-build_info_file="${site_dir}/build-info.json"
+version_tool="${repo_root}/bin/pm-version"
 
-if [[ ! -r "${version_file}" ]]; then
-  printf 'ERROR: site VERSION file not found: %s\n' "${version_file}" >&2
+if [[ ! -x "${version_tool}" && -x "${repo_root}/../../bin/pm-version" ]]; then
+  version_tool="$(cd -- "${repo_root}/../.." && pwd -P)/bin/pm-version"
+fi
+
+[[ -x "${version_tool}" ]] || {
+  printf 'ERROR: pm-version was not found or is not executable: %s\n' "${version_tool}" >&2
   exit 1
-fi
-
-version="$(tr -d '[:space:]' < "${version_file}")"
-if [[ ! "${version}" =~ ^[0-9]{3}$ ]]; then
-  printf 'ERROR: invalid site VERSION %q; expected a three-digit build number\n' "${version}" >&2
-  exit 1
-fi
-
-if [[ -n "${GITHUB_SHA:-}" ]]; then
-  commit="${GITHUB_SHA:0:12}"
-else
-  commit="$(git -C "${repo_root}" rev-parse --short=12 HEAD 2>/dev/null || printf 'unavailable')"
-fi
-built_at="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
-target="local"
-
-if [[ -r "${repo_root}/.env.generated" ]]; then
-  deploy_env="$(awk -F= '$1 == "DEPLOY_ENV" {print substr($0, index($0, "=") + 1); exit}' "${repo_root}/.env.generated" | tr -d '"\r')"
-  if [[ -n "${deploy_env}" ]]; then
-    target="${deploy_env}"
-  fi
-fi
-
-if [[ "${GITHUB_ACTIONS:-}" == "true" ]]; then
-  target="github-pages"
-fi
-
-python3 - "${build_info_file}" "${version}" "${commit}" "${built_at}" "${target}" <<'PY'
-from __future__ import annotations
-
-import json
-import os
-import sys
-import tempfile
-from pathlib import Path
-
-path = Path(sys.argv[1])
-payload = {
-    "version": sys.argv[2],
-    "commit": sys.argv[3],
-    "built_at": sys.argv[4],
-    "target": sys.argv[5],
-    "builder": "Et al Solutions LLC",
 }
-path.parent.mkdir(parents=True, exist_ok=True)
-fd, temporary_name = tempfile.mkstemp(prefix=path.name + ".", dir=str(path.parent))
-try:
-    # mkstemp intentionally starts at 0600. The Pages artifact is archived by
-    # the host runner after this hook exits, so make the temporary file
-    # world-readable before the atomic replacement preserves its mode.
-    os.fchmod(fd, 0o644)
-    with os.fdopen(fd, "w", encoding="utf-8") as handle:
-        json.dump(payload, handle, indent=2, sort_keys=True)
-        handle.write("\n")
-    os.replace(temporary_name, path)
-    os.chmod(path, 0o644)
-finally:
-    if os.path.exists(temporary_name):
-        os.unlink(temporary_name)
-PY
 
-if [[ ! -r "${build_info_file}" ]]; then
-  printf 'ERROR: generated build metadata is not readable: %s\n' "${build_info_file}" >&2
-  exit 1
-fi
-
-mode="$(stat -c '%a' "${build_info_file}" 2>/dev/null || stat -f '%Lp' "${build_info_file}")"
-if [[ "${mode}" != "644" ]]; then
-  printf 'ERROR: generated build metadata has mode %s; expected 644: %s\n' "${mode}" "${build_info_file}" >&2
-  exit 1
-fi
-
-printf '<!-- ETAL_SITE_BUILD version="%s" details="/build-info.json" -->\n' "${version}"
-printf '<meta name="etal-site-build" content="%s" />\n' "${version}"
-printf '<meta name="etal-site-build-info" content="/build-info.json" />\n'
+exec "${version_tool}" build meta --emit-html

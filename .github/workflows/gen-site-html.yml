@@ -22,6 +22,8 @@ concurrency:
 jobs:
   generate:
     runs-on: ubuntu-latest
+    outputs:
+      should_deploy: ${{ steps.rotation.outputs.should_build }}
 
     defaults:
       run:
@@ -36,6 +38,7 @@ jobs:
         working-directory: .
         run: |
           required_scripts=(
+            bin/pm-version
             bin/rotate-transformation-thread
             bin/report-blog-rotation
           )
@@ -47,7 +50,10 @@ jobs:
             fi
           done
 
+          bin/pm-version validate
+
       - name: Rotate Transformation Thread selection
+        id: rotation
         shell: bash
         env:
           WORKFLOW_EVENT: ${{ github.event_name }}
@@ -71,9 +77,60 @@ jobs:
             echo "Scheduled Transformation Thread rotation with local-midnight guard"
           fi
 
-          ../../bin/rotate-transformation-thread "${rotation_args[@]}"
+          rotation_output="$(../../bin/rotate-transformation-thread "${rotation_args[@]}" 2>&1)"
+          printf '%s\n' "$rotation_output"
+
+          if grep -q '^Outside local midnight rotation window:' <<<"$rotation_output"; then
+            echo "should_build=false" >> "$GITHUB_OUTPUT"
+            echo "No artifact will be built or deployed for this guard run."
+          else
+            echo "should_build=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Commit rotation source state
+        if: ${{ steps.rotation.outputs.should_build == 'true' && !env.ACT }}
+        shell: bash
+        working-directory: .
+        run: |
+          rotation_paths=(
+            deploy/prd/www/collections/transformation-thread/generated/selection.json
+            deploy/prd/www/collections/transformation-thread/items
+          )
+
+          if ! git diff --quiet -- "${rotation_paths[@]}"; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add -f "${rotation_paths[@]}"
+            git commit -m "chore: rotate Transformation Thread"
+            git push
+          fi
+
+      - name: Allocate immutable site build
+        if: ${{ steps.rotation.outputs.should_build == 'true' }}
+        shell: bash
+        working-directory: .
+        env:
+          CI: "true"
+        run: |
+          build_number="$(bin/pm-version build allocate --ci)"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            RELEASE_VERSION \
+            BUILD_NUMBER \
+            VERSION \
+            deploy/*/RELEASE_VERSION \
+            deploy/*/BUILD_NUMBER \
+            deploy/*/VERSION
+          git commit -m "chore: allocate site build ${build_number}"
+          git push
+
+          echo "PM_BUILD_NUMBER=${build_number}" >> "$GITHUB_ENV"
+          echo "PM_SOURCE_COMMIT=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
 
       - name: Verify deployment basics
+        if: ${{ steps.rotation.outputs.should_build == 'true' }}
         shell: bash
         working-directory: .
         run: |
@@ -81,33 +138,66 @@ jobs:
           bash tests/verify-production-entrypoints
 
       - name: Generate production site HTML
+        if: ${{ steps.rotation.outputs.should_build == 'true' }}
+        env:
+          PM_DEPLOYMENT_ID: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
         run: |
           docker compose \
             -f docker-compose.yml \
             run --rm \
             -e SITE_DIR=/workspace/www \
             -e GITHUB_ACTIONS=true \
-            -e GITHUB_SHA="${GITHUB_SHA}" \
+            -e PM_OFFICIAL_BUILD=true \
+            -e PM_DEFER_SITE_BUILD_FINALIZE=true \
+            -e PM_SOURCE_COMMIT="${PM_SOURCE_COMMIT}" \
+            -e PM_SOURCE_DIRTY=false \
+            -e PM_DEPLOY_ENV=github-pages \
+            -e PM_DEPLOYMENT_ID="${PM_DEPLOYMENT_ID}" \
             toolbox \
             sh -lc 'exec python3 "$PORTMASON_SHARE/pm-process-site-partials"'
 
+          PM_OFFICIAL_BUILD=true \
+          PM_SOURCE_COMMIT="${PM_SOURCE_COMMIT}" \
+          PM_SOURCE_DIRTY=false \
+          PM_DEPLOY_ENV=github-pages \
+          PM_DEPLOYMENT_ID="${PM_DEPLOYMENT_ID}" \
+            ../../bin/pm-version build finalize \
+              --site-dir "$PWD/www" \
+              --environment github-pages \
+              --deployment-id "${PM_DEPLOYMENT_ID}"
+
       - name: Verify Pages artifact readability
+        if: ${{ steps.rotation.outputs.should_build == 'true' }}
         shell: bash
         working-directory: .
         run: |
           artifact_root="deploy/prd/www"
-          build_info="${artifact_root}/build-info.json"
+          required_metadata=(
+            "$artifact_root/build-info.json"
+            "$artifact_root/deploy-info.json"
+            "$artifact_root/artifact-manifest.json"
+          )
 
-          if [[ ! -f "$build_info" ]]; then
-            echo "Pages artifact is missing required build metadata: $build_info" >&2
-            exit 1
-          fi
+          for metadata_file in "${required_metadata[@]}"; do
+            if [[ ! -f "$metadata_file" ]]; then
+              echo "Pages artifact is missing required metadata: $metadata_file" >&2
+              exit 1
+            fi
 
-          if [[ ! -r "$build_info" ]]; then
-            echo "Pages build metadata is not readable by the GitHub runner:" >&2
-            stat "$build_info" >&2 || true
-            exit 1
-          fi
+            if [[ ! -r "$metadata_file" ]]; then
+              echo "Pages metadata is not readable by the GitHub runner:" >&2
+              stat "$metadata_file" >&2 || true
+              exit 1
+            fi
+
+            mode="$(stat -c '%a' "$metadata_file")"
+            if [[ "$mode" != "644" ]]; then
+              echo "Pages metadata has mode $mode; expected 644: $metadata_file" >&2
+              exit 1
+            fi
+          done
+
+          ../../bin/pm-version deployment verify --site-dir "$artifact_root"
 
           unreadable_files="$(find "$artifact_root" -type f ! -readable -print)"
           if [[ -n "$unreadable_files" ]]; then
@@ -116,25 +206,19 @@ jobs:
             exit 1
           fi
 
-          mode="$(stat -c '%a' "$build_info")"
-          if [[ "$mode" != "644" ]]; then
-            echo "Pages build metadata has mode $mode; expected 644: $build_info" >&2
-            exit 1
-          fi
-
           tar -C "$artifact_root" -cf /dev/null .
 
       - name: Report blog entry rotation
+        if: ${{ steps.rotation.outputs.should_build == 'true' }}
         run: ../../bin/report-blog-rotation
 
       - name: Commit generated production site HTML
-        if: ${{ !env.ACT }}
+        if: ${{ steps.rotation.outputs.should_build == 'true' && !env.ACT }}
         shell: bash
         working-directory: .
         run: |
           generated_paths=(
             deploy/prd/www/index.html
-            deploy/prd/www/collections/transformation-thread/generated/selection.json
           )
 
           if git diff --quiet -- "${generated_paths[@]}"; then
@@ -145,16 +229,17 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -f "${generated_paths[@]}"
-          git commit -m "chore: generate production site HTML"
+          git commit -m "chore: generate production site HTML for build ${PM_BUILD_NUMBER}"
           git push
 
       - name: Upload GitHub Pages artifact
-        if: ${{ !env.ACT }}
+        if: ${{ steps.rotation.outputs.should_build == 'true' && !env.ACT }}
         uses: actions/upload-pages-artifact@v3
         with:
           path: deploy/prd/www
 
   deploy:
+    if: ${{ needs.generate.outputs.should_deploy == 'true' }}
     runs-on: ubuntu-latest
     needs: generate
 

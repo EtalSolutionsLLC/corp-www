@@ -19,14 +19,19 @@ class CollectionSystemTests(unittest.TestCase):
         actual = {path.name for path in COLLECTIONS.iterdir() if path.is_dir() and path.name != "__pycache__"}
         self.assertEqual(actual, {"_system", *COLLECTION_IDS})
 
-    def test_every_collection_has_manifest_data_and_style(self):
+    def test_every_collection_has_manifest_source_and_style(self):
         for collection_id in COLLECTION_IDS:
             with self.subTest(collection_id=collection_id):
                 directory = COLLECTIONS / collection_id
                 manifest = json.loads((directory / "collection.json").read_text(encoding="utf-8"))
                 self.assertEqual(manifest["id"], collection_id)
                 self.assertIn(manifest["mode"], {"catalog", "publication", "workspace"})
-                self.assertTrue((directory / manifest["dataFile"]).is_file())
+                if manifest["mode"] == "publication":
+                    self.assertNotIn("dataFile", manifest)
+                    self.assertTrue((directory / "items").is_dir())
+                    self.assertTrue(list((directory / "items").glob("[0-9][0-9][0-9]/meta.json")))
+                else:
+                    self.assertTrue((directory / manifest["dataFile"]).is_file())
                 self.assertTrue((directory / manifest["styleFile"]).is_file())
                 if manifest.get("scriptFile"):
                     self.assertTrue((directory / manifest["scriptFile"]).is_file())
@@ -119,10 +124,27 @@ class CollectionSystemTests(unittest.TestCase):
         self.assertEqual(schema["properties"]["mode"]["enum"], ["catalog", "publication", "workspace"])
         self.assertIn("workspace", schema["properties"])
         self.assertIn("scriptFile", schema["properties"])
+        self.assertNotIn("dataFile", schema["required"])
+        requirements = {
+            branch["if"]["properties"]["mode"]["const"]: branch["then"].get("required", [])
+            for branch in schema["allOf"]
+        }
+        self.assertIn("dataFile", requirements["catalog"])
+        self.assertNotIn("dataFile", requirements["publication"])
+        self.assertIn("dataFile", requirements["workspace"])
         presentation = schema["properties"]["presentation"]["properties"]
         self.assertIn("platformModel", presentation)
         layer_ids = presentation["platformModel"]["properties"]["layers"]["items"]["properties"]["id"]["enum"]
         self.assertEqual(layer_ids, ["foundations", "operations", "tooling"])
+
+        publication_schema = json.loads(
+            (COLLECTIONS / "_system/publication-item.schema.json").read_text(encoding="utf-8")
+        )
+        publication_properties = publication_schema["allOf"][1]["properties"]
+        self.assertIn("dateFirstDisplayed", publication_properties)
+        self.assertEqual(publication_properties["dateFirstDisplayed"]["format"], "date")
+        self.assertIn("displayAfter", publication_properties)
+        self.assertTrue(publication_properties["displayAfter"]["uniqueItems"])
 
     def test_catalog_section_copy_is_manifest_owned(self):
         brands = json.loads((COLLECTIONS / "brands/collection.json").read_text(encoding="utf-8"))
@@ -138,6 +160,9 @@ class CollectionSystemTests(unittest.TestCase):
             SITE / "content/transformation-thread",
             SITE / "content/transformation-thread-posts.json",
             SITE / "content/transformation-thread-selection.json",
+            SITE / "collections/transformation-thread/items.json",
+            SITE / "collections/transformation-thread/_deprecated_items.json",
+            SITE / "collections/move-meta",
             SITE / "assets/css/carousel.css",
             SITE / "assets/css/transformation-thread.css",
             SITE / "assets/css/lab.css",

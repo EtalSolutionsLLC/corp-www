@@ -19,6 +19,16 @@
       "fallback": "build-info.json"
     },
     {
+      "label": "GET /v1/site-deployment",
+      "route": "/v1/site-deployment",
+      "fallback": "deploy-info.json"
+    },
+    {
+      "label": "GET /v1/site-artifact",
+      "route": "/v1/site-artifact",
+      "fallback": "artifact-manifest.json"
+    },
+    {
       "label": "GET /openapi.json",
       "route": "/openapi.json",
       "fallback": "api/openapi.json"

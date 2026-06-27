@@ -37,18 +37,40 @@
     <span class="site-build-modal-kicker">About this build</span>
     <h2 id="site-build-modal-title">A small marker for the curious.</h2>
     <p class="site-build-modal-intro">
-      This identifies the static artifact currently being served, so a deployed version can be verified without guessing from appearance alone.
+      This identifies the product release, exact static build, and deployment record currently being served.
     </p>
-    <dl>
-      <dt>Site build</dt>
-      <dd><code data-site-build-version>Loading…</code></dd>
-      <dt>Source commit</dt>
-      <dd><code data-site-build-commit>Loading…</code></dd>
-      <dt>Built at</dt>
-      <dd><time data-site-build-time>Loading…</time></dd>
-      <dt>Target</dt>
-      <dd data-site-build-target>Loading…</dd>
-    </dl>
+
+    <section class="site-build-section" aria-labelledby="site-build-identity-title">
+      <h3 id="site-build-identity-title">Build identity</h3>
+      <dl>
+        <dt>Release</dt>
+        <dd><code data-site-release-version>Loading…</code></dd>
+        <dt>Build</dt>
+        <dd><code data-site-build-version>Loading…</code></dd>
+        <dt>Source commit</dt>
+        <dd><code data-site-build-commit>Loading…</code></dd>
+        <dt>Built at</dt>
+        <dd><time data-site-build-time>Loading…</time></dd>
+        <dt>Artifact SHA</dt>
+        <dd><code data-site-artifact-sha>Loading…</code></dd>
+      </dl>
+    </section>
+
+    <section class="site-build-section" aria-labelledby="site-deployment-title">
+      <h3 id="site-deployment-title">Deployment</h3>
+      <dl>
+        <dt>Environment</dt>
+        <dd data-site-deploy-environment>Loading…</dd>
+        <dt>Deployment ID</dt>
+        <dd><code data-site-deployment-id>Loading…</code></dd>
+        <dt>Deployed at</dt>
+        <dd><time data-site-deployed-time>Loading…</time></dd>
+        <dt>Verification</dt>
+        <dd data-site-deployment-verification>Loading…</dd>
+      </dl>
+      <p class="site-build-warning" data-site-build-warning hidden></p>
+    </section>
+
     <section class="site-build-marks" aria-labelledby="site-build-marks-title">
       <h3 id="site-build-marks-title">Marks</h3>
       <p>A.I. Fusion℠ and SIMPLIFAI℠ are service marks of Et al Solutions LLC, registered with the California Secretary of State.</p>

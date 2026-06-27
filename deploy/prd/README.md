@@ -124,25 +124,13 @@ Example:
 
 Do not remove PM marker pairs unless the page is being intentionally detached from Portmason rendering.
 
-## Served build marker
+## Release, build, and deployment identity
 
-The site exposes the static artifact version in three ways:
+The site exposes its served identity through the footer easter egg, HTML metadata, and three static JSON records: `build-info.json`, `deploy-info.json`, and `artifact-manifest.json`.
 
-```text
-Footer copyright → About this build dialog
-View Source      → ETAL_SITE_BUILD comment and meta tag
-Automation       → /build-info.json
-```
+`RELEASE_VERSION` identifies the marketed feature collection. `BUILD_NUMBER` identifies the sequential deployable artifact. `VERSION` remains only as a compatibility alias and is maintained by `bin/pm-version`.
 
-The authoritative build number lives in the repository-root `VERSION` file. The
-`SITE-BUILD-META` executable partial hook writes deterministic HTML metadata and
-a runtime `www/build-info.json` containing the source commit, UTC materialization
-time, deployment target, and builder. The JSON file is included in the served
-artifact but intentionally ignored by Git because its timestamp changes on every
-materialization.
-
-The footer copyright remains visually unchanged; selecting it opens the build
-information dialog.
+`bin/pm-version` is the sole writer. Build allocation occurs in serialized CI before generation, build finalization seals the content manifest, deployment recording verifies the exact build and digest, and provisioning never changes application identity.
 
 ## Portmason Platform™ Systems Lab
 

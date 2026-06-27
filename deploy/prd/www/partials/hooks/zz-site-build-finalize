@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# The Python renderer used by GitHub Actions defers this finalization until after
+# it has written the fully rendered page. The Bash Portmason renderer processes
+# hooks incrementally and reaches this hook last, so it can finalize in place.
+case "${PM_DEFER_SITE_BUILD_FINALIZE:-}" in
+  1|true|TRUE|yes|YES|on|ON) exit 0 ;;
+esac
+
+site_dir="${SITE_DIR:-$(pwd -P)}"
+repo_root="$(cd -- "${site_dir}/.." && pwd -P)"
+version_tool="${repo_root}/bin/pm-version"
+
+if [[ ! -x "${version_tool}" && -x "${repo_root}/../../bin/pm-version" ]]; then
+  version_tool="$(cd -- "${repo_root}/../.." && pwd -P)/bin/pm-version"
+fi
+
+[[ -x "${version_tool}" ]] || {
+  printf 'ERROR: pm-version was not found or is not executable: %s\n' "${version_tool}" >&2
+  exit 1
+}
+
+args=(build finalize --site-dir "${site_dir}")
+[[ -n "${PM_DEPLOY_ENV:-}" ]] && args+=(--environment "${PM_DEPLOY_ENV}")
+[[ -n "${PM_DEPLOYMENT_ID:-}" ]] && args+=(--deployment-id "${PM_DEPLOYMENT_ID}")
+
+"${version_tool}" "${args[@]}" >&2

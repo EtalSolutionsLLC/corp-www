@@ -31,6 +31,7 @@ class SystemsLabTests(unittest.TestCase):
         tag = '<section class="portmason-workspace panel pm-viewport-target pm-scroll-target collection collection--workspace"'
         self.assertIn(tag, INDEX)
         for token in [
+            'data-pm-viewport-align="start"',
             'data-collection-id="systems-lab"',
             'data-collection-mode="workspace"',
             'data-collection-config="/collections/systems-lab/collection.json"',
@@ -90,6 +91,57 @@ class SystemsLabTests(unittest.TestCase):
         ]:
             self.assertIn(token, PROFILE_JS)
 
+    def test_page_weight_tool_reports_pagespeed_visual_load_duration(self):
+        panel = (COLLECTION / "tools/page-weight-evidence.html").read_text(encoding="utf-8")
+        page_weight = next(item for item in ITEMS if item["slug"] == "page-weight-evidence")
+
+        self.assertIn("page-weight and visual-load", panel)
+        self.assertIn("Visual load", panel)
+        self.assertIn("Lighthouse Speed Index", panel)
+        for token in [
+            "data-site-speed-theirs",
+            "data-site-speed-ours",
+            "data-site-speed-summary",
+        ]:
+            self.assertIn(token, panel)
+        self.assertIn("PageSpeed visual-load duration", page_weight["outputs"])
+        self.assertIn('extractAuditValue(payload, "speed-index"', INSTANCE_JS)
+        self.assertIn("speedIndexMilliseconds", INSTANCE_JS)
+        self.assertIn("formatSeconds", INSTANCE_JS)
+        self.assertIn("describeVisualLoad", INSTANCE_JS)
+        self.assertNotIn("data-performance-duration", panel)
+
+    def test_platform_explanation_follows_the_approved_vertical_mockup(self):
+        for token in [
+            "@media (min-width: 1061px)",
+            '"intro"',
+            '"platform"',
+            '"gallery-heading"',
+            '"gallery"',
+            "grid-template-columns: minmax(520px, .95fr) minmax(420px, 1.05fr);",
+            "grid-template-columns: minmax(0, 1fr);",
+            "grid-template-columns: repeat(4, minmax(0, 1fr));",
+            "max-width: 1280px;",
+            "font-size: clamp(4.25rem, 6.1vw, 5.8rem);",
+        ]:
+            self.assertIn(token, CSS)
+        self.assertNotIn('"intro gallery-heading"', CSS)
+        self.assertNotIn('"platform gallery"', CSS)
+
+    def test_each_platform_plane_uses_the_same_dedicated_label_column(self):
+        for token in [
+            ".portmason-platform-layer > .portmason-platform-role",
+            "grid-template-columns: minmax(190px, .24fr) minmax(0, 1fr);",
+            "grid-row: 1 / -1;",
+            ".portmason-platform-layer h3,",
+            ".portmason-platform-includes {",
+        ]:
+            self.assertIn(token, CSS)
+        self.assertNotIn(
+            ".portmason-platform-layer--tooling .portmason-platform-role",
+            CSS,
+        )
+
     def test_tools_initialize_through_one_instance_adapter_on_open(self):
         self.assertIn('api.registerProfile("workspace"', PROFILE_JS)
         self.assertIn('api.registerInstance("systems-lab"', INSTANCE_JS)
@@ -114,8 +166,11 @@ class SystemsLabTests(unittest.TestCase):
     def test_api_endpoint_selector_is_json_configured(self):
         payload = json.loads((SITE / "api/endpoints.json").read_text(encoding="utf-8"))
         self.assertEqual(payload["schemaVersion"], 1)
-        self.assertEqual(len(payload["endpoints"]), 4)
+        self.assertEqual(len(payload["endpoints"]), 6)
         self.assertTrue(all({"label", "route", "fallback"} <= set(item) for item in payload["endpoints"]))
+        routes = {item["route"] for item in payload["endpoints"]}
+        self.assertIn("/v1/site-deployment", routes)
+        self.assertIn("/v1/site-artifact", routes)
         panel = (COLLECTION / "tools/published-interface.html").read_text(encoding="utf-8")
         self.assertIn('/api/endpoints.json', panel)
         self.assertIn('endpointConfigUrl: "api/endpoints.json"', INSTANCE_JS)

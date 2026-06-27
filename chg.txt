@@ -1,0 +1,12 @@
+project/README.md
+project/bin/cleanup-root
+project/bin/rotate-transformation-thread
+project/tests/test_collection_system.py
+project/tests/test_rotate_transformation_thread.py
+project/tests/test_transformation_thread_delivery.py
+project/www/collections/_system/collection.schema.json
+project/www/collections/_system/profiles/publication.js
+project/www/collections/_system/render-collection
+project/www/collections/transformation-thread/collection.json
+project/www/collections/transformation-thread/generated/selection.json
+project/www/index.html

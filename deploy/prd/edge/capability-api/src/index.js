@@ -14,6 +14,8 @@ const OPENAPI = {
     "/v1/capabilities": { get: { summary: "Et al capability registry" } },
     "/v1/dependency-status": { get: { summary: "Normalized GitHub service status" } },
     "/v1/site-build": { get: { summary: "Served corporate-site build metadata" } },
+    "/v1/site-deployment": { get: { summary: "Served corporate-site deployment metadata" } },
+    "/v1/site-artifact": { get: { summary: "Served corporate-site artifact manifest" } },
     "/openapi.json": { get: { summary: "OpenAPI contract" } }
   }
 };
@@ -53,8 +55,13 @@ export default {
     if (url.pathname === "/v1/health") return json({ api: "Et al Systems Lab API", version: "v1", status: "operational", runtime: "Cloudflare Worker" });
     if (url.pathname === "/v1/capabilities") return json({ api: "Et al Systems Lab API", version: "v1", capabilities: CAPABILITIES });
     if (url.pathname === "/v1/dependency-status") return dependencyStatus();
-    if (url.pathname === "/v1/site-build") {
-      const response = await fetch("https://www.etal.solutions/build-info.json", { headers: { accept: "application/json" } });
+    if (url.pathname === "/v1/site-build" || url.pathname === "/v1/site-deployment" || url.pathname === "/v1/site-artifact") {
+      const sourceByPath = {
+        "/v1/site-build": "build-info.json",
+        "/v1/site-deployment": "deploy-info.json",
+        "/v1/site-artifact": "artifact-manifest.json"
+      };
+      const response = await fetch(`https://www.etal.solutions/${sourceByPath[url.pathname]}`, { headers: { accept: "application/json" } });
       if (!response.ok) return json({ status: "unavailable", upstreamStatus: response.status }, 502);
       return json(await response.json());
     }

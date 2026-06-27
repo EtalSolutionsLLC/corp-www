@@ -154,7 +154,7 @@
     "instructions": [
       "Review the data this browser observed loading for the current page.",
       "Enter another public homepage address.",
-      "Run the same desktop PageSpeed page-size check against both sites."
+      "Run the same desktop PageSpeed page-weight and visual-load check against both sites."
     ],
     "inputs": [
       "Current browser resource timing",
@@ -162,7 +162,8 @@
     ],
     "outputs": [
       "Transferred bytes and file count",
-      "Side-by-side page weight",
+      "PageSpeed visual-load duration",
+      "Side-by-side page weight and visual-load duration",
       "Comparison with a typical desktop homepage"
     ],
     "thumbnail": {

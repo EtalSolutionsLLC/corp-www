@@ -67,6 +67,14 @@ class ViewportContractTests(unittest.TestCase):
         self.assertNotIn("width: 100%;", inner_block)
 
 
+
+    def test_start_aligned_targets_preserve_their_leading_edge(self) -> None:
+        css = self.read("assets/css/viewport-contract.css")
+        self.assertIn('.pm-viewport-target[data-pm-viewport-align="start"]', css)
+        self.assertIn("align-items: start !important;", css)
+        self.assertIn('#lab.pm-viewport-target[data-pm-viewport-align="start"]', css)
+        self.assertIn("padding-top: var(--pm-viewport-block-tight) !important;", css)
+
     def test_js_active_nav_state_overrides_stale_target_decoration(self) -> None:
         css = self.read("assets/css/viewport-contract.css")
         self.assertIn('body.has-js-active-nav .site-header .nav a:not([aria-current="page"])', css)

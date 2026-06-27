@@ -20,7 +20,12 @@ __pycache__/
 # Runtime-generated build metadata is deployed with the Pages artifact but is
 # not committed because its timestamp changes on every materialization.
 /www/build-info.json
+/www/deploy-info.json
+/www/artifact-manifest.json
 /deploy/*/www/build-info.json
+/deploy/*/www/deploy-info.json
+/deploy/*/www/artifact-manifest.json
+/.portmason-version.lock
 
 # Keep the generated Portmason contract files tracked.
 !.env.generated

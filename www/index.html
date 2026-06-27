@@ -30,9 +30,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <!-- PM:SITE-BUILD-META -->
-<!-- ETAL_SITE_BUILD version="034" details="/build-info.json" -->
+<!-- ETAL_SITE_RELEASE version="1.0.0" build="034" build-details="/build-info.json" deployment-details="/deploy-info.json" -->
+<meta name="etal-site-release" content="1.0.0" />
 <meta name="etal-site-build" content="034" />
 <meta name="etal-site-build-info" content="/build-info.json" />
+<meta name="etal-site-deploy-info" content="/deploy-info.json" />
 <!-- /PM:SITE-BUILD-META -->
   <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
   <title>Et al Solutions LLC</title>
@@ -226,7 +228,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       </section>
 
 <!-- PM:COLLECTION-SYSTEMS-LAB -->
-  <section class="portmason-workspace panel pm-viewport-target pm-scroll-target collection collection--workspace" id="lab" data-theme="dark" aria-labelledby="systems-lab-title" data-collection data-collection-id="systems-lab" data-collection-mode="workspace" data-collection-config="/collections/systems-lab/collection.json" data-workspace-query-parameter="lab">
+  <section class="portmason-workspace panel pm-viewport-target pm-scroll-target collection collection--workspace" id="lab" data-theme="dark" data-pm-viewport-align="start" aria-labelledby="systems-lab-title" data-collection data-collection-id="systems-lab" data-collection-mode="workspace" data-collection-config="/collections/systems-lab/collection.json" data-workspace-query-parameter="lab">
     <div class="container portmason-workspace-layout pm-viewport-target__inner">
       <header class="portmason-workspace-intro">
         <span class="portmason-wordmark">Portmason Platform™ · Live systems lab</span>
@@ -473,7 +475,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     </div>
     <span class="lab-contract-badge">Live browser data</span>
   </header>
-  <p>This is what the browser can observe being transferred now, plus an optional Google PageSpeed comparison against another public homepage.</p>
+  <p>This is what the browser can observe being transferred now, plus an optional Google PageSpeed comparison of page weight and visual-load duration against another public homepage.</p>
   <dl class="performance-proof-grid lab-proof-grid" aria-label="What your browser downloaded when this page opened" data-performance-proof>
     <div><dt>Data downloaded</dt><dd data-performance-transfer>Measuring…</dd></div>
     <div><dt>JavaScript downloaded</dt><dd data-performance-js>Measuring…</dd></div>
@@ -483,7 +485,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <section class="site-size-compare" aria-labelledby="site-size-compare-title" data-site-size-compare data-site-size-self-url="https://www.etal.solutions/" data-site-size-config-url="config.generated.json">
     <div class="site-size-compare-intro">
       <span class="lab-panel-label">Compare your homepage</span>
-      <h4 id="site-size-compare-title">Run the same desktop page-size check side by side.</h4>
+      <h4 id="site-size-compare-title">Run the same desktop page-weight and visual-load check side by side.</h4>
       <p>Enter a public homepage address. Nothing is stored by this site.</p>
     </div>
     <form class="site-size-form" data-site-size-form>
@@ -498,13 +500,32 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       <span class="lab-panel-label">Two-page comparison</span>
       <h4>Google PageSpeed checked both homepages using the same desktop test.</h4>
       <dl class="site-size-result-grid">
-        <div><dt>Your homepage</dt><dd data-site-size-theirs>—</dd></div>
-        <div><dt>This homepage</dt><dd data-site-size-ours>—</dd></div>
-        <div><dt>Typical desktop homepage</dt><dd>2.86 MB</dd></div>
+        <div>
+          <dt>Your homepage</dt>
+          <dd>
+            <span data-site-size-theirs>—</span>
+            <small>Visual load <strong data-site-speed-theirs>—</strong></small>
+          </dd>
+        </div>
+        <div>
+          <dt>This homepage</dt>
+          <dd>
+            <span data-site-size-ours>—</span>
+            <small>Visual load <strong data-site-speed-ours>—</strong></small>
+          </dd>
+        </div>
+        <div>
+          <dt>Typical desktop homepage</dt>
+          <dd>
+            <span>2.86 MB</span>
+            <small>Page-weight benchmark</small>
+          </dd>
+        </div>
       </dl>
       <p class="site-size-result-summary" data-site-size-summary></p>
+      <p class="site-size-result-summary" data-site-speed-summary></p>
       <p class="site-size-result-context" data-site-size-context></p>
-      <p class="site-size-result-note">This is a practical page-size comparison, not a full performance audit. Results can vary as content changes.</p>
+      <p class="site-size-result-note">Visual load is Lighthouse Speed Index: how quickly visible content appears during the test. It is not a stopwatch measurement of every background request. Results can vary as content changes.</p>
       <p class="site-size-result-source">Typical-homepage benchmark: <a href="https://almanac.httparchive.org/en/2025/page-weight" target="_blank" rel="noopener noreferrer">HTTP Archive, 2025 Web Almanac</a>.</p>
     </section>
   </section>
@@ -926,34 +947,34 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </div>
 
         <div class="thread-post-layout" aria-label="The Transformation Thread article list">
-          <article class="thread-featured-post" aria-label="Featured article" data-collection-item data-collection-item-id="1" data-collection-slug="tt-001" data-collection-slot="1">
+          <article class="thread-featured-post" aria-label="Featured article" data-collection-item data-collection-item-id="4" data-collection-slug="tt-004" data-collection-slot="4">
             <div class="thread-post-meta">
               <span>Featured</span>
-              <span>Transformation Strategy</span>
+              <span>Systems Thinking</span>
             </div>
-            <h3>What transformation actually asks of a business</h3>
-            <p>Transformation is a practical sequence of choices about what to simplify, what to preserve, and where technology can reduce friction without creating new confusion.</p>
-            <a class="thread-post-link" href="mailto:info@etalsolutions.tech?subject=Transformation%20Thread%20article%20request%20%5BTT-001%5D&amp;body=Please%20send%20Transformation%20Thread%20article%20TT-001%3A%20What%20transformation%20actually%20asks%20of%20a%20business" data-collection-open-item="1">Read this article →</a>
+            <h3>Legacy systems are often carrying business memory</h3>
+            <p>A perspective piece on treating older systems as operational knowledge, not just technical debt.</p>
+            <a class="thread-post-link" href="mailto:info@etalsolutions.tech?subject=Transformation%20Thread%20article%20request%20%5BTT-004%5D&amp;body=Please%20send%20Transformation%20Thread%20article%20TT-004%3A%20Legacy%20systems%20are%20often%20carrying%20business%20memory" data-collection-open-item="4">Read this article →</a>
           </article>
 
           <div class="thread-post-grid">
-            <article class="thread-post-card" data-post-category="Website Modernization" data-collection-item data-collection-item-id="8" data-collection-slug="tt-008" data-collection-slot="1">
+            <article class="thread-post-card" data-post-category="Workforce Transformation" data-collection-item data-collection-item-id="5" data-collection-slug="tt-005" data-collection-slot="5">
               <div class="thread-post-meta">
-                <span>Website Modernization</span>
+                <span>Workforce Transformation</span>
                 <span>Draft</span>
               </div>
-              <h3>Speed Is Not a Technical Detail</h3>
-              <p>A fast website is not merely an engineering achievement. It is part of the experience, and often the first thing a visitor notices.</p>
-              <a class="thread-post-link" href="mailto:info@etalsolutions.tech?subject=Transformation%20Thread%20article%20request%20%5BTT-008%5D&amp;body=Please%20send%20Transformation%20Thread%20article%20TT-008%3A%20Speed%20Is%20Not%20a%20Technical%20Detail" data-collection-open-item="8">Read article →</a>
+              <h3>Experience should not expire</h3>
+              <p>A practical look at how hiring systems, workplace assumptions, and automated screening can undervalue older workers—and why transformation should preserve experience instead of filtering it out.</p>
+              <a class="thread-post-link" href="mailto:info@etalsolutions.tech?subject=Transformation%20Thread%20article%20request%20%5BTT-005%5D&amp;body=Please%20send%20Transformation%20Thread%20article%20TT-005%3A%20Experience%20should%20not%20expire" data-collection-open-item="5">Read article →</a>
             </article>
-            <article class="thread-post-card" data-post-category="A.I. Adoption" data-collection-item data-collection-item-id="2" data-collection-slug="tt-002" data-collection-slot="2">
+            <article class="thread-post-card" data-post-category="A.I. Risk" data-collection-item data-collection-item-id="6" data-collection-slug="tt-006" data-collection-slot="6">
               <div class="thread-post-meta">
-                <span>A.I. Adoption</span>
+                <span>A.I. Risk</span>
                 <span>Draft</span>
               </div>
-              <h3>Start with the work, not the tool</h3>
-              <p>Durable A.I. adoption begins with workflows, decisions, and pain points before selecting platforms.</p>
-              <a class="thread-post-link" href="mailto:info@etalsolutions.tech?subject=Transformation%20Thread%20article%20request%20%5BTT-002%5D&amp;body=Please%20send%20Transformation%20Thread%20article%20TT-002%3A%20Start%20with%20the%20work%2C%20not%20the%20tool" data-collection-open-item="2">Read article →</a>
+              <h3>Is it too late for a Skynet scenario?</h3>
+              <p>A grounded reflection on whether A.I. has already become too embedded to control, and why the real risk may be less about machines waking up and more about people surrendering judgment too casually.</p>
+              <a class="thread-post-link" href="mailto:info@etalsolutions.tech?subject=Transformation%20Thread%20article%20request%20%5BTT-006%5D&amp;body=Please%20send%20Transformation%20Thread%20article%20TT-006%3A%20Is%20it%20too%20late%20for%20a%20Skynet%20scenario%3F" data-collection-open-item="6">Read article →</a>
             </article>
           </div>
         </div>
@@ -967,6 +988,40 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <div class="thread-article-modal-body" data-collection-modal-body></div>
           </div>
         </dialog>
+        <template data-collection-article-template data-collection-item-id="4">
+          <span data-collection-article-title>Legacy systems are often carrying business memory</span>
+          <span data-collection-article-meta>Article TT-004 · Systems Thinking</span>
+          <div data-collection-article-body>
+            <p>Legacy systems are often described as technical debt. Sometimes they are. They may be difficult to maintain, expensive to integrate, or dependent on knowledge that lives with too few people.</p>
+            <p>But an older system may also be carrying business memory.</p>
+            <p>It may contain the exception process that keeps a difficult customer relationship working. It may encode the approval path that exists because of a regulatory lesson learned years ago. It may support a report that looks ordinary until the day someone discovers three departments quietly depend on it.</p>
+            <p>Modernization should not romanticize old technology. It should understand it.</p>
+            <p>Before replacing a legacy system, map what the system knows, what people have built around it, and which risks are hidden inside apparently simple workflows. The goal is not to preserve age. The goal is to preserve value while removing friction.</p>
+          </div>
+        </template>
+        <template data-collection-article-template data-collection-item-id="5">
+          <span data-collection-article-title>Experience should not expire</span>
+          <span data-collection-article-meta>Article TT-005 · Workforce Transformation</span>
+          <div data-collection-article-body>
+            <p>Transformation is supposed to make organizations more capable. It should not quietly discard the people who know how the work actually gets done.</p>
+            <p>Experience can become invisible in modern hiring and workforce systems. Automated screening may favor familiar titles, recent credentials, or a narrow version of career progression. Long experience can look less tidy on a form even when it is exactly what a difficult environment needs.</p>
+            <p>The same problem appears inside organizations. A modernization effort may focus on platforms and processes while overlooking the people who understand the history behind the exceptions.</p>
+            <p>A better approach treats experience as an asset to be translated, not a barrier to be filtered out. Pair institutional knowledge with new tools. Capture the reasons behind recurring workarounds. Make room for people who have seen several cycles of change and know which promises usually arrive with hidden costs.</p>
+            <p>Transformation should create more ways for experience to matter.</p>
+          </div>
+        </template>
+        <template data-collection-article-template data-collection-item-id="6">
+          <span data-collection-article-title>Is it too late for a Skynet scenario?</span>
+          <span data-collection-article-meta>Article TT-006 · A.I. Risk</span>
+          <div data-collection-article-body>
+            <p>The Skynet question is memorable because it gives A.I. risk a dramatic shape. The machine wakes up. The machine decides. The machine takes control.</p>
+            <p>The more immediate risk is less cinematic.</p>
+            <p>People may gradually surrender judgment because an automated answer is convenient, fast, and presented with confidence. Organizations may deploy tools before deciding who is accountable for errors. Teams may accept opaque recommendations because nobody wants to slow down an experiment that appears to be working.</p>
+            <p>The question is not whether a system has become self-aware. The question is whether people still understand where judgment lives.</p>
+            <p>Responsible A.I. use requires boundaries. Which decisions may be assisted? Which decisions must remain human? What evidence is retained? Who can challenge an output? What happens when the system is wrong in a way nobody anticipated?</p>
+            <p>The future is not determined by one dramatic moment. It is shaped by the small decisions people normalize along the way.</p>
+          </div>
+        </template>
       </div>
     </div>
   </section>
@@ -1080,18 +1135,40 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <span class="site-build-modal-kicker">About this build</span>
     <h2 id="site-build-modal-title">A small marker for the curious.</h2>
     <p class="site-build-modal-intro">
-      This identifies the static artifact currently being served, so a deployed version can be verified without guessing from appearance alone.
+      This identifies the product release, exact static build, and deployment record currently being served.
     </p>
-    <dl>
-      <dt>Site build</dt>
-      <dd><code data-site-build-version>Loading…</code></dd>
-      <dt>Source commit</dt>
-      <dd><code data-site-build-commit>Loading…</code></dd>
-      <dt>Built at</dt>
-      <dd><time data-site-build-time>Loading…</time></dd>
-      <dt>Target</dt>
-      <dd data-site-build-target>Loading…</dd>
-    </dl>
+
+    <section class="site-build-section" aria-labelledby="site-build-identity-title">
+      <h3 id="site-build-identity-title">Build identity</h3>
+      <dl>
+        <dt>Release</dt>
+        <dd><code data-site-release-version>Loading…</code></dd>
+        <dt>Build</dt>
+        <dd><code data-site-build-version>Loading…</code></dd>
+        <dt>Source commit</dt>
+        <dd><code data-site-build-commit>Loading…</code></dd>
+        <dt>Built at</dt>
+        <dd><time data-site-build-time>Loading…</time></dd>
+        <dt>Artifact SHA</dt>
+        <dd><code data-site-artifact-sha>Loading…</code></dd>
+      </dl>
+    </section>
+
+    <section class="site-build-section" aria-labelledby="site-deployment-title">
+      <h3 id="site-deployment-title">Deployment</h3>
+      <dl>
+        <dt>Environment</dt>
+        <dd data-site-deploy-environment>Loading…</dd>
+        <dt>Deployment ID</dt>
+        <dd><code data-site-deployment-id>Loading…</code></dd>
+        <dt>Deployed at</dt>
+        <dd><time data-site-deployed-time>Loading…</time></dd>
+        <dt>Verification</dt>
+        <dd data-site-deployment-verification>Loading…</dd>
+      </dl>
+      <p class="site-build-warning" data-site-build-warning hidden></p>
+    </section>
+
     <section class="site-build-marks" aria-labelledby="site-build-marks-title">
       <h3 id="site-build-marks-title">Marks</h3>
       <p>A.I. Fusion℠ and SIMPLIFAI℠ are service marks of Et al Solutions LLC, registered with the California Secretary of State.</p>
@@ -1123,5 +1200,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <!-- /PM:COLLECTION-SCRIPTS -->
 <script src="assets/js/viewport-targets.js" defer></script>
 <script src="assets/js/visual-polish.js" defer></script>
+<!-- PM:ZZ-SITE-BUILD-FINALIZE -->
+<!-- /PM:ZZ-SITE-BUILD-FINALIZE -->
 </body>
 </html>

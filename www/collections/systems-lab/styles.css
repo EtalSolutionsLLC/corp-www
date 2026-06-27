@@ -35,7 +35,7 @@
 .portmason-workspace-layout {
   position: relative;
   z-index: 1;
-  max-width: 1220px;
+  max-width: 1280px;
   gap: clamp(12px, 1.5vw, 20px) !important;
 }
 
@@ -127,13 +127,35 @@
 
 .portmason-platform-layer {
   min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(96px, auto) minmax(0, 1fr);
+  column-gap: 18px;
+  row-gap: 4px;
+  align-items: center;
   padding: 13px 15px;
   border: 1px solid rgba(143, 178, 255, .16);
   background: linear-gradient(145deg, rgba(13, 31, 57, .72), rgba(4, 12, 25, .74));
 }
 
+.portmason-platform-layer > .portmason-platform-role {
+  grid-column: 1;
+  grid-row: 1 / -1;
+  align-self: stretch;
+  display: grid;
+  place-items: center start;
+  min-width: 96px;
+  padding-right: 15px;
+  border-right: 1px solid rgba(143, 178, 255, .14);
+}
+
+.portmason-platform-layer h3,
+.portmason-platform-layer p,
+.portmason-platform-includes {
+  grid-column: 2;
+}
+
 .portmason-platform-layer h3 {
-  margin: 5px 0 0;
+  margin: 0;
   color: #fff;
   font-size: 1rem;
   line-height: 1.05;
@@ -141,7 +163,7 @@
 }
 
 .portmason-platform-layer p {
-  margin: 7px 0 0;
+  margin: 3px 0 0;
   color: rgba(235, 242, 255, .6);
   font-size: .72rem;
   line-height: 1.4;
@@ -157,25 +179,7 @@
 
 .portmason-platform-layer--tooling {
   grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: 4px 18px;
-  align-items: center;
   box-shadow: inset 2px 0 0 #9b5de5;
-}
-
-.portmason-platform-layer--tooling .portmason-platform-role {
-  grid-row: 1 / 3;
-  align-self: stretch;
-  display: grid;
-  place-items: center;
-  padding-right: 15px;
-  border-right: 1px solid rgba(143, 178, 255, .14);
-}
-
-.portmason-platform-layer--tooling h3,
-.portmason-platform-layer--tooling p {
-  margin-left: 0;
 }
 
 .portmason-platform-includes {
@@ -637,7 +641,217 @@ html.workspace-modal-open { overflow: hidden; }
 .site-size-form { margin-top: 17px; }
 .site-size-status { min-height: 1.4em; margin: 12px 0 0; }
 .site-size-result { margin-top: 18px; padding: 18px; border: 1px solid rgba(143, 178, 255, .16); background: rgba(255, 255, 255, .025); }
+.site-size-result-grid dd { display: grid; gap: 4px; }
+.site-size-result-grid dd > span { font-size: 1.03rem; }
+.site-size-result-grid dd small { color: rgba(255, 255, 255, .55); font-size: .66rem; font-weight: 750; line-height: 1.35; }
+.site-size-result-grid dd small strong { color: #00ffb2; font: inherit; }
+.site-size-result-summary + .site-size-result-summary { margin-top: -5px; color: #dce8ff; }
 .site-size-result-source a { color: #8fb2ff; }
+
+/* Wide-screen composition follows the approved Portmason mockup:
+   a broad hero row, a shallow three-layer platform stack, and the live tools
+   immediately below it. The goal is to expose the first tool row above the
+   fold without shrinking the platform explanation into a side rail. */
+@media (min-width: 1061px) {
+  .portmason-workspace-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "intro"
+      "platform"
+      "gallery-heading"
+      "gallery"
+      "notice"
+      "noscript";
+    row-gap: clamp(8px, .9vw, 12px) !important;
+    align-items: start;
+  }
+
+  /* Compact architectural hero: a technical rail, a single declarative
+     headline when space permits, and supporting copy anchored beneath it on
+     the same invisible grid. */
+  .portmason-workspace-intro {
+    grid-area: intro;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    grid-template-areas:
+      "wordmark wordmark wordmark wordmark wordmark wordmark wordmark wordmark wordmark wordmark wordmark wordmark"
+      "title title title title title title title title title title title title"
+      ". . . summary summary summary summary summary summary summary summary summary";
+    column-gap: clamp(12px, 1.25vw, 18px);
+    row-gap: clamp(7px, .65vw, 10px);
+    align-items: start;
+  }
+
+  .portmason-wordmark {
+    grid-area: wordmark;
+    grid-column: auto;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: none;
+    box-shadow: none;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .portmason-wordmark::after {
+    content: "";
+    flex: 1 1 auto;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      rgba(143, 178, 255, .34),
+      rgba(143, 178, 255, .08) 62%,
+      transparent
+    );
+  }
+
+  .portmason-workspace-intro h2 {
+    grid-area: title;
+    grid-column: 1 / -1;
+    max-width: none;
+    font-size: clamp(3.72rem, 5.25vw, 5.15rem);
+    line-height: .9;
+    white-space: nowrap;
+  }
+
+  .portmason-workspace-intro p {
+    grid-area: summary;
+    grid-column: 4 / -1;
+    justify-self: start;
+    width: min(100%, 74ch);
+    max-width: 74ch;
+    padding: 0;
+    border: 0;
+    background: none;
+    font-size: clamp(.94rem, 1.04vw, 1.02rem);
+    line-height: 1.48;
+  }
+
+  .portmason-platform-map {
+    grid-area: platform;
+    gap: 6px;
+    margin-top: clamp(16px, 1.15vw, 20px);
+    padding: 8px 10px 9px;
+  }
+
+  .portmason-platform-map > header {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 6px 18px;
+  }
+
+  .portmason-platform-layers {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 6px;
+  }
+
+  /* Keep every platform plane on one compact desktop row so the live tools
+     rise further above the fold. */
+  .portmason-platform-layer {
+    grid-template-columns:
+      minmax(160px, .19fr)
+      max-content
+      minmax(0, 1fr);
+    grid-template-rows: auto;
+    column-gap: 18px;
+    row-gap: 0;
+    min-height: 48px;
+    padding: 7px 12px;
+  }
+
+  .portmason-platform-layer--tooling {
+    grid-column: auto;
+  }
+
+  .portmason-platform-layer > .portmason-platform-role {
+    grid-column: 1;
+    grid-row: 1;
+    align-self: stretch;
+    min-width: 160px;
+    padding-right: 14px;
+  }
+
+  .portmason-platform-layer > h3 {
+    grid-column: 2;
+    grid-row: 1;
+    white-space: nowrap;
+  }
+
+  .portmason-platform-layer > p {
+    grid-column: 3;
+    grid-row: 1;
+    margin: 0;
+  }
+
+  .portmason-platform-layer--foundations {
+    grid-template-columns:
+      minmax(160px, .19fr)
+      max-content
+      minmax(0, 1fr)
+      max-content;
+  }
+
+  .portmason-platform-layer--foundations > .portmason-platform-includes {
+    grid-column: 4;
+    grid-row: 1;
+    align-self: stretch;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    padding-left: 18px;
+    border-left: 1px solid rgba(143, 178, 255, .14);
+  }
+
+  .portmason-platform-layer--foundations
+    > .portmason-platform-includes
+    span,
+  .portmason-platform-layer--foundations
+    > .portmason-platform-includes
+    strong {
+    white-space: nowrap;
+  }
+
+  .workspace-gallery-heading {
+    grid-area: gallery-heading;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 8px 18px;
+    margin-top: clamp(14px, 1vw, 18px);
+    padding-top: 2px;
+  }
+
+  .workspace-gallery {
+    grid-area: gallery;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .workspace-tile { min-height: 335px; }
+  .portmason-mark-notice { grid-area: notice; }
+  .portmason-workspace-layout > noscript { grid-area: noscript; }
+}
+
+
+@media (min-width: 1061px) and (max-width: 1239px) {
+  .portmason-workspace-intro {
+    grid-template-areas:
+      "wordmark wordmark wordmark wordmark wordmark wordmark wordmark wordmark wordmark wordmark wordmark wordmark"
+      "title title title title title title title title title title title title"
+      ". . summary summary summary summary summary summary summary summary summary summary";
+  }
+
+  .portmason-workspace-intro h2 {
+    max-width: 11.25ch;
+    white-space: normal;
+  }
+
+  .portmason-workspace-intro p {
+    grid-column: 3 / -1;
+  }
+}
 
 @media (max-width: 1060px) {
   .workspace-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -665,13 +879,18 @@ html.workspace-modal-open { overflow: hidden; }
 @media (max-width: 560px) {
   .workspace-gallery { grid-template-columns: 1fr; }
   .workspace-tile { min-height: 300px; }
-  .portmason-platform-layer--tooling { grid-template-columns: 1fr; }
-  .portmason-platform-layer--tooling .portmason-platform-role {
+  .portmason-platform-layer { grid-template-columns: 1fr; }
+  .portmason-platform-layer > .portmason-platform-role {
+    grid-column: 1;
     grid-row: auto;
     place-items: start;
+    min-width: 0;
     padding-right: 0;
     border-right: 0;
   }
+  .portmason-platform-layer h3,
+  .portmason-platform-layer p,
+  .portmason-platform-includes { grid-column: 1; }
   .portmason-tool-head { grid-template-columns: 1fr; }
   .lab-metrics,
   .lab-proof-grid,

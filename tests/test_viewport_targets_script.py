@@ -31,7 +31,8 @@ class ViewportTargetsScriptTests(unittest.TestCase):
         self.assertIn("hashchange", JS)
         self.assertIn("decodeURIComponent", JS)
         self.assertIn("window.scrollTo", JS)
-        self.assertIn("getBoundingClientRect().top + window.pageYOffset", JS)
+        self.assertIn("const targetRect = target.getBoundingClientRect();", JS)
+        self.assertIn("window.pageYOffset + delta", JS)
 
     def test_script_controls_same_document_hash_clicks(self) -> None:
         self.assertIn('document.addEventListener("click"', JS)
@@ -49,10 +50,10 @@ class ViewportTargetsScriptTests(unittest.TestCase):
 
     def test_script_centers_short_inner_content_in_live_slot(self) -> None:
         self.assertIn('querySelector(":scope > .pm-viewport-target__inner")', JS)
-        self.assertIn("const slotCenter = headerHeight + (visiblePanelHeight / 2);", JS)
-        self.assertIn("const subjectCenter = subjectRect.top + window.pageYOffset + (subjectRect.height / 2);", JS)
-        self.assertIn("return subjectCenter - slotCenter;", JS)
-        self.assertIn("subjectRect.height <= visiblePanelHeight", JS)
+        self.assertIn("const slot = visibleSlotBounds();", JS)
+        self.assertIn("const subjectCenter = subjectRect.top + (subjectRect.height / 2);", JS)
+        self.assertIn("delta = subjectCenter - slot.center;", JS)
+        self.assertIn("subjectRect.height <= slot.height", JS)
 
 
     def test_script_updates_primary_nav_for_controlled_hash_navigation(self) -> None:
@@ -60,6 +61,23 @@ class ViewportTargetsScriptTests(unittest.TestCase):
         self.assertIn('document.querySelectorAll(".site-header .nav a[href]")', JS)
         self.assertIn('link.setAttribute("aria-current", "page")', JS)
         self.assertIn('document.body.classList.toggle("has-js-active-nav", hasActiveLink)', JS)
+
+
+    def test_script_uses_live_chrome_edges_and_self_correcting_delta(self) -> None:
+        self.assertIn("function visibleSlotBounds", JS)
+        self.assertIn("headerRect.bottom", JS)
+        self.assertIn("footerRect.top", JS)
+        self.assertIn("window.pageYOffset + delta", JS)
+
+    def test_script_honors_explicit_start_alignment(self) -> None:
+        self.assertIn("function alignmentMode", JS)
+        self.assertIn('getAttribute("data-pm-viewport-align")', JS)
+        self.assertIn('alignmentMode(target) === "start"', JS)
+
+    def test_script_realigns_after_fonts_and_chrome_settle(self) -> None:
+        self.assertIn("document.fonts.ready.then(requestHashAlignment)", JS)
+        self.assertIn("function requestChromeMeasurement", JS)
+        self.assertIn("new ResizeObserver(requestChromeMeasurement)", JS)
 
     def test_script_loads_before_visual_polish(self) -> None:
         self.assertLess(INDEX.index("assets/js/viewport-targets.js"), INDEX.index("assets/js/visual-polish.js"))
