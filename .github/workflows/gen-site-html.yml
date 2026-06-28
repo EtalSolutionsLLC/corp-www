@@ -22,52 +22,146 @@ concurrency:
 jobs:
   generate:
     runs-on: ubuntu-latest
+
     outputs:
       should_deploy: ${{ steps.rotation.outputs.should_build }}
 
+    env:
+      PM_VERSION_ROOT: ${{ github.workspace }}/site
+
     defaults:
       run:
-        working-directory: deploy/prd
+        shell: bash
+        working-directory: site/deploy/prd
 
     steps:
-      - name: Check out repository
+      - name: Check out website
         uses: actions/checkout@v4
+        with:
+          path: site
+          fetch-depth: 0
 
-      - name: Verify repository automation
-        shell: bash
+      - name: Read Portmason tooling revision
+        id: portmason-ref
+        working-directory: site
+        run: |
+          set -euo pipefail
+
+          if [[ ! -r .portmason-tooling-ref ]]; then
+            echo "::error::.portmason-tooling-ref is missing or unreadable"
+            exit 1
+          fi
+
+          ref="$(tr -d '[:space:]' < .portmason-tooling-ref)"
+          ref="${ref,,}"
+
+          if [[ ! "${ref}" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "::error::.portmason-tooling-ref must contain one full 40-character Git commit SHA"
+            exit 1
+          fi
+
+          echo "sha=${ref}" >> "${GITHUB_OUTPUT}"
+
+      - name: Check out ops-and-sops
+        uses: actions/checkout@v4
+        with:
+          repository: etalsolutionsllc/ops-and-sops
+          ref: ${{ steps.portmason-ref.outputs.sha }}
+          token: ${{ secrets.OPS_AND_SOPS_READ_TOKEN }}
+          path: ops-and-sops
+          sparse-checkout: |
+            ops/portmason
+          sparse-checkout-cone-mode: true
+          persist-credentials: false
+
+      - name: Register Portmason tooling
         working-directory: .
         run: |
+          set -euo pipefail
+
+          portmason_share="${GITHUB_WORKSPACE}/ops-and-sops/ops/portmason"
+
+          if [[ ! -r "${portmason_share}/pm-helpers" ]]; then
+            echo "::error::Shared pm-helpers is missing or unreadable: ${portmason_share}/pm-helpers"
+            exit 1
+          fi
+
+          if [[ ! -x "${portmason_share}/pm-version" ]]; then
+            echo "::error::Shared pm-version is missing or not executable: ${portmason_share}/pm-version"
+            exit 1
+          fi
+
+          echo "${portmason_share}" >> "${GITHUB_PATH}"
+          echo "PORTMASON_SHARE=${portmason_share}" >> "${GITHUB_ENV}"
+
+      - name: Verify repository automation
+        working-directory: site
+        run: |
+          set -euo pipefail
+
           required_scripts=(
             bin/rotate-transformation-thread
             bin/report-blog-rotation
           )
 
           for script in "${required_scripts[@]}"; do
-            if [[ ! -x "$script" ]]; then
-              echo "Required repository automation is missing or not executable: $script" >&2
+            if [[ ! -x "${script}" ]]; then
+              echo "Required repository automation is missing or not executable: ${script}" >&2
               exit 1
             fi
           done
 
-          portmason/pm-version validate
+          if [[ -e bin/pm-version ]]; then
+            echo "Project-local bin/pm-version must not exist; use shared ops-and-sops tooling." >&2
+            exit 1
+          fi
+
+          expected_pm_version="${GITHUB_WORKSPACE}/ops-and-sops/ops/portmason/pm-version"
+          actual_pm_version="$(command -v pm-version)"
+
+          if [[ "${actual_pm_version}" != "${expected_pm_version}" ]]; then
+            echo "Unexpected pm-version executable: ${actual_pm_version}" >&2
+            echo "Expected: ${expected_pm_version}" >&2
+            exit 1
+          fi
+
+          expected_tooling_ref="$(tr -d '[:space:]' < .portmason-tooling-ref)"
+          expected_tooling_ref="${expected_tooling_ref,,}"
+
+          actual_tooling_ref="$(
+            git \
+              -C "${GITHUB_WORKSPACE}/ops-and-sops" \
+              rev-parse HEAD
+          )"
+
+          if [[ "${actual_tooling_ref}" != "${expected_tooling_ref}" ]]; then
+            echo "Checked-out Portmason revision does not match .portmason-tooling-ref" >&2
+            echo "Expected: ${expected_tooling_ref}" >&2
+            echo "Actual:   ${actual_tooling_ref}" >&2
+            exit 1
+          fi
+
+          bash -n "${expected_pm_version}"
+          pm-version validate
 
       - name: Rotate Transformation Thread selection
         id: rotation
-        shell: bash
         env:
           WORKFLOW_EVENT: ${{ github.event_name }}
           ROTATION_DATE: ${{ github.event.inputs.rotation_date || '' }}
         run: |
+          set -euo pipefail
+
           rotation_args=(
             --collection www/collections/transformation-thread/collection.json
           )
 
-          if [[ "$WORKFLOW_EVENT" == "workflow_dispatch" ]]; then
+          if [[ "${WORKFLOW_EVENT}" == "workflow_dispatch" ]]; then
             rotation_args+=(--force)
 
-            if [[ -n "$ROTATION_DATE" ]]; then
-              rotation_args+=(--date "$ROTATION_DATE")
-              echo "Manual Transformation Thread rotation override: $ROTATION_DATE"
+            if [[ -n "${ROTATION_DATE}" ]]; then
+              rotation_args+=(--date "${ROTATION_DATE}")
+              echo "Manual Transformation Thread rotation override: ${ROTATION_DATE}"
             else
               echo "Manual Transformation Thread rotation override: configured-timezone today"
             fi
@@ -76,21 +170,30 @@ jobs:
             echo "Scheduled Transformation Thread rotation with local-midnight guard"
           fi
 
-          rotation_output="$(../../bin/rotate-transformation-thread "${rotation_args[@]}" 2>&1)"
-          printf '%s\n' "$rotation_output"
+          rotation_output="$(
+            ../../bin/rotate-transformation-thread \
+              "${rotation_args[@]}" \
+              2>&1
+          )"
 
-          if grep -q '^Outside local midnight rotation window:' <<<"$rotation_output"; then
-            echo "should_build=false" >> "$GITHUB_OUTPUT"
+          printf '%s\n' "${rotation_output}"
+
+          if grep -q \
+            '^Outside local midnight rotation window:' \
+            <<<"${rotation_output}"
+          then
+            echo "should_build=false" >> "${GITHUB_OUTPUT}"
             echo "No artifact will be built or deployed for this guard run."
           else
-            echo "should_build=true" >> "$GITHUB_OUTPUT"
+            echo "should_build=true" >> "${GITHUB_OUTPUT}"
           fi
 
       - name: Commit rotation source state
         if: ${{ steps.rotation.outputs.should_build == 'true' && !env.ACT }}
-        shell: bash
-        working-directory: .
+        working-directory: site
         run: |
+          set -euo pipefail
+
           rotation_paths=(
             deploy/prd/www/collections/transformation-thread/generated/selection.json
             deploy/prd/www/collections/transformation-thread/items
@@ -99,6 +202,7 @@ jobs:
           if ! git diff --quiet -- "${rotation_paths[@]}"; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
             git add -f "${rotation_paths[@]}"
             git commit -m "chore: rotate Transformation Thread"
             git push
@@ -106,15 +210,17 @@ jobs:
 
       - name: Allocate immutable site build
         if: ${{ steps.rotation.outputs.should_build == 'true' }}
-        shell: bash
-        working-directory: .
+        working-directory: site
         env:
           CI: "true"
         run: |
-          build_number="$(bin/pm-version build allocate --ci)"
+          set -euo pipefail
+
+          build_number="$(pm-version build allocate --ci)"
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
           git add \
             RELEASE_VERSION \
             BUILD_NUMBER \
@@ -122,17 +228,19 @@ jobs:
             deploy/*/RELEASE_VERSION \
             deploy/*/BUILD_NUMBER \
             deploy/*/VERSION
+
           git commit -m "chore: allocate site build ${build_number}"
           git push
 
-          echo "PM_BUILD_NUMBER=${build_number}" >> "$GITHUB_ENV"
-          echo "PM_SOURCE_COMMIT=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+          echo "PM_BUILD_NUMBER=${build_number}" >> "${GITHUB_ENV}"
+          echo "PM_SOURCE_COMMIT=$(git rev-parse HEAD)" >> "${GITHUB_ENV}"
 
       - name: Verify deployment basics
         if: ${{ steps.rotation.outputs.should_build == 'true' }}
-        shell: bash
-        working-directory: .
+        working-directory: site
         run: |
+          set -euo pipefail
+
           bash tests/verify-compose-contract
           bash tests/verify-production-entrypoints
 
@@ -141,6 +249,8 @@ jobs:
         env:
           PM_DEPLOYMENT_ID: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
         run: |
+          set -euo pipefail
+
           docker compose \
             -f docker-compose.yml \
             run --rm \
@@ -160,52 +270,62 @@ jobs:
           PM_SOURCE_DIRTY=false \
           PM_DEPLOY_ENV=github-pages \
           PM_DEPLOYMENT_ID="${PM_DEPLOYMENT_ID}" \
-            ../../bin/pm-version build finalize \
-              --site-dir "$PWD/www" \
+            pm-version build finalize \
+              --site-dir "${PWD}/www" \
               --environment github-pages \
               --deployment-id "${PM_DEPLOYMENT_ID}"
 
       - name: Verify Pages artifact readability
         if: ${{ steps.rotation.outputs.should_build == 'true' }}
-        shell: bash
-        working-directory: .
+        working-directory: site
         run: |
+          set -euo pipefail
+
           artifact_root="deploy/prd/www"
+
           required_metadata=(
-            "$artifact_root/build-info.json"
-            "$artifact_root/deploy-info.json"
-            "$artifact_root/artifact-manifest.json"
+            "${artifact_root}/build-info.json"
+            "${artifact_root}/deploy-info.json"
+            "${artifact_root}/artifact-manifest.json"
           )
 
           for metadata_file in "${required_metadata[@]}"; do
-            if [[ ! -f "$metadata_file" ]]; then
-              echo "Pages artifact is missing required metadata: $metadata_file" >&2
+            if [[ ! -f "${metadata_file}" ]]; then
+              echo "Pages artifact is missing required metadata: ${metadata_file}" >&2
               exit 1
             fi
 
-            if [[ ! -r "$metadata_file" ]]; then
+            if [[ ! -r "${metadata_file}" ]]; then
               echo "Pages metadata is not readable by the GitHub runner:" >&2
-              stat "$metadata_file" >&2 || true
+              stat "${metadata_file}" >&2 || true
               exit 1
             fi
 
-            mode="$(stat -c '%a' "$metadata_file")"
-            if [[ "$mode" != "644" ]]; then
-              echo "Pages metadata has mode $mode; expected 644: $metadata_file" >&2
+            mode="$(stat -c '%a' "${metadata_file}")"
+
+            if [[ "${mode}" != "644" ]]; then
+              echo "Pages metadata has mode ${mode}; expected 644: ${metadata_file}" >&2
               exit 1
             fi
           done
 
-          ../../bin/pm-version deployment verify --site-dir "$artifact_root"
+          pm-version deployment verify \
+            --site-dir "${artifact_root}"
 
-          unreadable_files="$(find "$artifact_root" -type f ! -readable -print)"
-          if [[ -n "$unreadable_files" ]]; then
+          unreadable_files="$(
+            find "${artifact_root}" \
+              -type f \
+              ! -readable \
+              -print
+          )"
+
+          if [[ -n "${unreadable_files}" ]]; then
             echo "Pages artifact contains unreadable files:" >&2
-            printf '%s\n' "$unreadable_files" >&2
+            printf '%s\n' "${unreadable_files}" >&2
             exit 1
           fi
 
-          tar -C "$artifact_root" -cf /dev/null .
+          tar -C "${artifact_root}" -cf /dev/null .
 
       - name: Report blog entry rotation
         if: ${{ steps.rotation.outputs.should_build == 'true' }}
@@ -213,9 +333,10 @@ jobs:
 
       - name: Commit generated production site HTML
         if: ${{ steps.rotation.outputs.should_build == 'true' && !env.ACT }}
-        shell: bash
-        working-directory: .
+        working-directory: site
         run: |
+          set -euo pipefail
+
           generated_paths=(
             deploy/prd/www/index.html
           )
@@ -227,15 +348,19 @@ jobs:
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
           git add -f "${generated_paths[@]}"
-          git commit -m "chore: generate production site HTML for build ${PM_BUILD_NUMBER}"
+
+          git commit \
+            -m "chore: generate production site HTML for build ${PM_BUILD_NUMBER}"
+
           git push
 
       - name: Upload GitHub Pages artifact
         if: ${{ steps.rotation.outputs.should_build == 'true' && !env.ACT }}
         uses: actions/upload-pages-artifact@v3
         with:
-          path: deploy/prd/www
+          path: site/deploy/prd/www
 
   deploy:
     if: ${{ needs.generate.outputs.should_deploy == 'true' }}
@@ -244,8 +369,10 @@ jobs:
 
     environment:
       name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       - name: Deploy to GitHub Pages
+        id: deployment
         if: ${{ !env.ACT }}
         uses: actions/deploy-pages@v4
