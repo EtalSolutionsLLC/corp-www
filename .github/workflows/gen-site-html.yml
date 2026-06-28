@@ -36,7 +36,7 @@ jobs:
 
     steps:
       - name: Check out website
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           path: site
           fetch-depth: 0
@@ -62,8 +62,20 @@ jobs:
 
           echo "sha=${ref}" >> "${GITHUB_OUTPUT}"
 
+      - name: Verify ops-and-sops credentials
+        working-directory: .
+        env:
+          OPS_AND_SOPS_READ_TOKEN: ${{ secrets.OPS_AND_SOPS_READ_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          if [[ -z "${OPS_AND_SOPS_READ_TOKEN}" ]]; then
+            echo "::error::OPS_AND_SOPS_READ_TOKEN is not configured"
+            exit 1
+          fi
+
       - name: Check out ops-and-sops
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: domer6811/ops-and-sops
           ref: ${{ steps.portmason-ref.outputs.sha }}
@@ -80,6 +92,11 @@ jobs:
           set -euo pipefail
 
           portmason_share="${GITHUB_WORKSPACE}/ops-and-sops/ops/portmason"
+
+          if [[ ! -d "${portmason_share}" ]]; then
+            echo "::error::Portmason tooling directory is missing: ${portmason_share}"
+            exit 1
+          fi
 
           if [[ ! -r "${portmason_share}/pm-helpers" ]]; then
             echo "::error::Shared pm-helpers is missing or unreadable: ${portmason_share}/pm-helpers"
@@ -129,9 +146,7 @@ jobs:
           expected_tooling_ref="${expected_tooling_ref,,}"
 
           actual_tooling_ref="$(
-            git \
-              -C "${GITHUB_WORKSPACE}/ops-and-sops" \
-              rev-parse HEAD
+            git -C "${GITHUB_WORKSPACE}/ops-and-sops" rev-parse HEAD
           )"
 
           if [[ "${actual_tooling_ref}" != "${expected_tooling_ref}" ]]; then
@@ -216,7 +231,24 @@ jobs:
         run: |
           set -euo pipefail
 
-          build_number="$(pm-version build allocate --ci)"
+          # pm-version owns allocation. Do not capture stdout because shared
+          # Portmason logging is intentionally human-readable.
+          pm-version build allocate --ci
+
+          # Read the authoritative machine value from the file pm-version wrote.
+          build_number="$(tr -d '[:space:]' < BUILD_NUMBER)"
+          compatibility_version="$(tr -d '[:space:]' < VERSION)"
+
+          if [[ ! "${build_number}" =~ ^[0-9]+$ ]]; then
+            echo "::error::BUILD_NUMBER contains an invalid value: ${build_number}"
+            exit 1
+          fi
+
+          if [[ "${compatibility_version}" != "${build_number}" ]]; then
+            echo "::error::VERSION does not match BUILD_NUMBER"
+            echo "::error::BUILD_NUMBER=${build_number}; VERSION=${compatibility_version}"
+            exit 1
+          fi
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -232,8 +264,10 @@ jobs:
           git commit -m "chore: allocate site build ${build_number}"
           git push
 
-          echo "PM_BUILD_NUMBER=${build_number}" >> "${GITHUB_ENV}"
-          echo "PM_SOURCE_COMMIT=$(git rev-parse HEAD)" >> "${GITHUB_ENV}"
+          {
+            echo "PM_BUILD_NUMBER=${build_number}"
+            echo "PM_SOURCE_COMMIT=$(git rev-parse HEAD)"
+          } >> "${GITHUB_ENV}"
 
       - name: Verify deployment basics
         if: ${{ steps.rotation.outputs.should_build == 'true' }}
@@ -350,10 +384,8 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           git add -f "${generated_paths[@]}"
-
           git commit \
             -m "chore: generate production site HTML for build ${PM_BUILD_NUMBER}"
-
           git push
 
       - name: Upload GitHub Pages artifact
