@@ -65,7 +65,7 @@ jobs:
       - name: Check out ops-and-sops
         uses: actions/checkout@v4
         with:
-          repository: etalsolutionsllc/ops-and-sops
+          repository: domer6811/ops-and-sops
           ref: ${{ steps.portmason-ref.outputs.sha }}
           token: ${{ secrets.OPS_AND_SOPS_READ_TOKEN }}
           path: ops-and-sops
