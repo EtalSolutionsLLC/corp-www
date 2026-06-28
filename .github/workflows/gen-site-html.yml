@@ -159,6 +159,12 @@ jobs:
           bash -n "${expected_pm_version}"
           pm-version validate
 
+      - name: Unit test shared build metadata integration
+        working-directory: site
+        run: |
+          set -euo pipefail
+          python3 -m unittest tests.test_site_build_shared_tooling
+
       - name: Rotate Transformation Thread selection
         id: rotation
         env:
@@ -288,6 +294,7 @@ jobs:
           docker compose \
             -f docker-compose.yml \
             run --rm \
+            --volume "${PORTMASON_SHARE}:/workspace/portmason:ro" \
             -e SITE_DIR=/workspace/www \
             -e GITHUB_ACTIONS=true \
             -e PM_OFFICIAL_BUILD=true \
@@ -390,7 +397,7 @@ jobs:
 
       - name: Upload GitHub Pages artifact
         if: ${{ steps.rotation.outputs.should_build == 'true' && !env.ACT }}
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: site/deploy/prd/www
 
@@ -407,4 +414,4 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         if: ${{ !env.ACT }}
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
