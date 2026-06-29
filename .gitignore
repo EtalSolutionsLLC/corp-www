@@ -6,6 +6,8 @@
 /www/logs/
 /.artifacts/
 
+/portmason/
+
 # Downloaded build packages and Windows attachment metadata.
 /*.tar.gz
 /*-chg.txt
