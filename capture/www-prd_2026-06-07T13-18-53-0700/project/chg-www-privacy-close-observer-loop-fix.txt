@@ -1,2 +1,0 @@
-project/assets/js/policy-modal-close.js
-project/chg.txt

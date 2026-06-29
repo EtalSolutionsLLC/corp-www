@@ -1,6 +1,0 @@
-project/index.html
-project/assets/css/styles.css
-project/assets/css/carousel.css
-project/assets/js/visual-polish.js
-project/tests/test_corp_site_refinement.py
-project/chg.txt
