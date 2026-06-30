@@ -1,6 +1,16 @@
 name: Publish corp test Pages mirror
 
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - "www/**"
+      - "BUILD_NUMBER"
+      - "VERSION"
+      - "RELEASE_VERSION"
+      - ".portmason-tooling-ref"
+      - ".github/workflows/publish-test-pages.yml"
   workflow_dispatch:
 
 permissions:
@@ -8,24 +18,32 @@ permissions:
 
 concurrency:
   group: corp-www-test-pages
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 env:
   TARGET_REPOSITORY: EtalSolutionsLLC/corp-www-test-pages
-  SOURCE_PATH: www
+  TEST_DOMAIN: www-test.etal.solutions
+  PM_VERSION_ROOT: ${{ github.workspace }}/source
 
 jobs:
   publish:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Verify mirror credentials
+      - name: Verify publication credentials
         env:
           PAGES_MIRROR_TOKEN: ${{ secrets.PAGES_MIRROR_TOKEN }}
+          OPS_AND_SOPS_READ_TOKEN: ${{ secrets.OPS_AND_SOPS_READ_TOKEN }}
         run: |
           set -euo pipefail
+
           [[ -n "${PAGES_MIRROR_TOKEN}" ]] || {
             echo "::error::PAGES_MIRROR_TOKEN is not configured."
+            exit 1
+          }
+
+          [[ -n "${OPS_AND_SOPS_READ_TOKEN}" ]] || {
+            echo "::error::OPS_AND_SOPS_READ_TOKEN is not configured."
             exit 1
           }
 
@@ -33,37 +51,113 @@ jobs:
         uses: actions/checkout@v7
         with:
           path: source
+          fetch-depth: 0
           persist-credentials: false
 
-      - name: Validate static DEV artifact
+      - name: Read pinned Portmason tooling revision
+        id: portmason-ref
+        working-directory: source
         run: |
           set -euo pipefail
 
-          artifact_root="source/${SOURCE_PATH}"
-
-          [[ -d "${artifact_root}" ]] || {
-            echo "::error::DEV static artifact directory does not exist: ${artifact_root}"
+          [[ -r .portmason-tooling-ref ]] || {
+            echo "::error::.portmason-tooling-ref is missing."
             exit 1
           }
 
-          [[ -f "${artifact_root}/index.html" ]] || {
-            echo "::error::DEV static artifact is missing index.html."
+          ref="$(tr -d '[:space:]' < .portmason-tooling-ref)"
+          ref="${ref,,}"
+
+          [[ "${ref}" =~ ^[0-9a-f]{40}$ ]] || {
+            echo "::error::.portmason-tooling-ref must contain a full commit SHA."
             exit 1
           }
 
-          if find "${artifact_root}" -type l -print -quit | grep -q .; then
-            echo "::error::Static artifact must not contain symbolic links."
+          echo "sha=${ref}" >> "${GITHUB_OUTPUT}"
+
+      - name: Check out pinned Portmason tooling
+        uses: actions/checkout@v7
+        with:
+          repository: domer6811/ops-and-sops
+          ref: ${{ steps.portmason-ref.outputs.sha }}
+          token: ${{ secrets.OPS_AND_SOPS_READ_TOKEN }}
+          path: ops-and-sops
+          sparse-checkout: |
+            ops/portmason
+          sparse-checkout-cone-mode: true
+          persist-credentials: false
+
+      - name: Register Portmason tooling
+        run: |
+          set -euo pipefail
+
+          portmason_share="${GITHUB_WORKSPACE}/ops-and-sops/ops/portmason"
+          [[ -r "${portmason_share}/pm-helpers" ]]
+          [[ -x "${portmason_share}/pm-version" ]]
+
+          echo "${portmason_share}" >> "${GITHUB_PATH}"
+          echo "PORTMASON_SHARE=${portmason_share}" >> "${GITHUB_ENV}"
+
+      - name: Stage test publication artifact
+        run: |
+          set -euo pipefail
+
+          mkdir -p artifact
+          rsync -a \
+            --exclude='.env' \
+            --exclude='**/.env' \
+            source/www/ \
+            artifact/
+
+          [[ -f artifact/index.html ]] || {
+            echo "::error::Staged test artifact is missing index.html."
             exit 1
-          fi
+          }
+
+      - name: Finalize Portmason test deployment metadata
+        env:
+          PM_OFFICIAL_BUILD: "true"
+          PM_SOURCE_COMMIT: ${{ github.sha }}
+          PM_SOURCE_DIRTY: "false"
+          PM_DEPLOY_ENV: test
+          PM_DEPLOYMENT_ID: github-pages-test-${{ github.run_id }}-${{ github.run_attempt }}
+        run: |
+          set -euo pipefail
+
+          pm-version build finalize \
+            --site-dir "${GITHUB_WORKSPACE}/artifact" \
+            --environment test \
+            --deployment-id "${PM_DEPLOYMENT_ID}"
+
+      - name: Verify finalized test artifact
+        run: |
+          set -euo pipefail
+
+          required=(
+            artifact/index.html
+            artifact/build-info.json
+            artifact/deploy-info.json
+            artifact/artifact-manifest.json
+          )
+
+          for file in "${required[@]}"; do
+            [[ -r "${file}" ]] || {
+              echo "::error::Finalized artifact is missing ${file}."
+              exit 1
+            }
+          done
+
+          pm-version deployment verify \
+            --site-dir "${GITHUB_WORKSPACE}/artifact"
 
           forbidden="$(
-            find "${artifact_root}" -type f \
-              \( -name '*.pem' -o -name '*.key' -o -name 'id_rsa*' \) \
+            find artifact -type f \
+              \( -name '.env' -o -name '*.pem' -o -name '*.key' -o -name 'id_rsa*' \) \
               -print
           )"
 
           [[ -z "${forbidden}" ]] || {
-            echo "::error::Static artifact contains forbidden files:"
+            echo "::error::Finalized artifact contains forbidden files:"
             printf '%s\n' "${forbidden}"
             exit 1
           }
@@ -88,26 +182,19 @@ jobs:
             git checkout --orphan main
           fi
 
-      - name: Replace mirror contents
+      - name: Replace mirror with finalized artifact
         run: |
           set -euo pipefail
 
           rsync -a --delete \
             --exclude='.git/' \
-            --exclude='.env' \
-            --exclude='**/.env' \
-            "source/${SOURCE_PATH}/" \
+            artifact/ \
             mirror/
 
           touch mirror/.nojekyll
-          rm -f mirror/CNAME
+          printf '%s\n' "${TEST_DOMAIN}" > mirror/CNAME
 
-          if find mirror -type f -name '.env' -print -quit | grep -q .; then
-            echo "::error::.env file reached the public mirror."
-            exit 1
-          fi
-
-      - name: Commit sanitized DEV publication artifact
+      - name: Commit finalized test publication
         working-directory: mirror
         env:
           SOURCE_REPOSITORY: ${{ github.repository }}
