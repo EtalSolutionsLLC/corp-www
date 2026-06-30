@@ -1,0 +1,152 @@
+name: Publish GitHub Pages mirror
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_repository:
+        description: "Public Pages mirror in owner/repository form"
+        required: true
+        default: "EtalSolutionsLLC/corp-www-test-pages"
+        type: string
+      source_path:
+        description: "Repository-relative static artifact directory"
+        required: true
+        default: "deploy/prd/www"
+        type: string
+      custom_domain:
+        description: "Optional custom domain written to CNAME; leave blank for github.io"
+        required: false
+        default: ""
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages-mirror-${{ inputs.target_repository }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Validate publication request
+        env:
+          TARGET_REPOSITORY: ${{ inputs.target_repository }}
+          SOURCE_PATH: ${{ inputs.source_path }}
+          CUSTOM_DOMAIN: ${{ inputs.custom_domain }}
+        run: |
+          set -euo pipefail
+
+          if [[ ! "${TARGET_REPOSITORY}" =~ ^EtalSolutionsLLC/[A-Za-z0-9._-]+$ ]]; then
+            echo "::error::Mirror target must belong to EtalSolutionsLLC."
+            exit 1
+          fi
+
+          target_name="${TARGET_REPOSITORY#EtalSolutionsLLC/}"
+          if [[ "${target_name}" != *-pages && "${target_name}" != "www.simplifai.team" ]]; then
+            echo "::error::Mirror repository must end in -pages or be the established production domain repository."
+            exit 1
+          fi
+
+          if [[ "${SOURCE_PATH}" == /* || "${SOURCE_PATH}" == *".."* ]]; then
+            echo "::error::source_path must be a safe repository-relative path."
+            exit 1
+          fi
+
+          if [[ -n "${CUSTOM_DOMAIN}" && ! "${CUSTOM_DOMAIN}" =~ ^[A-Za-z0-9.-]+$ ]]; then
+            echo "::error::custom_domain contains invalid characters."
+            exit 1
+          fi
+
+      - name: Verify mirror credentials
+        env:
+          PAGES_MIRROR_TOKEN: ${{ secrets.PAGES_MIRROR_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [[ -z "${PAGES_MIRROR_TOKEN}" ]]; then
+            echo "::error::PAGES_MIRROR_TOKEN is not configured."
+            exit 1
+          fi
+
+      - name: Check out authoritative source
+        uses: actions/checkout@v7
+        with:
+          path: source
+          persist-credentials: false
+
+      - name: Validate static artifact
+        env:
+          SOURCE_PATH: ${{ inputs.source_path }}
+        run: |
+          set -euo pipefail
+          artifact_root="source/${SOURCE_PATH}"
+
+          test -d "${artifact_root}"
+          test -f "${artifact_root}/index.html"
+
+          if find "${artifact_root}" -type l -print -quit | grep -q .; then
+            echo "::error::Static artifact must not contain symbolic links."
+            exit 1
+          fi
+
+          forbidden="$(
+            find "${artifact_root}" -type f \
+              \( -name '.env' -o -name '*.pem' -o -name '*.key' -o -name 'id_rsa*' \) \
+              -print
+          )"
+
+          if [[ -n "${forbidden}" ]]; then
+            echo "::error::Static artifact contains forbidden files:"
+            printf '%s\n' "${forbidden}"
+            exit 1
+          fi
+
+      - name: Check out public mirror
+        uses: actions/checkout@v7
+        with:
+          repository: ${{ inputs.target_repository }}
+          token: ${{ secrets.PAGES_MIRROR_TOKEN }}
+          path: mirror
+          fetch-depth: 0
+
+      - name: Replace mirror contents
+        env:
+          SOURCE_PATH: ${{ inputs.source_path }}
+          CUSTOM_DOMAIN: ${{ inputs.custom_domain }}
+        run: |
+          set -euo pipefail
+
+          rsync -a --delete \
+            --exclude='.git/' \
+            "source/${SOURCE_PATH}/" \
+            mirror/
+
+          touch mirror/.nojekyll
+          rm -f mirror/CNAME
+
+          if [[ -n "${CUSTOM_DOMAIN}" ]]; then
+            printf '%s\n' "${CUSTOM_DOMAIN}" > mirror/CNAME
+          fi
+
+      - name: Commit sanitized publication artifact
+        working-directory: mirror
+        env:
+          SOURCE_REPOSITORY: ${{ github.repository }}
+          SOURCE_COMMIT: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add -A
+
+          if git diff --cached --quiet; then
+            echo "Mirror already matches ${SOURCE_REPOSITORY}@${SOURCE_COMMIT}."
+            exit 0
+          fi
+
+          git commit -m "publish: ${SOURCE_REPOSITORY}@${SOURCE_COMMIT}"
+          git push origin HEAD:main
