@@ -1,25 +1,11 @@
-# Corp WWW Deterministic Test Mirror — Build 031
+# Corp WWW Test Mirror Source Fix — Build 032
 
-This build supersedes Build 028.
+Build 031 incorrectly used `deploy/dev/www`, which does not exist.
 
-The test deployment contains no runtime choices. The workflow is permanently
-bound to:
+The test mirror is now permanently bound to:
 
-```text
-source repository: EtalSolutionsLLC/corp-www
-source artifact:   deploy/dev/www
-mirror repository: EtalSolutionsLLC/corp-www-test-pages
-custom domain:     none
-```
+- source artifact: `www`
+- mirror repository: `EtalSolutionsLLC/corp-www-test-pages`
+- custom domain: none
 
-The workflow presents one action only:
-
-```text
-Run workflow
-```
-
-It does not ask for a repository, source path, environment, or domain.
-
-Production publication is intentionally not included in this build. It will use
-its own separately named, parameterless workflow after the test mirror pattern
-has been verified.
+There are no deployment-time choices.
