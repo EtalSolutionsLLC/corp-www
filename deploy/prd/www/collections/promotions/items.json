@@ -1,5 +1,48 @@
 [
   {
+    "id": "reviewnudge",
+    "slug": "reviewnudge",
+    "status": "featured",
+    "label": "Featured Product",
+    "title": "ReviewNudge™",
+    "shortTitle": "ReviewNudge",
+    "subtitle": "Turn completed work into more honest customer reviews—without chasing people manually.",
+    "audience": "Local service businesses and owner-led teams",
+    "summary": "A focused review-request platform that helps businesses send professional, branded requests, schedule respectful follow-ups, and keep customer outreach organized.",
+    "price": "Free trial",
+    "priceNote": "simple self-service setup",
+    "primaryAction": {
+      "label": "Start Free Trial",
+      "href": "https://reviewnudge.etal.solutions",
+      "openInNewTab": true
+    },
+    "tags": [
+      "Review-focused",
+      "Easy setup",
+      "Branded email",
+      "Respectful follow-up"
+    ],
+    "attributes": [
+      {
+        "title": "Professional requests",
+        "body": "Send clear, branded review requests that reflect the business customers already know."
+      },
+      {
+        "title": "Automatic follow-up",
+        "body": "Schedule one respectful reminder without manually tracking who still needs a nudge."
+      },
+      {
+        "title": "Best fit",
+        "body": "Service businesses that rely on customer trust, local reputation, and consistent word of mouth."
+      },
+      {
+        "title": "Goal",
+        "body": "Make it easier for satisfied customers to leave honest feedback while keeping outreach simple and accountable."
+      }
+    ],
+    "sortOrder": 1
+  },
+  {
     "id": "workflow-friction-review",
     "slug": "workflow-friction-review",
     "status": "featured",
