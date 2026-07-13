@@ -1,10 +1,10 @@
 # Portmason-managed local workspace material.
-/portmason/
-/capture/
-/archive/
-/logs/
-/www/logs/
-/.artifacts/
+portmason/
+capture/
+archive/
+logs/
+www/logs/
+.artifacts/
 
 # Downloaded build packages and Windows attachment metadata.
 /*.tar.gz
@@ -26,10 +26,6 @@ __pycache__/
 /deploy/*/www/deploy-info.json
 /deploy/*/www/artifact-manifest.json
 /.portmason-version.lock
-
-# Keep the generated Portmason contract files tracked.
-!.env.generated
-!config.generated.json
 
 # Track authoritative project automation despite workstation-wide bin/ rules.
 !/bin/

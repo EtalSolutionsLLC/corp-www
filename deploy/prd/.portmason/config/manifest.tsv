@@ -1,0 +1,2 @@
+service	role	config_scopes
+web	www-dev-web	www-dev-web,web
