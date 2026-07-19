@@ -30,6 +30,7 @@ jobs:
       DEPLOY_DIR: site/deploy/prd
       PAGES_SITE_DIR: site/deploy/prd/www
       OPS_DIR: ops-and-sops
+      OPS_AND_SOPS_READ_TOKEN: ${{ secrets.OPS_AND_SOPS_READ_TOKEN }}
 
     steps:
       - name: Check out project
@@ -62,12 +63,22 @@ jobs:
 
           printf 'ref=%s\n' "${ref}" >> "${GITHUB_OUTPUT}"
 
+      - name: Verify private Portmason repository access token
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          [[ -n "${OPS_AND_SOPS_READ_TOKEN}" ]] || {
+            echo "::error::OPS_AND_SOPS_READ_TOKEN is required to read private domer6811/ops-and-sops"
+            exit 1
+          }
+
       - name: Check out Portmason tooling
         uses: actions/checkout@v4
         with:
           repository: domer6811/ops-and-sops
           ref: ${{ steps.portmason-ref.outputs.ref }}
-          token: ${{ secrets.OPS_AND_SOPS_READ_TOKEN }}
+          token: ${{ env.OPS_AND_SOPS_READ_TOKEN }}
           path: ${{ env.OPS_DIR }}
           sparse-checkout: |
             ops/portmason
