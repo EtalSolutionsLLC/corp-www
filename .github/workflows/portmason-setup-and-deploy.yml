@@ -39,31 +39,7 @@ jobs:
           path: ${{ env.PROJECT_DIR }}
           fetch-depth: 0
 
-      - name: Resolve Portmason tooling revision
-        id: portmason-ref
-        working-directory: ${{ env.PROJECT_DIR }}
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          ref_file=".portmason-tooling-ref"
-          ref="main"
-
-          if [[ -r "${ref_file}" ]]; then
-            configured_ref="$(tr -d '[:space:]' < "${ref_file}")"
-            configured_ref="${configured_ref,,}"
-            if [[ -n "${configured_ref}" ]]; then
-              [[ "${configured_ref}" =~ ^[0-9a-f]{40}$ ]] || {
-                echo "::error::${ref_file} must be empty or contain one full 40-character Git commit SHA"
-                exit 1
-              }
-              ref="${configured_ref}"
-            fi
-          fi
-
-          printf 'ref=%s\n' "${ref}" >> "${GITHUB_OUTPUT}"
-
-      - name: Verify private Portmason repository access token
+      - name: Install Portmason tooling
         shell: bash
         run: |
           set -euo pipefail
@@ -73,22 +49,30 @@ jobs:
             exit 1
           }
 
-      - name: Check out Portmason tooling
-        uses: actions/checkout@v4
-        with:
-          repository: domer6811/ops-and-sops
-          ref: ${{ steps.portmason-ref.outputs.ref }}
-          token: ${{ env.OPS_AND_SOPS_READ_TOKEN }}
-          path: ${{ env.OPS_DIR }}
-          sparse-checkout: |
-            ops/portmason
-          sparse-checkout-cone-mode: true
-          persist-credentials: false
+          ref_file="${PROJECT_DIR}/.portmason-tooling-ref"
+          ref="main"
+          if [[ -r "${ref_file}" ]]; then
+            configured_ref="$(tr -d '[:space:]' < "${ref_file}")"
+            configured_ref="${configured_ref,,}"
+            if [[ -n "${configured_ref}" ]]; then
+              [[ "${configured_ref}" =~ ^[0-9a-f]{40}$ ]] || {
+                echo "::error::.portmason-tooling-ref must be empty or contain one full 40-character Git commit SHA"
+                exit 1
+              }
+              ref="${configured_ref}"
+            fi
+          fi
 
-      - name: Register Portmason
-        shell: bash
-        run: |
-          set -euo pipefail
+          auth_header="AUTHORIZATION: basic $(printf 'x-access-token:%s' "${OPS_AND_SOPS_READ_TOKEN}" | base64 -w0)"
+
+          git init "${OPS_DIR}"
+          git -C "${OPS_DIR}" remote add origin https://github.com/domer6811/ops-and-sops.git
+          git -C "${OPS_DIR}" config http.https://github.com/.extraheader "${auth_header}"
+          git -C "${OPS_DIR}" sparse-checkout init --cone
+          git -C "${OPS_DIR}" sparse-checkout set ops/portmason
+          git -C "${OPS_DIR}" fetch --depth=1 origin "${ref}"
+          git -C "${OPS_DIR}" checkout --detach FETCH_HEAD
+          git -C "${OPS_DIR}" config --unset-all http.https://github.com/.extraheader || true
 
           portmason_share="${GITHUB_WORKSPACE}/${OPS_DIR}/ops/portmason"
 
@@ -119,7 +103,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          "${PORTMASON_SHARE}/pm-setup"
+          pm-setup
 
       - name: Upload GitHub Pages artifact
         uses: actions/upload-pages-artifact@v3
