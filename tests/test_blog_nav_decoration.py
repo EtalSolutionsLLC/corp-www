@@ -20,6 +20,12 @@ class BlogNavDecorationTests(unittest.TestCase):
         self.assertIn('body:has(#blog:target) .nav a[href$="#blog"]::after', CSS)
         self.assertIn('body:has(#blog:target) .nav a[href$="#blog"]', CSS)
 
+    def test_newsroom_target_decorates_newsroom_link(self):
+        self.assertRegex(INDEX, r'<section class="thread-blog newsroom-publication panel[^"]*pm-viewport-target[^"]*" id="newsroom"')
+        self.assertIn('<a href="/#newsroom">Newsroom</a>', HEADER)
+        self.assertIn('body:has(#newsroom:target) .nav a[href$="#newsroom"]::after', CSS)
+        self.assertIn('body:has(#newsroom:target) .nav a[href$="#newsroom"]', CSS)
+
     def test_blog_has_no_standalone_page(self):
         self.assertFalse((SITE / "transformation-thread/index.html").exists())
 

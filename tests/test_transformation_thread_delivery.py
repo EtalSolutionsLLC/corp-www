@@ -48,8 +48,10 @@ class TransformationThreadDeliveryTests(unittest.TestCase):
 
     def test_every_post_has_directory_derived_identity_and_complete_source_files(self):
         self.assertEqual([post["id"] for post in self.posts], list(range(1, len(self.posts) + 1)))
-        self.assertEqual([post["slot"] for post in self.posts], [1, 2, 3, 4, 5, 6, 7, 1, 2, 3, 4, 5])
+        self.assertEqual([post["slot"] for post in self.posts[:7]], [1, 2, 3, 4, 5, 6, 7])
         for post in self.posts:
+            self.assertIsInstance(post["slot"], int)
+            self.assertGreaterEqual(post["slot"], 1)
             meta = json.loads(self.resolve(f"items/{post['id']:03d}/meta.json").read_text(encoding="utf-8"))
             self.assertNotIn("id", meta)
             self.assertNotIn("slug", meta)

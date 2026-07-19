@@ -7,5 +7,6 @@
   "APP_HOST": "www.etal.solutions",
   "APP_URL": "https://www.etal.solutions",
   "SITE_URL": "https://www.etal.solutions",
-  "URI_SCHEME": "https:"
+  "URI_SCHEME": "https:",
+  "LOG_FORMAT": "text"
 }

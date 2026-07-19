@@ -560,6 +560,11 @@ def render_publication(collection_dir: Path, manifest: dict[str, Any], items: li
     labels = manifest.get("labels") or {}
     presentation = manifest.get("presentation") or {}
     collection_id = str(manifest["id"])
+    section_id = str(presentation.get("sectionId") or ("blog" if collection_id == "transformation-thread" else collection_id))
+    theme = str(presentation.get("theme") or "light")
+    section_class = str(presentation.get("sectionClass") or "thread-blog")
+    title_id = str(presentation.get("titleId") or ("thread-blog-title" if collection_id == "transformation-thread" else f"{collection_id}-title"))
+    modal_title_id = str(presentation.get("modalTitleId") or f"{collection_id}-article-modal-title")
     featured, supporting = visible[0], visible[1:]
 
     title_lines = "\n".join(f"            <span>{esc(line)}</span>" for line in presentation.get("titleLines") or [])
@@ -581,16 +586,21 @@ def render_publication(collection_dir: Path, manifest: dict[str, Any], items: li
     item_prefix = str(labels.get("itemPrefix") or "Item")
     templates = "\n".join(publication_article_template(collection_dir, item, item_prefix) for item in visible)
 
-    return f'''  <section class="thread-blog panel pm-viewport-target pm-scroll-target collection collection--publication" id="blog" data-theme="light" aria-labelledby="thread-blog-title" data-collection data-collection-id="{esc(collection_id)}" data-collection-mode="publication" data-collection-config="/collections/{esc(collection_id)}/collection.json">
+    logo = presentation.get("logo")
+    logo_html = ""
+    if logo:
+        logo_html = f'''          <div class="thread-blog-logo-wrap" aria-label="{esc(presentation.get('brand'))}">
+            <img class="thread-blog-logo" src="{esc(logo)}" alt="{esc(presentation.get('logoAlt'))}" />
+          </div>'''
+
+    return f'''  <section class="{esc(section_class)} panel pm-viewport-target pm-scroll-target collection collection--publication" id="{esc(section_id)}" data-theme="{esc(theme)}" aria-labelledby="{esc(title_id)}" data-collection data-collection-id="{esc(collection_id)}" data-collection-mode="publication" data-collection-config="/collections/{esc(collection_id)}/collection.json">
 
     <div class="container pm-viewport-target__inner">
       <div class="thread-blog-showcase">
         <div class="thread-blog-masthead">
-          <div class="thread-blog-logo-wrap" aria-label="{esc(presentation.get('brand'))}">
-            <img class="thread-blog-logo" src="{esc(presentation.get('logo'))}" alt="{esc(presentation.get('logoAlt'))}" />
-          </div>
+{logo_html}
           <span class="thread-blog-kicker">{esc(presentation.get('kicker'))}</span>
-          <h2 id="thread-blog-title" class="thread-blog-title">
+          <h2 id="{esc(title_id)}" class="thread-blog-title">
 {title_lines}
           </h2>
           <p class="thread-blog-summary">{esc(presentation.get('summary'))}</p>
@@ -615,12 +625,12 @@ def render_publication(collection_dir: Path, manifest: dict[str, Any], items: li
           </div>
         </div>
 
-        <dialog class="thread-article-modal" data-collection-modal aria-labelledby="thread-article-modal-title">
+        <dialog class="thread-article-modal" data-collection-modal aria-labelledby="{esc(modal_title_id)}">
           <div class="thread-article-modal-shell">
             <button class="thread-article-modal-close modal-close-circle" type="button" data-collection-modal-close aria-label="{esc(labels.get('close', 'Close article'))}">×</button>
             <span class="thread-blog-kicker">{esc(presentation.get('brand'))}</span>
             <p class="thread-article-modal-meta" data-collection-modal-meta></p>
-            <h3 id="thread-article-modal-title" data-collection-modal-title></h3>
+            <h3 id="{esc(modal_title_id)}" data-collection-modal-title></h3>
             <div class="thread-article-modal-body" data-collection-modal-body></div>
           </div>
         </dialog>

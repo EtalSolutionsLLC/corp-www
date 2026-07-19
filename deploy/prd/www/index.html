@@ -30,27 +30,28 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <!-- PM:SITE-BUILD-META -->
-<!-- ETAL_SITE_RELEASE version="1.0.0" build="039" build-details="/build-info.json" deployment-details="/deploy-info.json" -->
+<!-- ETAL_SITE_RELEASE version="1.0.0" build="040" build-details="/build-info.json" deployment-details="/deploy-info.json" -->
 <meta name="etal-site-release" content="1.0.0" />
-<meta name="etal-site-build" content="039" />
+<meta name="etal-site-build" content="040" />
 <meta name="etal-site-build-info" content="/build-info.json" />
 <meta name="etal-site-deploy-info" content="/deploy-info.json" />
 <!-- /PM:SITE-BUILD-META -->
-  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico?v=040">
   <title>Et al Solutions LLC</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orestbida/cookieconsent@3.1.0/dist/cookieconsent.css" />
-    <link rel="stylesheet" href="assets/css/styles.css" />
+    <link rel="stylesheet" href="assets/css/styles.css?v=040" />
 <!-- PM:COLLECTION-STYLES -->
-    <link rel="stylesheet" href="collections/_system/collection.css" />
-    <link rel="stylesheet" href="collections/brands/styles.css" />
-    <link rel="stylesheet" href="collections/promotions/styles.css" />
-    <link rel="stylesheet" href="collections/systems-lab/styles.css" />
-    <link rel="stylesheet" href="collections/transformation-thread/styles.css" />
+    <link rel="stylesheet" href="collections/_system/collection.css?v=040" />
+    <link rel="stylesheet" href="collections/brands/styles.css?v=040" />
+    <link rel="stylesheet" href="collections/newsroom/styles.css?v=040" />
+    <link rel="stylesheet" href="collections/promotions/styles.css?v=040" />
+    <link rel="stylesheet" href="collections/systems-lab/styles.css?v=040" />
+    <link rel="stylesheet" href="collections/transformation-thread/styles.css?v=040" />
 <!-- /PM:COLLECTION-STYLES -->
-    <link rel="stylesheet" href="assets/css/action-system.css" />
-    <link rel="stylesheet" href="assets/css/theme-rhythm.css" />
-    <link rel="stylesheet" href="assets/css/cookie-consent-overrides.css" />
-    <link rel="stylesheet" href="assets/css/viewport-contract.css" />
+    <link rel="stylesheet" href="assets/css/action-system.css?v=040" />
+    <link rel="stylesheet" href="assets/css/theme-rhythm.css?v=040" />
+    <link rel="stylesheet" href="assets/css/cookie-consent-overrides.css?v=040" />
+    <link rel="stylesheet" href="assets/css/viewport-contract.css?v=040" />
 </head>
 <body>
 <!-- PM:TRACKING-CONSENT-PART2 -->
@@ -68,10 +69,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <nav class="nav" aria-label="Primary">
       <a href="/#home">Home</a>
       <a href="/#services">Services</a>
+      <a href="/#lab">Portmason</a>
       <a href="/#brands">Brands</a>
       <a href="/#promotions">Promotions</a>
-      <a href="/#lab">Portmason</a>
       <a href="/#blog">Blog</a>
+      <a href="/#newsroom">Newsroom</a>
       <a href="/#about">About</a>
       <a href="/#contact">Contact</a>
     </nav>
@@ -482,10 +484,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <div><dt>Files loaded</dt><dd data-performance-resources>Measuring…</dd></div>
   </dl>
 
-  <section class="site-size-compare" aria-labelledby="site-size-compare-title" data-site-size-compare data-site-size-self-url="https://www.etal.solutions/" data-site-size-config-url="config.generated.json">
+  <section class="site-size-compare" aria-labelledby="site-size-compare-title" data-site-size-compare data-site-size-self-url="https://www.etal.solutions/" data-site-size-config-url="config.public.json">
     <div class="site-size-compare-intro">
       <span class="lab-panel-label">Compare your homepage</span>
-      <h4 id="site-size-compare-title">Compare downloaded page weight and estimated transfer time.</h4>
+      <h4 id="site-size-compare-title">Run the same desktop page-weight and visual-load check side by side.</h4>
       <p>Enter a public homepage address. Nothing is stored by this site.</p>
     </div>
     <form class="site-size-form" data-site-size-form>
@@ -504,12 +506,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           <dt>Your homepage</dt>
           <dd>
             <span data-site-size-theirs>—</span>
+            <small>Visual load <strong data-site-speed-theirs>—</strong></small>
           </dd>
         </div>
         <div>
           <dt>This homepage</dt>
           <dd>
             <span data-site-size-ours>—</span>
+            <small>Visual load <strong data-site-speed-ours>—</strong></small>
           </dd>
         </div>
         <div>
@@ -523,8 +527,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       <p class="site-size-result-summary" data-site-size-summary></p>
       <p class="site-size-result-summary" data-site-speed-summary></p>
       <p class="site-size-result-context" data-site-size-context></p>
-<!--      <p class="site-size-result-note">Visual load is Lighthouse Speed Index: how quickly visible content appears during the test. It is not a stopwatch measurement of every background request. Results can vary as content changes.</p>
-      <p class="site-size-result-source">Typical-homepage benchmark: <a href="https://almanac.httparchive.org/en/2025/page-weight" target="_blank" rel="noopener noreferrer">HTTP Archive, 2025 Web Almanac</a>.</p>-->
+      <p class="site-size-result-note">Visual load is Lighthouse Speed Index: how quickly visible content appears during the test. It is not a stopwatch measurement of every background request. Results can vary as content changes.</p>
+      <p class="site-size-result-source">Typical-homepage benchmark: <a href="https://almanac.httparchive.org/en/2025/page-weight" target="_blank" rel="noopener noreferrer">HTTP Archive, 2025 Web Almanac</a>.</p>
     </section>
   </section>
 </article>
@@ -1022,12 +1026,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           </div>
         </div>
 
-        <dialog class="thread-article-modal" data-collection-modal aria-labelledby="thread-article-modal-title">
+        <dialog class="thread-article-modal" data-collection-modal aria-labelledby="transformation-thread-article-modal-title">
           <div class="thread-article-modal-shell">
             <button class="thread-article-modal-close modal-close-circle" type="button" data-collection-modal-close aria-label="Close article">×</button>
             <span class="thread-blog-kicker">The Transformation Thread</span>
             <p class="thread-article-modal-meta" data-collection-modal-meta></p>
-            <h3 id="thread-article-modal-title" data-collection-modal-title></h3>
+            <h3 id="transformation-thread-article-modal-title" data-collection-modal-title></h3>
             <div class="thread-article-modal-body" data-collection-modal-body></div>
           </div>
         </dialog>
@@ -1070,10 +1074,82 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   </section>
 <!-- /PM:COLLECTION-TRANSFORMATION-THREAD -->
 
-      <section class="section-dark panel pm-viewport-target pm-scroll-target" id="about" data-theme="dark">
+<!-- PM:COLLECTION-NEWSROOM -->
+  <section class="thread-blog newsroom-publication panel pm-viewport-target pm-scroll-target collection collection--publication" id="newsroom" data-theme="dark" aria-labelledby="newsroom-title" data-collection data-collection-id="newsroom" data-collection-mode="publication" data-collection-config="/collections/newsroom/collection.json">
+
+    <div class="container pm-viewport-target__inner">
+      <div class="thread-blog-showcase">
+        <div class="thread-blog-masthead">
+
+          <span class="thread-blog-kicker">Newsroom</span>
+          <h2 id="newsroom-title" class="thread-blog-title">
+            <span>Company</span>
+            <span>news,</span>
+            <span>launches,</span>
+            <span>updates.</span>
+          </h2>
+          <p class="thread-blog-summary">Official announcements, product launches, and company updates from Et al Solutions LLC.</p>
+          <div class="thread-blog-actions">
+            <a class="thread-topic-cta action action-primary" href="mailto:media@etal.solutions?subject=Et%20al%20Solutions%20media%20inquiry">Media Contact</a>
+          </div>
+        </div>
+
+        <div class="thread-post-layout" aria-label="Et al Solutions Newsroom article list">
+          <article class="thread-featured-post" aria-label="Featured article" data-collection-item data-collection-item-id="1" data-collection-slug="nr-001" data-collection-slot="1">
+            <div class="thread-post-meta">
+              <span>Latest</span>
+              <span>Product Launch</span>
+            </div>
+            <h3>ReviewNudge to Launch Internationally July 20, Beginning in the Netherlands</h3>
+            <p>Customer-review workspace introduces an 11-language launch experience and opens region by region through 8:00 a.m. Pacific.</p>
+            <a class="thread-post-link" href="/#newsroom" data-collection-open-item="1">Read release →</a>
+          </article>
+
+          <div class="thread-post-grid">
+
+          </div>
+        </div>
+
+        <dialog class="thread-article-modal" data-collection-modal aria-labelledby="newsroom-article-modal-title">
+          <div class="thread-article-modal-shell">
+            <button class="thread-article-modal-close modal-close-circle" type="button" data-collection-modal-close aria-label="Close release">×</button>
+            <span class="thread-blog-kicker">Et al Solutions Newsroom</span>
+            <p class="thread-article-modal-meta" data-collection-modal-meta></p>
+            <h3 id="newsroom-article-modal-title" data-collection-modal-title></h3>
+            <div class="thread-article-modal-body" data-collection-modal-body></div>
+          </div>
+        </dialog>
+        <template data-collection-article-template data-collection-item-id="1">
+          <span data-collection-article-title>ReviewNudge to Launch Internationally July 20, Beginning in the Netherlands</span>
+          <span data-collection-article-meta>Article NR-001 · Product Launch</span>
+          <div data-collection-article-body>
+            <p>Customer-review workspace introduces an 11-language launch experience and opens region by region through 8:00 a.m. Pacific.</p>
+            <p>LONG BEACH, Calif. - July 17, 2026 - PRLog -- ReviewNudge, a workspace for organizing customer-review outreach, launches internationally Monday, July 20. It begins in the Netherlands at 8:00 a.m. CEST and moves westward. The final wave opens at 8:00 a.m. PDT.</p>
+            <p>ReviewNudge originally targeted July 15, but founder David Omer postponed the launch after finding it lacked meaningful global language support. He added several days to make the launch more than a symbolic acknowledgment of those it hopes to serve.</p>
+            <p>&quot;On our original launch date, I realized that acknowledging a region while disregarding the language spoken by the people who live there sends the wrong message,&quot; said Omer.</p>
+            <p>&quot;Language is one of the most powerful tools humans have to connect, recognize one another and show respect. I could not put my name on an international launch that treated it as an afterthought.&quot;</p>
+            <p>ReviewNudge gives customer-facing teams one place for review links, outreach, follow-ups, status and team visibility. It shows what happened, what hasn&#x27;t yet, and who is handling it.</p>
+            <p>ReviewNudge grew from Omer&#x27;s micro-SaaS framework and his conclusion that many sites have become difficult to use. Customer reviews can make usability a public conversation, but useful feedback requires participation. ReviewNudge makes the first step - asking - easier.</p>
+            <p>The launch supports Dutch, English, Simplified Chinese, Hindi, Spanish, Arabic, French, Bengali, Brazilian Portuguese, Indonesian and Urdu.</p>
+            <p>Five minutes before the Netherlands launch, the Coming Soon page will give way to ReviewNudge in dark launch mode. Visitors will see the rollout and countdown while other product functions remain gated. At 8:00 a.m. CEST, access opens in the Netherlands and regions to its east past their Monday launch window.</p>
+            <p>The rollout moves westward through the United Kingdom, South America and the United States, then Eastern, Central, Mountain and Pacific time. As each region opens, the display shrinks to a compact status indicator. Hawaii joins the final Pacific wave, giving the rollout one clear finish.</p>
+            <p><em>&quot;People using ReviewNudge should be able to focus on the business they know, rather than becoming technical support for another piece of software,&quot; Omer said. &quot;It should simply work.&quot;</em></p>
+            <p>ReviewNudge will be available beginning July 20 at <a href="https://reviewnudge.etal.solutions/">reviewnudge.etal.solutions</a>.</p>
+            <h4>About ReviewNudge</h4>
+            <p>ReviewNudge is a customer-review workspace from Et al Solutions LLC. It helps businesses organize review links, outreach, follow-up activity, customer status and team visibility in one straightforward workspace.</p>
+            <h4>Contact</h4>
+            <p>Et al Solutions LLC media@etal.solutions</p>
+          </div>
+        </template>
+      </div>
+    </div>
+  </section>
+<!-- /PM:COLLECTION-NEWSROOM -->
+
+      <section class="section-light panel pm-viewport-target pm-scroll-target" id="about" data-theme="light">
         <div class="container about-layout pm-viewport-target__inner">
           <div class="section-copy">
-            <span class="section-kicker light">How We Think</span>
+            <span class="section-kicker">How We Think</span>
             <h2>Enterprise judgment without enterprise drag.</h2>
             <p>
               Et al Solutions LLC helps smaller organizations make technology decisions with the clarity larger companies expect, without importing the weight that often comes with them.
@@ -1100,7 +1176,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </div>
       </section>
 
-      <section class="section-light panel pm-viewport-target pm-scroll-target" id="contact" data-theme="light">
+      <section class="section-dark panel pm-viewport-target pm-scroll-target" id="contact" data-theme="dark">
         <div class="container founder-band pm-viewport-target__inner">
           <div class="founder-copy">
             <span class="section-kicker light">How We Work</span>
@@ -1221,28 +1297,28 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </dialog>
 
 <link rel="stylesheet" href="https://public.etal.solutions/assets/css/policy-modal.css">
-<link rel="stylesheet" href="/assets/css/policy-modal-overrides.css">
-<link rel="stylesheet" href="/assets/css/modal-close-system.css">
-<link rel="stylesheet" href="/assets/css/home-quick-summary.css">
-<link rel="stylesheet" href="/assets/css/site-build-info.css">
+<link rel="stylesheet" href="/assets/css/policy-modal-overrides.css?v=040">
+<link rel="stylesheet" href="/assets/css/modal-close-system.css?v=040">
+<link rel="stylesheet" href="/assets/css/home-quick-summary.css?v=040">
+<link rel="stylesheet" href="/assets/css/site-build-info.css?v=040">
 <script src="https://public.etal.solutions/assets/js/policy-modal.js" defer></script>
-<script src="/assets/js/policy-modal-close.js" defer></script>
-<script src="/assets/js/home-quick-summary.js" defer></script>
-<script src="/assets/js/site-build-info.js" defer></script>
+<script src="/assets/js/policy-modal-close.js?v=040" defer></script>
+<script src="/assets/js/home-quick-summary.js?v=040" defer></script>
+<script src="/assets/js/site-build-info.js?v=040" defer></script>
 <!-- /PM:FOOTER -->
   </div>
 <script src="https://cdn.jsdelivr.net/gh/orestbida/cookieconsent@3.1.0/dist/cookieconsent.umd.js"></script>
-<script src="assets/js/cookie-consent.js"></script>
+<script src="assets/js/cookie-consent.js?v=040"></script>
 
 <!-- PM:COLLECTION-SCRIPTS -->
-<script src="collections/_system/collection.js" defer></script>
-<script src="collections/_system/profiles/catalog.js" defer></script>
-<script src="collections/_system/profiles/publication.js" defer></script>
-<script src="collections/_system/profiles/workspace.js" defer></script>
-<script src="collections/systems-lab/workspace.js" defer></script>
+<script src="collections/_system/collection.js?v=040" defer></script>
+<script src="collections/_system/profiles/catalog.js?v=040" defer></script>
+<script src="collections/_system/profiles/publication.js?v=040" defer></script>
+<script src="collections/_system/profiles/workspace.js?v=040" defer></script>
+<script src="collections/systems-lab/workspace.js?v=040" defer></script>
 <!-- /PM:COLLECTION-SCRIPTS -->
-<script src="assets/js/viewport-targets.js" defer></script>
-<script src="assets/js/visual-polish.js" defer></script>
+<script src="assets/js/viewport-targets.js?v=040" defer></script>
+<script src="assets/js/visual-polish.js?v=040" defer></script>
 <!-- PM:ZZ-SITE-BUILD-FINALIZE -->
 <!-- /PM:ZZ-SITE-BUILD-FINALIZE -->
 </body>

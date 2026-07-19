@@ -9,7 +9,6 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT / "bin" / "report-blog-rotation"
-WORKFLOW = ROOT / ".github" / "workflows" / "gen-site-html.yml"
 
 
 def page(ids: tuple[int, int, int]) -> str:
@@ -34,11 +33,6 @@ def page(ids: tuple[int, int, int]) -> str:
 
 
 class BlogRotationReportTests(unittest.TestCase):
-    def test_workflow_calls_authoritative_root_reporter(self) -> None:
-        workflow = WORKFLOW.read_text(encoding="utf-8")
-        self.assertIn("run: ../../bin/report-blog-rotation", workflow)
-        self.assertNotIn("run: ./bin/report-blog-rotation", workflow)
-
     def test_reporter_parses_collection_system_markup(self) -> None:
         script = SCRIPT.read_text(encoding="utf-8")
         self.assertIn("COLLECTION-TRANSFORMATION-THREAD", script)

@@ -1,0 +1,28 @@
+{
+  "generated_by": "manual-newsroom-publication-import",
+  "collection": "newsroom",
+  "selection_date": "2026-07-17",
+  "rotation_timezone": "America/Los_Angeles",
+  "active_slot": 1,
+  "week_of_month": 3,
+  "source_sha256": "manual",
+  "visibleItems": [
+    {
+      "id": 1,
+      "slug": "nr-001",
+      "slot": 1,
+      "category": "Product Launch",
+      "status": "Press Release",
+      "dateFirstDisplayed": "2026-07-17",
+      "displayAfter": [],
+      "title_md": "items/001/title.md",
+      "excerpt_md": "items/001/excerpt.md",
+      "full_article_md": "items/001/full-article.md",
+      "title": "ReviewNudge to Launch Internationally July 20, Beginning in the Netherlands",
+      "title_html": "ReviewNudge to Launch Internationally July 20, Beginning in the Netherlands",
+      "excerpt": "Customer-review workspace introduces an 11-language launch experience and opens region by region through 8:00 a.m. Pacific.",
+      "excerpt_html": "Customer-review workspace introduces an 11-language launch experience and opens region by region through 8:00 a.m. Pacific.",
+      "url": "/#newsroom"
+    }
+  ]
+}

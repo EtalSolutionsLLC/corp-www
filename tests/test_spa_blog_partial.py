@@ -14,9 +14,9 @@ HOOK = SITE / "partials/hooks/collection-transformation-thread"
 
 EXPECTED_LINKS = [
     "/#home", "/#services", "/#lab", "/#brands",
-    "/#promotions", "/#blog", "/#about", "/#contact",
+    "/#promotions", "/#blog", "/#newsroom", "/#about", "/#contact",
 ]
-EXPECTED_PANEL_IDS = ["home", "services", "lab", "brands", "promotions", "blog", "about", "contact"]
+EXPECTED_PANEL_IDS = ["home", "services", "lab", "brands", "promotions", "blog", "newsroom", "about", "contact"]
 
 
 def section_position(section_id: str) -> int:
@@ -67,6 +67,16 @@ class SpaBlogCollectionTests(unittest.TestCase):
         ]:
             self.assertIn(token, INDEX)
         self.assertIn("collections/transformation-thread/styles.css", INDEX)
+
+    def test_newsroom_is_publication_profile_inside_spa(self):
+        tag = re.search(r'<section\b[^>]*\bid="newsroom"[^>]*>', INDEX)
+        self.assertIsNotNone(tag)
+        rendered = tag.group(0)
+        self.assertIn('data-collection-id="newsroom"', rendered)
+        self.assertIn('data-collection-mode="publication"', rendered)
+        self.assertIn('/collections/newsroom/collection.json', rendered)
+        self.assertIn("<!-- PM:COLLECTION-NEWSROOM -->", INDEX)
+        self.assertIn("collections/newsroom/styles.css", INDEX)
 
 
 if __name__ == "__main__":

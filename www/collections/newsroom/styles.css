@@ -1,0 +1,244 @@
+/* Et al Solutions Newsroom publication collection.
+   This intentionally departs from The Transformation Thread's editorial rail:
+   Newsroom should feel like an official press desk, not a blog magazine. */
+.newsroom-publication {
+  --thread-accent: #123bff;
+  --thread-rail: transparent;
+  --thread-rail-glow: transparent;
+  --newsroom-blue: #123bff;
+  --newsroom-ink: #071427;
+  --newsroom-muted: rgba(7, 20, 39, .68);
+  --newsroom-line: rgba(18, 59, 255, .16);
+  --newsroom-card: rgba(255, 255, 255, .96);
+  position: relative;
+  background:
+    radial-gradient(circle at 12% 16%, rgba(18, 59, 255, .10), transparent 0 28%),
+    linear-gradient(180deg, #f8fbff 0%, #eef4ff 48%, #f7f7fa 100%) !important;
+}
+
+.newsroom-publication[data-theme="dark"] {
+  --newsroom-line: rgba(143, 178, 255, .22);
+  background:
+    radial-gradient(circle at 14% 14%, rgba(18, 59, 255, .22), transparent 0 30%),
+    radial-gradient(circle at 86% 78%, rgba(143, 178, 255, .12), transparent 0 28%),
+    var(--corp-dark-band) !important;
+}
+
+.newsroom-publication::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(18, 59, 255, .045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(18, 59, 255, .045) 1px, transparent 1px);
+  background-size: 34px 34px;
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, .88), transparent 72%);
+}
+
+.newsroom-publication[data-theme="dark"]::before {
+  background-image:
+    linear-gradient(rgba(143, 178, 255, .055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(143, 178, 255, .055) 1px, transparent 1px);
+}
+
+.newsroom-publication[data-theme="dark"]::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 5px;
+  background: linear-gradient(#123bff, #00ffb2);
+  box-shadow: 0 0 28px rgba(18, 59, 255, .6);
+  pointer-events: none;
+}
+
+.newsroom-publication .container {
+  position: relative;
+  z-index: 1;
+}
+
+.newsroom-publication .thread-blog-showcase {
+  grid-template-columns: minmax(280px, .86fr) minmax(0, 1.14fr);
+  gap: 0;
+  overflow: hidden;
+  border: 1px solid var(--newsroom-line);
+  background: var(--newsroom-card);
+  box-shadow:
+    0 24px 70px rgba(7, 20, 39, .12),
+    inset 0 1px 0 rgba(255, 255, 255, .86);
+}
+
+.newsroom-publication .thread-blog-masthead {
+  min-height: 100%;
+  padding: clamp(22px, 3.2vw, 40px);
+  background:
+    linear-gradient(145deg, rgba(18, 59, 255, .96), rgba(7, 20, 39, .95)),
+    var(--newsroom-blue) !important;
+  color: #fff;
+}
+
+.newsroom-publication .thread-blog-masthead::before,
+.newsroom-publication .thread-blog-masthead::after {
+  display: none;
+}
+
+.newsroom-publication .thread-blog-masthead::selection,
+.newsroom-publication .thread-featured-post::selection {
+  background: rgba(255, 255, 255, .24);
+}
+
+.newsroom-publication .thread-blog-kicker {
+  display: inline-flex;
+  width: fit-content;
+  min-height: 28px;
+  align-items: center;
+  margin-bottom: clamp(14px, 2.1vw, 24px);
+  padding: 0 10px;
+  border: 1px solid rgba(255, 255, 255, .24);
+  background: rgba(255, 255, 255, .08);
+  color: rgba(255, 255, 255, .86);
+  letter-spacing: .2em;
+}
+
+.newsroom-publication .thread-blog-title {
+  max-width: 10ch;
+  color: #fff;
+  font-size: clamp(2.45rem, 4.25vw, 4.95rem);
+  line-height: .88;
+  letter-spacing: -.075em;
+}
+
+.newsroom-publication .thread-blog-title span {
+  display: block;
+}
+
+.newsroom-publication .thread-blog-summary {
+  max-width: 34ch;
+  color: rgba(255, 255, 255, .76);
+  font-size: clamp(.92rem, 1vw, 1.02rem);
+  line-height: 1.42;
+}
+
+.newsroom-publication .thread-topic-cta {
+  border: 1px solid rgba(255, 255, 255, .34);
+  background: #ffffff;
+  color: var(--newsroom-blue);
+  box-shadow: 0 16px 34px rgba(0, 0, 0, .18);
+}
+
+.newsroom-publication .thread-post-layout {
+  padding: clamp(20px, 2.7vw, 36px);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, .72), rgba(255, 255, 255, .96)),
+    #ffffff;
+}
+
+.newsroom-publication .thread-featured-post {
+  min-height: 100%;
+  padding: clamp(20px, 2.6vw, 34px);
+  border: 1px solid var(--newsroom-line);
+  border-top: 5px solid var(--newsroom-blue);
+  background:
+    linear-gradient(135deg, rgba(18, 59, 255, .055), rgba(255, 255, 255, .96)),
+    #ffffff;
+  box-shadow: 0 16px 42px rgba(7, 20, 39, .10);
+}
+
+.newsroom-publication .thread-featured-post::before {
+  content: "Press Release";
+  width: fit-content;
+  margin-bottom: 12px;
+  padding: 7px 10px;
+  border: 1px solid rgba(18, 59, 255, .20);
+  background: rgba(18, 59, 255, .07);
+  color: var(--newsroom-blue);
+  font-size: .66rem;
+  font-weight: 900;
+  letter-spacing: .14em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.newsroom-publication .thread-post-meta {
+  order: -1;
+  margin-bottom: 9px;
+}
+
+.newsroom-publication .thread-post-meta span {
+  border: 1px solid rgba(18, 59, 255, .16);
+  background: #fff;
+  color: var(--newsroom-muted);
+}
+
+.newsroom-publication .thread-post-meta span:first-child {
+  background: var(--newsroom-blue);
+  color: #fff;
+}
+
+.newsroom-publication .thread-featured-post h3 {
+  max-width: 15ch;
+  color: var(--newsroom-ink);
+  font-size: clamp(1.9rem, 3.15vw, 3.55rem);
+  line-height: .96;
+}
+
+.newsroom-publication .thread-featured-post p {
+  max-width: 62ch;
+  color: var(--newsroom-muted);
+  font-size: .96rem;
+  line-height: 1.48;
+}
+
+.newsroom-publication .thread-post-link {
+  align-self: flex-start;
+  margin-top: auto;
+  padding: 9px 13px;
+  border: 1px solid rgba(18, 59, 255, .24);
+  background: var(--newsroom-blue);
+  color: #fff;
+  text-decoration: none;
+}
+
+.newsroom-publication .thread-post-link:hover,
+.newsroom-publication .thread-post-link:focus-visible {
+  background: #071427;
+  color: #fff;
+}
+
+.newsroom-publication .thread-post-grid:empty {
+  display: none;
+}
+
+.newsroom-publication .thread-article-modal {
+  border-color: rgba(18, 59, 255, .28);
+}
+
+.newsroom-publication .thread-article-modal .thread-blog-kicker {
+  border-color: rgba(18, 59, 255, .18);
+  background: rgba(18, 59, 255, .06);
+  color: var(--newsroom-blue);
+}
+
+.newsroom-publication .thread-article-modal-meta {
+  color: var(--newsroom-blue);
+}
+
+.newsroom-publication .thread-article-modal h3 {
+  color: var(--newsroom-ink);
+}
+
+.newsroom-publication .thread-article-modal-body blockquote {
+  border-left-color: var(--newsroom-blue);
+  background: rgba(18, 59, 255, .06);
+}
+
+@media (max-width: 980px) {
+  .newsroom-publication .thread-blog-showcase {
+    grid-template-columns: 1fr;
+  }
+
+  .newsroom-publication .thread-blog-title,
+  .newsroom-publication .thread-featured-post h3 {
+    max-width: none;
+  }
+}

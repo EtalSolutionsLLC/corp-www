@@ -8,7 +8,7 @@ import unittest
 ROOT = Path(__file__).resolve().parents[1]
 WWW = ROOT / "www"
 
-PRIMARY_TARGETS = ["home", "services", "lab", "brands", "promotions", "blog", "about", "contact"]
+PRIMARY_TARGETS = ["home", "services", "lab", "brands", "promotions", "blog", "newsroom", "about", "contact"]
 
 
 class ViewportContractTests(unittest.TestCase):
@@ -17,9 +17,9 @@ class ViewportContractTests(unittest.TestCase):
 
     def test_viewport_contract_is_loaded_after_section_css(self) -> None:
         index = self.read("index.html")
-        lab_pos = index.index('href="collections/systems-lab/styles.css"')
-        rhythm_pos = index.index('href="assets/css/theme-rhythm.css"')
-        contract_pos = index.index('href="assets/css/viewport-contract.css"')
+        lab_pos = index.index("collections/systems-lab/styles.css")
+        rhythm_pos = index.index("assets/css/theme-rhythm.css")
+        contract_pos = index.index("assets/css/viewport-contract.css")
         self.assertGreater(contract_pos, lab_pos)
         self.assertGreater(contract_pos, rhythm_pos)
 

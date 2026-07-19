@@ -12,14 +12,15 @@
 #home[data-theme="dark"],
 #lab[data-theme="dark"],
 #promotions[data-theme="dark"],
-#about[data-theme="dark"] {
+#newsroom[data-theme="dark"],
+#contact[data-theme="dark"] {
   color: #ffffff;
 }
 
 #services[data-theme="light"],
 #brands[data-theme="light"],
 #blog[data-theme="light"],
-#contact[data-theme="light"] {
+#about[data-theme="light"] {
   background: var(--corp-light-band);
   color: #091427;
 }

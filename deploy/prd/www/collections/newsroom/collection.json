@@ -1,0 +1,41 @@
+{
+  "id": "newsroom",
+  "mode": "publication",
+  "layout": "featured-grid",
+  "styleFile": "styles.css",
+  "sectionHref": "/#newsroom",
+  "labels": {
+    "itemPrefix": "NR",
+    "featured": "Latest",
+    "openFeatured": "Read release →",
+    "openItem": "Read release →",
+    "close": "Close release"
+  },
+  "presentation": {
+    "sectionId": "newsroom",
+    "theme": "dark",
+    "sectionClass": "thread-blog newsroom-publication",
+    "brand": "Et al Solutions Newsroom",
+    "kicker": "Newsroom",
+    "titleLines": [
+      "Company",
+      "news,",
+      "launches,",
+      "updates."
+    ],
+    "summary": "Official announcements, product launches, and company updates from Et al Solutions LLC.",
+    "primaryAction": {
+      "label": "Media Contact",
+      "href": "mailto:media@etal.solutions?subject=Et%20al%20Solutions%20media%20inquiry"
+    }
+  },
+  "selection": {
+    "strategy": "latest",
+    "visibleItems": 1,
+    "timezone": "America/Los_Angeles",
+    "outputFile": "generated/selection.json"
+  },
+  "regions": {
+    "section": "COLLECTION-NEWSROOM"
+  }
+}

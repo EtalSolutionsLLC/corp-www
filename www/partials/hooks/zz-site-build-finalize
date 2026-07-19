@@ -10,6 +10,7 @@ esac
 
 resolve_version_tool() {
   local candidate=""
+  local script_dir=""
 
   if [[ -n "${PORTMASON_SHARE:-}" ]]; then
     candidate="${PORTMASON_SHARE}/pm-version"
@@ -21,6 +22,13 @@ resolve_version_tool() {
 
   if candidate="$(command -v pm-version 2>/dev/null)" \
       && [[ -x "${candidate}" ]]; then
+    printf '%s\n' "${candidate}"
+    return 0
+  fi
+
+  script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
+  candidate="${script_dir}/../../../bin/pm-version"
+  if [[ -x "${candidate}" ]]; then
     printf '%s\n' "${candidate}"
     return 0
   fi

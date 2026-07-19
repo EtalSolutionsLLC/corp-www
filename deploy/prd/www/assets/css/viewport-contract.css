@@ -143,6 +143,7 @@ body:not(:has(.pm-scroll-target:target)) #home.pm-viewport-target {
 #brands,
 #promotions,
 #blog,
+#newsroom,
 #about,
 #contact {
   padding-top: var(--pm-viewport-block) !important;
@@ -154,6 +155,7 @@ body:not(:has(.pm-scroll-target:target)) #home.pm-viewport-target {
 .pm-viewport-target#brands,
 .pm-viewport-target#promotions,
 .pm-viewport-target#blog,
+.pm-viewport-target#newsroom,
 .pm-viewport-target#about,
 .pm-viewport-target#contact {
   min-height: var(--pm-visible-panel-height) !important;

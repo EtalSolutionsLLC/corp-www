@@ -11,7 +11,7 @@ SITE = ROOT / "www"
 COLLECTIONS = SITE / "collections"
 INDEX = (SITE / "index.html").read_text(encoding="utf-8")
 
-COLLECTION_IDS = ["brands", "promotions", "systems-lab", "transformation-thread"]
+COLLECTION_IDS = ["brands", "newsroom", "promotions", "systems-lab", "transformation-thread"]
 
 
 class CollectionSystemTests(unittest.TestCase):
@@ -45,6 +45,7 @@ class CollectionSystemTests(unittest.TestCase):
         }
         self.assertEqual(modes, {
             "brands": "catalog",
+            "newsroom": "publication",
             "promotions": "catalog",
             "systems-lab": "workspace",
             "transformation-thread": "publication",
@@ -70,6 +71,7 @@ class CollectionSystemTests(unittest.TestCase):
             "COLLECTION-SCRIPTS": "collection-scripts",
             "COLLECTION-SYSTEMS-LAB": "collection-systems-lab",
             "COLLECTION-BRANDS": "collection-brands",
+            "COLLECTION-NEWSROOM": "collection-newsroom",
             "COLLECTION-PROMOTIONS": "collection-promotions",
             "COLLECTION-PROMOTIONS-HERO-TEASER": "collection-promotions-hero-teaser",
             "COLLECTION-TRANSFORMATION-THREAD": "collection-transformation-thread",
@@ -98,6 +100,7 @@ class CollectionSystemTests(unittest.TestCase):
         for href in [
             "collections/_system/collection.css",
             "collections/brands/styles.css",
+            "collections/newsroom/styles.css",
             "collections/promotions/styles.css",
             "collections/systems-lab/styles.css",
             "collections/transformation-thread/styles.css",

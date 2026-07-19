@@ -23,6 +23,10 @@ def shared_portmason() -> Path:
     if pm_version:
         return Path(pm_version).resolve().parent
 
+    workspace_share = ROOT.parent / "ops-and-sops" / "ops" / "portmason"
+    if (workspace_share / "pm-version").is_file():
+        return workspace_share.resolve()
+
     raise RuntimeError("PORTMASON_SHARE is not set and pm-version is not on PATH")
 
 

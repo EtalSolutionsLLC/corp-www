@@ -99,6 +99,7 @@ jobs:
         shell: bash
         env:
           GITHUB_ACTIONS: "true"
+          PM_NO_REDIRECT: "1"
           PM_OFFICIAL_BUILD: "true"
           PM_SOURCE_COMMIT: ${{ github.sha }}
           PM_SOURCE_DIRTY: "false"

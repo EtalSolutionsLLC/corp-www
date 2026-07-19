@@ -36,9 +36,14 @@ class CatalogLinkPolicyConfigTests(unittest.TestCase):
 
     def test_rendered_promotion_links_include_safe_new_tab_attributes(self):
         promotions_html = self.section_html("promotions", "blog")
+        expected = sum(
+            1
+            for item in self.load_items("promotions")
+            if item.get("primaryAction", {}).get("openInNewTab")
+        )
         self.assertEqual(
             promotions_html.count('target="_blank" rel="noopener noreferrer"'),
-            4,
+            expected,
         )
 
     def test_footer_loads_privacy_close_button_override_after_shared_modal(self):

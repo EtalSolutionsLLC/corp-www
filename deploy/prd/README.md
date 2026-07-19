@@ -142,16 +142,16 @@ BUILD_NUMBER     Sequential immutable deployable build, for example 035
 VERSION          Temporary compatibility alias maintained from BUILD_NUMBER
 ```
 
-`bin/pm-version` is the only writer for release, build, and deployment metadata.
-No lifecycle script independently edits version files.
+`pm-version` is the only writer for release, build, and deployment metadata.
+No workflow should independently edit version files or duplicate Portmason lifecycle steps.
 
 - `pm-version release bump major|minor|patch` calculates the next release; nobody types a version number manually.
-- GitHub Actions calls `pm-version build allocate --ci`, commits the allocation before building, and never reuses an already committed build number.
-- Portmason rendering calls `pm-version build finalize` to write and seal `build-info.json`, produce `artifact-manifest.json`, and record `deploy-info.json`.
+- GitHub Actions runs `pm-setup` from `deploy/prd`; Portmason owns collection rotation, site rendering, build finalization, and deployment metadata.
+- Portmason finalization calls `pm-version build finalize` to write and seal `build-info.json`, produce `artifact-manifest.json`, and record `deploy-info.json`.
 - Deployment recording verifies release, build, source commit, and artifact digest agree.
 - Provisioning does not alter product or build identity.
 
-Local materializations do not consume official build numbers. Their `buildId` is a development identifier derived from the source revision; official GitHub Pages artifacts use the allocated numeric build.
+Local materializations do not consume official build numbers. Their `buildId` is a development identifier derived from the source revision; official GitHub Pages artifacts use the committed numeric build.
 
 The artifact SHA-256 is a canonical manifest digest covering all served files except the three metadata records themselves, plus the canonical build identity. This avoids an impossible self-referential file digest while still identifying the exact served content set. The deployment record is intentionally separate so one immutable build may be promoted to multiple environments.
 
@@ -369,7 +369,7 @@ bin/cleanup-root
 ```
 
 The command protects `.project_timestamp`, `.env`, `.env.generated`,
-`config.generated.json`, `www/`, and every `deploy/*` tree.
+`config.public.json`, `www/`, and every `deploy/*` tree.
 
 ## Common checks
 

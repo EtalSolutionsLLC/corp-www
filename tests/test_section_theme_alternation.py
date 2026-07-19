@@ -11,6 +11,7 @@ INDEX = (SITE / 'index.html').read_text(encoding='utf-8')
 CSS = (SITE / 'assets/css/styles.css').read_text(encoding='utf-8')
 THEME_CSS = (SITE / 'assets/css/theme-rhythm.css').read_text(encoding='utf-8')
 THREAD_CSS = (SITE / 'collections/transformation-thread/styles.css').read_text(encoding='utf-8')
+SYSTEMS_LAB_CSS = (SITE / 'collections/systems-lab/styles.css').read_text(encoding='utf-8')
 
 
 class SectionThemeAlternationTests(unittest.TestCase):
@@ -27,16 +28,17 @@ class SectionThemeAlternationTests(unittest.TestCase):
             ('brands', 'light'),
             ('promotions', 'dark'),
             ('blog', 'light'),
-            ('about', 'dark'),
-            ('contact', 'light'),
+            ('newsroom', 'dark'),
+            ('about', 'light'),
+            ('contact', 'dark'),
         ]
         for section_id, theme in expected:
             with self.subTest(section_id=section_id):
                 self.assertIn(f'data-theme="{theme}"', self.section_tag(section_id))
 
-    def test_services_and_contact_classes_match_theme(self):
+    def test_services_and_about_classes_match_theme(self):
         self.assertRegex(INDEX, r'class="section-light panel[^"]*pm-viewport-target[^"]*" id="services" data-theme="light"')
-        self.assertRegex(INDEX, r'class="section-light panel[^"]*pm-viewport-target[^"]*" id="contact" data-theme="light"')
+        self.assertRegex(INDEX, r'class="section-light panel[^"]*pm-viewport-target[^"]*" id="about" data-theme="light"')
 
     def test_blog_collection_declares_light_theme(self):
         self.assertRegex(INDEX, r'class="thread-blog panel[^"]*pm-viewport-target[^"]*" id="blog" data-theme="light"')
@@ -51,11 +53,21 @@ class SectionThemeAlternationTests(unittest.TestCase):
         self.assertIn('#services[data-theme="light"],', THEME_CSS)
         self.assertIn('#brands[data-theme="light"],', THEME_CSS)
         self.assertIn('#blog[data-theme="light"],', THEME_CSS)
-        self.assertIn('#contact[data-theme="light"] {', THEME_CSS)
+        self.assertIn('#about[data-theme="light"] {', THEME_CSS)
         self.assertIn('#home[data-theme="dark"],', THEME_CSS)
         self.assertIn('#lab[data-theme="dark"],', THEME_CSS)
         self.assertIn('#promotions[data-theme="dark"],', THEME_CSS)
-        self.assertIn('#about[data-theme="dark"] {', THEME_CSS)
+        self.assertIn('#newsroom[data-theme="dark"],', THEME_CSS)
+        self.assertIn('#contact[data-theme="dark"] {', THEME_CSS)
+
+    def test_dark_panels_share_the_portmason_left_rail(self):
+        newsroom_css = (SITE / 'collections/newsroom/styles.css').read_text(encoding='utf-8')
+        self.assertIn('border-image: linear-gradient(180deg, #123bff, #00ffb2) 1;', CSS)
+        self.assertIn('.section-dark::after,\n.portmason-workspace::after {', CSS)
+        self.assertNotIn('.portmason-workspace::after {', SYSTEMS_LAB_CSS)
+        self.assertIn('.newsroom-publication[data-theme="dark"]::after {', newsroom_css)
+        self.assertIn('background: linear-gradient(#123bff, #00ffb2);', CSS)
+        self.assertIn('background: linear-gradient(#123bff, #00ffb2);', newsroom_css)
 
     def test_theme_rhythm_layer_loads_after_generated_catalog_styles(self):
         html = (SITE / 'index.html').read_text(encoding='utf-8')

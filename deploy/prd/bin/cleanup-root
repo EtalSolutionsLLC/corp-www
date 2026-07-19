@@ -73,7 +73,7 @@ remove_path() {
   [[ -e "${path}" || -L "${path}" ]] || return 0
 
   case "${path}" in
-    "config.generated.json"|deploy|deploy/*)
+    "config.public.json"|deploy|deploy/*)
       die "Refusing to alter protected Portmason path: ${path}"
       ;;
   esac

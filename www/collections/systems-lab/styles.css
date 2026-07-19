@@ -13,8 +13,7 @@
     linear-gradient(137deg, #071426 0%, #030a14 55%, #08182b 100%);
 }
 
-.portmason-workspace::before,
-.portmason-workspace::after {
+.portmason-workspace::before {
   content: "";
   position: absolute;
   inset: 0;
@@ -27,13 +26,6 @@
     linear-gradient(90deg, rgba(138, 176, 255, .045) 1px, transparent 1px);
   background-size: 38px 38px;
   mask-image: linear-gradient(to bottom, #000 0 72%, transparent 100%);
-}
-
-.portmason-workspace::after {
-  inset: 0 auto 0 0;
-  width: 5px;
-  background: linear-gradient(#123bff, #00ffb2);
-  box-shadow: 0 0 28px rgba(18, 59, 255, .6);
 }
 
 .portmason-workspace-layout {

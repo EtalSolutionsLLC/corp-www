@@ -148,6 +148,8 @@ body:not(:has(section:target)) .brand-page-hero {
 
 .hero {
   position: relative;
+  border-left: 5px solid #123bff;
+  border-image: linear-gradient(180deg, #123bff, #00ffb2) 1;
   color: var(--white);
   overflow: hidden;
   background:
@@ -457,6 +459,17 @@ body:not(:has(section:target)) .brand-page-hero {
     linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
   background-size: 46px 46px;
   opacity: 0.12;
+  pointer-events: none;
+}
+
+.section-dark::after,
+.portmason-workspace::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 5px;
+  background: linear-gradient(#123bff, #00ffb2);
+  box-shadow: 0 0 28px rgba(18, 59, 255, .6);
   pointer-events: none;
 }
 
@@ -2209,6 +2222,7 @@ body:has(#brands:target) .nav a[href$="#brands"]::after,
 body:has(#services:target) .nav a[href$="#services"]::after,
 body:has(#promotions:target) .nav a[href$="#promotions"]::after,
 body:has(#blog:target) .nav a[href$="#blog"]::after,
+body:has(#newsroom:target) .nav a[href$="#newsroom"]::after,
 body:has(#about:target) .nav a[href$="#about"]::after,
 body:has(#contact:target) .nav a[href$="#contact"]::after {
   opacity: 1;
@@ -2221,6 +2235,7 @@ body:has(#brands:target) .nav a[href$="#brands"],
 body:has(#services:target) .nav a[href$="#services"],
 body:has(#promotions:target) .nav a[href$="#promotions"],
 body:has(#blog:target) .nav a[href$="#blog"],
+body:has(#newsroom:target) .nav a[href$="#newsroom"],
 body:has(#about:target) .nav a[href$="#about"],
 body:has(#contact:target) .nav a[href$="#contact"] {
   color: #b8cdff;
@@ -2449,24 +2464,26 @@ body:has(#explore:target) .nav a[href$="#explore"] { color: #b8cdff; }
 #services[data-theme="light"],
 #brands[data-theme="light"],
 #blog[data-theme="light"],
-#contact[data-theme="light"] {
+#about[data-theme="light"] {
   color: var(--text);
 }
 
 #services[data-theme="light"],
 #blog[data-theme="light"],
-#contact[data-theme="light"] {
+#about[data-theme="light"] {
   background: var(--corp-light-band);
 }
 
 #home[data-theme="dark"],
 #explore[data-theme="dark"],
 #promotions[data-theme="dark"],
-#about[data-theme="dark"] {
+#newsroom[data-theme="dark"],
+#contact[data-theme="dark"] {
   color: var(--white);
 }
 
-#about[data-theme="dark"] {
+#newsroom[data-theme="dark"],
+#contact[data-theme="dark"] {
   background: var(--corp-dark-band);
 }
 

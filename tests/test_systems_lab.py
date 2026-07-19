@@ -118,11 +118,11 @@ class SystemsLabTests(unittest.TestCase):
             '"platform"',
             '"gallery-heading"',
             '"gallery"',
-            "grid-template-columns: minmax(520px, .95fr) minmax(420px, 1.05fr);",
+            "grid-template-columns: repeat(12, minmax(0, 1fr));",
             "grid-template-columns: minmax(0, 1fr);",
             "grid-template-columns: repeat(4, minmax(0, 1fr));",
             "max-width: 1280px;",
-            "font-size: clamp(4.25rem, 6.1vw, 5.8rem);",
+            "font-size: clamp(3.72rem, 5.25vw, 5.15rem);",
         ]:
             self.assertIn(token, CSS)
         self.assertNotIn('"intro gallery-heading"', CSS)
@@ -131,7 +131,7 @@ class SystemsLabTests(unittest.TestCase):
     def test_each_platform_plane_uses_the_same_dedicated_label_column(self):
         for token in [
             ".portmason-platform-layer > .portmason-platform-role",
-            "grid-template-columns: minmax(190px, .24fr) minmax(0, 1fr);",
+            "grid-template-columns: minmax(96px, auto) minmax(0, 1fr);",
             "grid-row: 1 / -1;",
             ".portmason-platform-layer h3,",
             ".portmason-platform-includes {",
