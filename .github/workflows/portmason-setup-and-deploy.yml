@@ -20,15 +20,10 @@ jobs:
   setup:
     runs-on: ubuntu-latest
 
-    outputs:
-      runtime_code: ${{ steps.runtime.outputs.runtime_code }}
-      is_static: ${{ steps.runtime.outputs.is_static }}
-      site_dir: ${{ steps.runtime.outputs.site_dir }}
-      image_artifact_name: ${{ steps.persist-static-image.outputs.artifact_name }}
-
     env:
       PROJECT_DIR: site
       DEPLOY_DIR: site/deploy/prd
+      PAGES_SITE_DIR: site/deploy/prd/www
       OPS_DIR: ops-and-sops
 
     steps:
@@ -109,96 +104,10 @@ jobs:
 
           "${PORTMASON_SHARE}/pm-setup"
 
-      - name: Resolve runtime outputs
-        id: runtime
-        working-directory: ${{ env.DEPLOY_DIR }}
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          # Load Portmason's resolved project context rather than duplicating
-          # runtime-selection logic in GitHub Actions.
-          # shellcheck disable=SC1090
-          source "${PORTMASON_SHARE}/pm-helpers" --read-only
-
-          runtime_code="${RUNTIME_CODE:-${RUNTIME_ADAPTER_CODE%%-*}}"
-          site_dir="${SITE_DIR:-${PWD}/www}"
-
-          [[ -n "${runtime_code}" ]] || {
-            echo "::error::Portmason did not resolve RUNTIME_CODE"
-            exit 1
-          }
-
-          printf 'runtime_code=%s\n' "${runtime_code}" >> "${GITHUB_OUTPUT}"
-          printf 'site_dir=%s\n' "${site_dir}" >> "${GITHUB_OUTPUT}"
-
-          if [[ "${runtime_code}" == "static" ]]; then
-            printf 'is_static=true\n' >> "${GITHUB_OUTPUT}"
-          else
-            printf 'is_static=false\n' >> "${GITHUB_OUTPUT}"
-          fi
-
-      - name: Persist static-site container image
-        id: persist-static-image
-        if: ${{ steps.runtime.outputs.is_static == 'true' }}
-        working-directory: ${{ env.DEPLOY_DIR }}
-        shell: bash
-        env:
-          STATIC_IMAGE_SERVICE: ${{ vars.PM_STATIC_IMAGE_SERVICE || 'web' }}
-        run: |
-          set -euo pipefail
-
-          service="${STATIC_IMAGE_SERVICE}"
-
-          docker compose config --services \
-            | grep -Fx -- "${service}" >/dev/null \
-            || {
-              echo "::error::Static image service is not defined in Compose: ${service}"
-              exit 1
-            }
-
-          image_id="$(docker compose images -q "${service}" | head -n 1)"
-
-          [[ -n "${image_id}" ]] || {
-            echo "::error::No built image was found for Compose service: ${service}"
-            exit 1
-          }
-
-          safe_repository="$(
-            printf '%s' "${GITHUB_REPOSITORY}" \
-              | tr '[:upper:]/_' '[:lower:]---' \
-              | sed 's/[^a-z0-9.-]/-/g; s/-\{2,\}/-/g'
-          )"
-
-          image_tag="ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/${safe_repository}:sha-${GITHUB_SHA}"
-          artifact_name="${safe_repository}-static-image-${GITHUB_SHA}"
-          image_archive="${RUNNER_TEMP}/${artifact_name}.tar"
-
-          docker tag "${image_id}" "${image_tag}"
-          docker save --output "${image_archive}" "${image_tag}"
-
-          sha256sum "${image_archive}" > "${image_archive}.sha256"
-
-          printf 'artifact_name=%s\n' "${artifact_name}" >> "${GITHUB_OUTPUT}"
-          printf 'archive=%s\n' "${image_archive}" >> "${GITHUB_OUTPUT}"
-          printf 'checksum=%s\n' "${image_archive}.sha256" >> "${GITHUB_OUTPUT}"
-
-      - name: Upload persisted static-site image
-        if: ${{ steps.runtime.outputs.is_static == 'true' }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ steps.persist-static-image.outputs.artifact_name }}
-          path: |
-            ${{ steps.persist-static-image.outputs.archive }}
-            ${{ steps.persist-static-image.outputs.checksum }}
-          if-no-files-found: error
-          retention-days: 14
-          compression-level: 0
-
       - name: Upload GitHub Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ${{ steps.runtime.outputs.site_dir }}
+          path: ${{ env.PAGES_SITE_DIR }}
 
   deploy-pages:
     runs-on: ubuntu-latest
