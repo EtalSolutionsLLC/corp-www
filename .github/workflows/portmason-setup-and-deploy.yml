@@ -2,6 +2,11 @@ name: setup-maintain-deploy-via-portmason
 
 on:
   workflow_dispatch:
+    inputs:
+      collection_date:
+        description: "Optional publication collection date (YYYY-MM-DD). Leave blank for today in each collection timezone."
+        required: false
+        type: string
   push:
     branches:
       - main
@@ -33,7 +38,7 @@ jobs:
           path: ${{ env.PROJECT_DIR }}
           fetch-depth: 0
 
-      - name: Read pinned Portmason revision
+      - name: Resolve Portmason tooling revision
         id: portmason-ref
         working-directory: ${{ env.PROJECT_DIR }}
         shell: bash
@@ -41,27 +46,27 @@ jobs:
           set -euo pipefail
 
           ref_file=".portmason-tooling-ref"
+          ref="main"
 
-          [[ -r "${ref_file}" ]] || {
-            echo "::error::${ref_file} is missing or unreadable"
-            exit 1
-          }
+          if [[ -r "${ref_file}" ]]; then
+            configured_ref="$(tr -d '[:space:]' < "${ref_file}")"
+            configured_ref="${configured_ref,,}"
+            if [[ -n "${configured_ref}" ]]; then
+              [[ "${configured_ref}" =~ ^[0-9a-f]{40}$ ]] || {
+                echo "::error::${ref_file} must be empty or contain one full 40-character Git commit SHA"
+                exit 1
+              }
+              ref="${configured_ref}"
+            fi
+          fi
 
-          ref="$(tr -d '[:space:]' < "${ref_file}")"
-          ref="${ref,,}"
+          printf 'ref=%s\n' "${ref}" >> "${GITHUB_OUTPUT}"
 
-          [[ "${ref}" =~ ^[0-9a-f]{40}$ ]] || {
-            echo "::error::${ref_file} must contain one full 40-character Git commit SHA"
-            exit 1
-          }
-
-          printf 'sha=%s\n' "${ref}" >> "${GITHUB_OUTPUT}"
-
-      - name: Check out pinned Portmason tooling
+      - name: Check out Portmason tooling
         uses: actions/checkout@v4
         with:
           repository: domer6811/ops-and-sops
-          ref: ${{ steps.portmason-ref.outputs.sha }}
+          ref: ${{ steps.portmason-ref.outputs.ref }}
           token: ${{ secrets.OPS_AND_SOPS_READ_TOKEN }}
           path: ${{ env.OPS_DIR }}
           sparse-checkout: |
@@ -99,6 +104,7 @@ jobs:
           PM_SOURCE_COMMIT: ${{ github.sha }}
           PM_SOURCE_DIRTY: "false"
           PM_DEPLOYMENT_ID: github-${{ github.run_id }}-${{ github.run_attempt }}
+          PM_STATIC_COLLECTION_DATE: ${{ inputs.collection_date || '' }}
         run: |
           set -euo pipefail
 
