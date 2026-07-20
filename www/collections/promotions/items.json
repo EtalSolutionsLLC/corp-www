@@ -1,7 +1,7 @@
 [
   {
-    "id": "reviewnudge-founding-25",
-    "slug": "reviewnudge-founding-25",
+    "id": "reviewnudge-founding-200",
+    "slug": "reviewnudge-founding-200",
     "status": "featured",
     "label": "Featured Product Launch",
     "title": "ReviewNudge",
@@ -10,7 +10,7 @@
     "audience": "Small service businesses and owner-led teams",
     "summary": "ReviewNudge gives you one focused workspace to add customers and send a thoughtful review request, then we'll manage the follow-up and give you complete visibility along the way.",
     "price": "$9.95",
-    "priceNote": "Founding 25 monthly rate",
+    "priceNote": "Founding 200 monthly rate",
     "primaryAction": {
       "label": "Start the Free Trial",
       "href": "https://reviewnudge.etal.solutions/setup",
@@ -32,12 +32,12 @@
         "body": "Keep customer status, message history, and review progress in one place."
       },
       {
-        "title": "Founding 25",
-        "body": "The first 25 active subscribers pay $9.95 per month while the subscription remains active."
+        "title": "Founding 200",
+        "body": "The first 200 active subscribers pay $9.95 per month while the subscription remains active."
       },
       {
         "title": "Standard rate",
-        "body": "$24.95 per month after the first 25."
+        "body": "$24.95 per month after the first 200."
       }
     ],
     "sortOrder": 1

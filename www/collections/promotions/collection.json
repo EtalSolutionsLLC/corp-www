@@ -5,7 +5,7 @@
   "dataFile": "items.json",
   "styleFile": "styles.css",
   "sectionHref": "/#promotions",
-  "defaultItem": "reviewnudge-founding-25",
+  "defaultItem": "reviewnudge-founding-200",
   "labels": {
     "itemFallback": "Promotion",
     "heroCta": "View Details",

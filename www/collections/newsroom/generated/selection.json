@@ -1,11 +1,9 @@
 {
-  "generated_by": "manual-newsroom-publication-import",
+  "generated_by": "pm-materialize-publication-collections",
   "collection": "newsroom",
-  "selection_date": "2026-07-17",
+  "selection_date": "2026-07-19",
   "rotation_timezone": "America/Los_Angeles",
-  "active_slot": 1,
-  "week_of_month": 3,
-  "source_sha256": "manual",
+  "source_sha256": "bd406ddecd94458b975dc4f955a7a1530da3524a87aaa2793256f0f4d46a5b47",
   "visibleItems": [
     {
       "id": 1,
@@ -13,6 +11,7 @@
       "slot": 1,
       "category": "Product Launch",
       "status": "Press Release",
+      "publishDate": null,
       "dateFirstDisplayed": "2026-07-17",
       "displayAfter": [],
       "title_md": "items/001/title.md",
