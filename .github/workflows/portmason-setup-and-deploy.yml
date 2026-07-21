@@ -49,32 +49,11 @@ jobs:
             exit 1
           }
 
-          ref_file="${PROJECT_DIR}/.portmason-tooling-ref"
-          ref="main"
-          if [[ -r "${ref_file}" ]]; then
-            configured_ref="$(tr -d '[:space:]' < "${ref_file}")"
-            configured_ref="${configured_ref,,}"
-            if [[ -n "${configured_ref}" ]]; then
-              [[ "${configured_ref}" =~ ^[0-9a-f]{40}$ ]] || {
-                echo "::error::.portmason-tooling-ref must be empty or contain one full 40-character Git commit SHA"
-                exit 1
-              }
-              ref="${configured_ref}"
-            fi
-          fi
-
-          mkdir -p "${OPS_DIR}"
-          archive="${RUNNER_TEMP}/ops-and-sops.tar.gz"
           export GITHUB_TOKEN="${OPS_AND_SOPS_READ_TOKEN_2}"
 
-          gh api \
-            "repos/domer6811/ops-and-sops/tarball/${ref}" \
-            > "${archive}"
-
-          tar -xzf "${archive}" \
-            --strip-components=1 \
-            --wildcards '*/ops/portmason/*' \
-            -C "${OPS_DIR}"
+          git clone --filter=blob:none --sparse git@github.com:domer6811/ops-and-sops.git $OPS_DIR
+          cd $OPS_DIR
+          git sparse-checkout set ops/portmason
 
           portmason_share="${GITHUB_WORKSPACE}/${OPS_DIR}/ops/portmason"
 
