@@ -65,7 +65,7 @@ jobs:
 
           mkdir -p "${OPS_DIR}"
           archive="${RUNNER_TEMP}/ops-and-sops.tar.gz"
-          export GH_TOKEN="${OPS_AND_SOPS_READ_TOKEN}"
+          export GITHUB_TOKEN="${OPS_AND_SOPS_READ_TOKEN}"
 
           gh api \
             "repos/domer6811/ops-and-sops/tarball/${ref}" \
