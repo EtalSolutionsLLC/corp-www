@@ -30,7 +30,7 @@ jobs:
       DEPLOY_DIR: site/deploy/prd
       PAGES_SITE_DIR: site/deploy/prd/www
       OPS_DIR: ops-and-sops
-      OPS_AND_SOPS_READ_TOKEN: ${{ secrets.OPS_AND_SOPS_READ_TOKEN }}
+      OPS_AND_SOPS_READ_TOKEN_2: ${{ secrets.OPS_AND_SOPS_READ_TOKEN_2 }}
 
     steps:
       - name: Check out project
@@ -44,8 +44,8 @@ jobs:
         run: |
           set -euo pipefail
 
-          [[ -n "${OPS_AND_SOPS_READ_TOKEN}" ]] || {
-            echo "::error::OPS_AND_SOPS_READ_TOKEN is required to read private domer6811/ops-and-sops"
+          [[ -n "${OPS_AND_SOPS_READ_TOKEN_2}" ]] || {
+            echo "::error::OPS_AND_SOPS_READ_TOKEN_2 is required to read private domer6811/ops-and-sops"
             exit 1
           }
 
@@ -65,7 +65,7 @@ jobs:
 
           mkdir -p "${OPS_DIR}"
           archive="${RUNNER_TEMP}/ops-and-sops.tar.gz"
-          export GITHUB_TOKEN="${OPS_AND_SOPS_READ_TOKEN}"
+          export GITHUB_TOKEN="${OPS_AND_SOPS_READ_TOKEN_2}"
 
           gh api \
             "repos/domer6811/ops-and-sops/tarball/${ref}" \
