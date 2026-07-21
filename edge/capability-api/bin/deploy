@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+set -eu
+: "${CLOUDFLARE_API_TOKEN:?CLOUDFLARE_API_TOKEN is required}"
+: "${CLOUDFLARE_ACCOUNT_ID:?CLOUDFLARE_ACCOUNT_ID is required}"
+SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+ROOT=$(CDPATH= cd -- "$SCRIPT_DIR/.." && pwd)
+docker run --rm \
+  -e CLOUDFLARE_API_TOKEN -e CLOUDFLARE_ACCOUNT_ID \
+  -v "$ROOT:/workspace" -w /workspace node:22-alpine \
+  sh -lc 'npm install --no-audit --no-fund && npx wrangler deploy'

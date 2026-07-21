@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+set -eu
+SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+ROOT=$(CDPATH= cd -- "$SCRIPT_DIR/.." && pwd)
+docker run --rm -v "$ROOT:/workspace" -w /workspace node:22-alpine node --test test/*.test.mjs
