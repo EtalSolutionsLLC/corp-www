@@ -39,6 +39,33 @@ class SystemsLabTests(unittest.TestCase):
         ]:
             self.assertIn(token, INDEX)
 
+    def test_portmason_first_touch_launches_into_the_live_lab(self):
+        intro = MANIFEST["presentation"]["productIntro"]
+        self.assertEqual(intro["primaryAction"]["href"], "#lab-proof")
+        for token in [
+            'class="portmason-product-frontdoor"',
+            "One operating foundation for small software products.",
+            "Launch sequence",
+            "repo root",
+            ".env",
+            "pm-setup",
+            "Enter the systems lab",
+            'id="lab-proof"',
+        ]:
+            self.assertIn(token, INDEX)
+        self.assertLess(
+            INDEX.index('class="portmason-product-frontdoor"'),
+            INDEX.index('class="portmason-platform-map"'),
+        )
+        for token in [
+            ".portmason-product-frontdoor",
+            ".portmason-product-console",
+            ".portmason-console-steps li",
+            "@keyframes portmasonBootStep",
+            '"overview"',
+        ]:
+            self.assertIn(token, CSS)
+
     def test_workspace_manifest_and_four_tools_are_data_driven(self):
         self.assertEqual(MANIFEST["mode"], "workspace")
         self.assertEqual(MANIFEST["layout"], "tile-gallery")

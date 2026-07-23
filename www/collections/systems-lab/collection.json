@@ -21,6 +21,50 @@
     "kicker": "Portmason Platform\u2122 \u00b7 Live systems lab",
     "title": "The platform is the proof.",
     "summary": "Portmason separates a system’s foundations, control surface, and operational lifecycle. The live tools below demonstrate combinations of those capabilities.",
+    "productIntro": {
+      "kicker": "Portmason Platform\u2122",
+      "title": "One operating foundation for small software products.",
+      "summary": "Portmason keeps code, configuration, deployment, scheduled work, queues, and provider-specific runtime details separated enough to change safely without turning every project into a custom DevOps snowflake.",
+      "primaryAction": {
+        "label": "Enter the systems lab",
+        "href": "#lab-proof"
+      },
+      "secondaryAction": {
+        "label": "Talk through a platform",
+        "href": "#contact"
+      },
+      "boot": {
+        "eyebrow": "Launch sequence",
+        "command": "pm-setup",
+        "flow": [
+          "repo root",
+          ".env",
+          "pm-setup",
+          "runtime"
+        ],
+        "steps": [
+          "environment",
+          "configuration",
+          "runtime",
+          "deployment",
+          "scheduled work"
+        ]
+      },
+      "features": [
+        {
+          "title": "Environment-led",
+          "summary": ".env and Compose describe the deployment. Code stays portable."
+        },
+        {
+          "title": "Adapter-ready",
+          "summary": "Local, cloud, database, queue, and scheduler concerns plug in through service-agnostic calls."
+        },
+        {
+          "title": "Promotion-safe",
+          "summary": "Dev and production can differ intentionally while setup, validation, and deployment remain repeatable."
+        }
+      ]
+    },
     "markNotice": "Portmason Platform\u2122, Portmason Operations\u2122, Portmason Foundations\u2122, Portmason Collections\u2122, and Portmason Tooling\u2122 are marks of Et al Solutions LLC.",
     "platformModel": {
       "relationship": "Foundations define the system. Tooling creates, validates, and controls it. Operations provisions, deploys, and runs it.",

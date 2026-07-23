@@ -42,6 +42,250 @@
   align-items: end;
 }
 
+.portmason-product-frontdoor {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(320px, .72fr);
+  grid-template-areas:
+    "copy console"
+    "features console";
+  gap: clamp(16px, 2vw, 28px);
+  align-items: stretch;
+  padding: clamp(20px, 3.2vw, 40px);
+  border: 1px solid rgba(143, 178, 255, .18);
+  background:
+    linear-gradient(135deg, rgba(13, 31, 57, .7), rgba(3, 10, 22, .58)),
+    radial-gradient(circle at 9% 0, rgba(18, 59, 255, .22), transparent 0 28%);
+  box-shadow: 0 28px 80px rgba(0, 0, 0, .22), inset 0 1px 0 rgba(255, 255, 255, .04);
+}
+
+.portmason-product-copy {
+  grid-area: copy;
+  display: grid;
+  align-content: start;
+  gap: clamp(13px, 1.4vw, 18px);
+}
+
+.portmason-product-copy h2 {
+  max-width: 13ch;
+  margin: 0;
+  color: #fff;
+  font-size: clamp(3rem, 5.4vw, 5.45rem);
+  line-height: .88;
+  letter-spacing: -.07em;
+}
+
+.portmason-product-copy p {
+  max-width: 67ch;
+  margin: 0;
+  color: rgba(235, 242, 255, .72);
+  font-size: clamp(.96rem, 1.08vw, 1.08rem);
+  line-height: 1.58;
+}
+
+.portmason-product-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.portmason-product-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 15px;
+  border: 1px solid rgba(143, 178, 255, .24);
+  color: #dce8ff;
+  font-size: .72rem;
+  font-weight: 950;
+  letter-spacing: .08em;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease, box-shadow 180ms ease;
+}
+
+.portmason-product-action--primary {
+  border-color: rgba(0, 255, 178, .38);
+  background: linear-gradient(90deg, rgba(18, 59, 255, .48), rgba(0, 255, 178, .22));
+  color: #fff;
+  box-shadow: 0 16px 42px rgba(18, 59, 255, .22);
+}
+
+.portmason-product-action--secondary {
+  background: rgba(3, 10, 22, .48);
+}
+
+.portmason-product-action:hover,
+.portmason-product-action:focus-visible {
+  transform: translateY(-2px);
+  border-color: rgba(143, 178, 255, .62);
+  box-shadow: 0 18px 46px rgba(0, 0, 0, .26), 0 0 24px rgba(0, 255, 178, .08);
+}
+
+.portmason-product-action:focus-visible {
+  outline: 2px solid #8fb2ff;
+  outline-offset: 3px;
+}
+
+.portmason-product-console {
+  grid-area: console;
+  align-self: stretch;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid rgba(143, 178, 255, .2);
+  background:
+    linear-gradient(rgba(143, 178, 255, .04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(143, 178, 255, .04) 1px, transparent 1px),
+    #020914;
+  background-size: 26px 26px;
+  box-shadow: inset 3px 0 0 #123bff;
+}
+
+.portmason-console-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 0 13px;
+  border-bottom: 1px solid rgba(143, 178, 255, .16);
+  color: #8fb2ff;
+  font-size: .57rem;
+  font-weight: 950;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.portmason-console-bar span { margin-right: auto; }
+.portmason-console-bar i { width: 6px; height: 6px; border-radius: 50%; background: rgba(143, 178, 255, .38); }
+.portmason-console-bar i:last-child { background: #00ffb2; box-shadow: 0 0 10px rgba(0, 255, 178, .72); }
+
+.portmason-console-command {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  padding: clamp(18px, 2.4vw, 28px) 18px 12px;
+  color: rgba(235, 242, 255, .62);
+  font: 800 clamp(.9rem, 1.2vw, 1.06rem)/1.2 ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+
+.portmason-console-command strong {
+  color: #fff;
+  font: inherit;
+}
+
+.portmason-console-flow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 0 18px 20px;
+}
+
+.portmason-console-flow span {
+  position: relative;
+  padding: 7px 9px;
+  border: 1px solid rgba(18, 59, 255, .32);
+  background: rgba(18, 59, 255, .1);
+  color: #bcd0ff;
+  font-size: .62rem;
+  font-weight: 900;
+  letter-spacing: .055em;
+  text-transform: uppercase;
+}
+
+.portmason-console-flow span:not(:last-child)::after {
+  content: "→";
+  position: absolute;
+  right: -12px;
+  color: rgba(0, 255, 178, .78);
+}
+
+.portmason-console-steps {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding: 0 18px 18px;
+  list-style: none;
+}
+
+.portmason-console-steps li {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 36px;
+  padding: 0 10px;
+  border: 1px solid rgba(143, 178, 255, .13);
+  background: rgba(4, 12, 26, .7);
+  color: rgba(235, 242, 255, .7);
+  font-size: .66rem;
+  font-weight: 850;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  animation: portmasonBootStep 4800ms ease-in-out infinite;
+}
+
+.portmason-console-step--2 { animation-delay: 180ms; }
+.portmason-console-step--3 { animation-delay: 360ms; }
+.portmason-console-step--4 { animation-delay: 540ms; }
+.portmason-console-step--5 { animation-delay: 720ms; }
+.portmason-console-step--6 { animation-delay: 900ms; }
+
+.portmason-console-steps li b {
+  color: #00ffb2;
+  font-size: .56rem;
+  letter-spacing: .1em;
+}
+
+.portmason-product-feature-grid {
+  grid-area: features;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.portmason-product-feature-grid article {
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid rgba(143, 178, 255, .16);
+  background: rgba(4, 12, 26, .58);
+}
+
+.portmason-product-feature-grid strong {
+  display: block;
+  color: #fff;
+  font-size: .82rem;
+  line-height: 1.1;
+  letter-spacing: -.02em;
+}
+
+.portmason-product-feature-grid p {
+  margin: 8px 0 0;
+  color: rgba(235, 242, 255, .62);
+  font-size: .7rem;
+  line-height: 1.42;
+}
+
+.portmason-proof-anchor {
+  position: relative;
+  top: -24px;
+  display: block;
+  width: 1px;
+  height: 1px;
+}
+
+@keyframes portmasonBootStep {
+  0%, 100% {
+    border-color: rgba(143, 178, 255, .13);
+    box-shadow: none;
+  }
+  14%, 26% {
+    border-color: rgba(0, 255, 178, .45);
+    box-shadow: inset 2px 0 0 #00ffb2, 0 0 18px rgba(0, 255, 178, .08);
+  }
+}
+
 .portmason-wordmark,
 .workspace-modal-brand,
 .workspace-modal-demonstrates,
@@ -654,6 +898,7 @@ html.workspace-modal-open { overflow: hidden; }
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     grid-template-areas:
+      "overview"
       "intro"
       "platform"
       "gallery-heading"
@@ -662,6 +907,10 @@ html.workspace-modal-open { overflow: hidden; }
       "noscript";
     row-gap: clamp(8px, .9vw, 12px) !important;
     align-items: start;
+  }
+
+  .portmason-product-frontdoor {
+    grid-area: overview;
   }
 
   /* Compact architectural hero: a technical rail, a single declarative
@@ -833,6 +1082,18 @@ html.workspace-modal-open { overflow: hidden; }
 
 
 @media (min-width: 1061px) and (max-width: 1239px) {
+  .portmason-product-frontdoor {
+    grid-template-columns: minmax(0, 1fr) minmax(280px, .62fr);
+  }
+
+  .portmason-product-copy h2 {
+    font-size: clamp(2.6rem, 5vw, 4.2rem);
+  }
+
+  .portmason-product-feature-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   .portmason-workspace-intro {
     grid-template-areas:
       "wordmark wordmark wordmark wordmark wordmark wordmark wordmark wordmark wordmark wordmark wordmark wordmark"
@@ -851,6 +1112,18 @@ html.workspace-modal-open { overflow: hidden; }
 }
 
 @media (max-width: 1060px) {
+  .portmason-product-frontdoor {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "copy"
+      "console"
+      "features";
+  }
+
+  .portmason-product-copy h2 {
+    max-width: 14ch;
+  }
+
   .workspace-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .workspace-tile { min-height: 315px; }
   .workspace-modal { width: 96vw; height: 94dvh; }
@@ -858,6 +1131,18 @@ html.workspace-modal-open { overflow: hidden; }
 }
 
 @media (max-width: 760px) {
+  .portmason-product-frontdoor {
+    padding: 18px;
+  }
+
+  .portmason-product-feature-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .portmason-console-flow span:not(:last-child)::after {
+    display: none;
+  }
+
   .portmason-workspace-intro { grid-template-columns: 1fr; }
   .portmason-workspace-intro h2 { max-width: none; }
   .portmason-platform-map > header,
@@ -897,8 +1182,10 @@ html.workspace-modal-open { overflow: hidden; }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .portmason-console-steps li,
   .workspace-tile,
   .workspace-tile::after { transition: none; }
+  .portmason-console-steps li { animation: none; }
   .workspace-tile:hover,
   .workspace-tile:focus-visible { transform: none; }
 }
