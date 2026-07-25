@@ -491,8 +491,12 @@ def render_catalog_section(manifest: dict[str, Any], items: list[dict[str, Any]]
     content_label = str(presentation.get("contentLabel") or f"{collection_id.title()} items")
     kicker_class = "section-kicker light"
 
-    return f'''      <section class="{' '.join(section_classes)}" id="{esc(collection_id)}" data-theme="{esc(theme)}" aria-labelledby="{esc(title_id)}">
-        <div class="container catalog-page-layout pm-viewport-target__inner">
+    viewport_align = presentation.get("viewportAlign")
+    viewport_attr = ""
+    if viewport_align:
+        viewport_attr = f' data-pm-viewport-align="{esc(viewport_align)}"'
+
+    return f'''      <section class="{' '.join(section_classes)}" id="{esc(collection_id)}"{viewport_attr} data-theme="{esc(theme)}" aria-labelledby="{esc(title_id)}">        <div class="container catalog-page-layout pm-viewport-target__inner">
           <section class="catalog-page-head" id="{esc(top_id)}" aria-labelledby="{esc(title_id)}">
             <span class="{kicker_class}">{esc(presentation.get('kicker') or collection_id.title())}</span>
             <h2 id="{esc(title_id)}">{esc(presentation.get('title'))}</h2>
@@ -789,8 +793,7 @@ def render_workspace_section(collection_dir: Path, manifest: dict[str, Any], ite
         </div>
       </div>
 
-      <span class="portmason-proof-anchor" id="lab-proof" aria-hidden="true"></span>
-      <header class="portmason-workspace-intro">
+      <header class="portmason-workspace-intro" id="lab-proof" data-pm-viewport-align="start">
         <span class="portmason-wordmark">{esc(presentation.get('kicker'))}</span>
         <h2 id="{esc(collection_id)}-title">{esc(presentation.get('title'))}</h2>
         <p>{esc(presentation.get('summary'))}</p>

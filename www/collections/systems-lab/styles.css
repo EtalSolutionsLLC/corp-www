@@ -36,6 +36,7 @@
 }
 
 .portmason-workspace-intro {
+  scroll-margin-top: var(--site-header-height, 96px);
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(280px, .72fr);
   gap: clamp(18px, 4vw, 58px);
@@ -265,14 +266,6 @@
   color: rgba(235, 242, 255, .62);
   font-size: .7rem;
   line-height: 1.42;
-}
-
-.portmason-proof-anchor {
-  position: relative;
-  top: -24px;
-  display: block;
-  width: 1px;
-  height: 1px;
 }
 
 @keyframes portmasonBootStep {
