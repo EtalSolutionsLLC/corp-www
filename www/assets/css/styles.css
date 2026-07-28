@@ -2194,18 +2194,6 @@ body {
 
 /* Corp-site refinement pass: native, library-free enhancements.
    The existing native :target alignment contract remains authoritative. */
-@view-transition {
-  navigation: auto;
-}
-
-.site-header {
-  view-transition-name: corp-site-header;
-}
-
-.site-footer {
-  view-transition-name: corp-site-footer;
-}
-
 .service-selector-result {
   view-transition-name: service-selector-result;
 }
