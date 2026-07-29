@@ -9,6 +9,14 @@
   --trust-line: rgba(16, 23, 34, 0.12);
 }
 
+.trust-corp-only {
+  display: none !important;
+}
+
+.trust-from-corp .trust-corp-only {
+  display: inline !important;
+}
+
 .trust-page .page-shell {
   overflow: visible;
 }
