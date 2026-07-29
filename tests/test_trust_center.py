@@ -28,7 +28,7 @@ class TrustCenterTests(unittest.TestCase):
     def test_trust_center_is_public_and_linked_from_shared_navigation(self):
         self.assertTrue((SITE / "trust/index.html").is_file())
         self.assertIn('href="/trust/#trust-top"', HEADER)
-        self.assertIn('href="/trust/"', FOOTER)
+        self.assertIn('href="/trust/?nav=corp#trust-top"', FOOTER)
         self.assertNotIn("login", TRUST.lower())
 
     def test_company_and_product_responsibilities_are_separate(self):
@@ -110,7 +110,7 @@ class TrustCenterTests(unittest.TestCase):
                 section = TRUST[section_start:section_end]
                 self.assertIn("pm-viewport-target__inner", section)
 
-        self.assertIn('/trust/#trust-top', TRUST_HEADER)
+        self.assertIn('href="#trust-top"', TRUST_HEADER)
         self.assertNotIn('/trust/#trust-home', TRUST_HEADER)
 
     def test_cross_document_menu_swap_does_not_crossfade(self):

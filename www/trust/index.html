@@ -2,27 +2,33 @@
 <html lang="en">
 <head>
 <!-- PM:TRACKING-CONSENT -->
-<link data-pm-web-analytics-stylesheet="" href="/assets/pm-web-analytics.css?v=076" rel="stylesheet"/>
-<script data-pm-web-consent="" data-gtm-container-id="GTM-59XLJP3Q" data-site-name="Et al Solutions LLC" src="/assets/pm-web-analytics.js?v=076"></script>
+<link data-pm-web-analytics-stylesheet="" href="/assets/pm-web-analytics.css?v=086" rel="stylesheet"/>
+<script data-pm-web-consent="" data-gtm-container-id="GTM-59XLJP3Q" data-site-name="Et al Solutions LLC" src="/assets/pm-web-analytics.js?v=086"></script>
 <!-- /PM:TRACKING-CONSENT -->
+<script>
+    document.documentElement.classList.toggle(
+      "trust-from-corp",
+      new URLSearchParams(location.search).get("nav") === "corp"
+    );
+  </script>
 <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Learn how Et al Solutions approaches transparency, privacy, security, and responsible technology practices." />
 <!-- PM:SITE-BUILD-META -->
-<!-- ETAL_SITE_RELEASE version="1.0.0" build="076" build-details="/build-info.json" deployment-details="/deploy-info.json" -->
+<!-- ETAL_SITE_RELEASE version="1.0.0" build="086" build-details="/build-info.json" deployment-details="/deploy-info.json" -->
 <meta name="etal-site-release" content="1.0.0" />
-<meta name="etal-site-build" content="076" />
+<meta name="etal-site-build" content="086" />
 <meta name="etal-site-build-info" content="/build-info.json" />
 <meta name="etal-site-deploy-info" content="/deploy-info.json" />
 <!-- /PM:SITE-BUILD-META -->
   <meta name="description" content="Et al Solutions LLC Trust Center: plain-language information about privacy, security, payment processing, service providers, availability, and product data handling." />
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=076" />
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=086" />
   <title>Trust Center · Et al Solutions LLC</title>
-  <link rel="stylesheet" href="/assets/css/styles.css?v=076" />
-  <link rel="stylesheet" href="/assets/css/action-system.css?v=076" />
-  <link rel="stylesheet" href="/assets/css/cookie-consent-overrides.css?v=076" />
-  <link rel="stylesheet" href="/assets/css/trust-center.css?v=076" />
-  <link rel="stylesheet" href="/assets/css/viewport-contract.css?v=076" />
+  <link rel="stylesheet" href="/assets/css/styles.css?v=086" />
+  <link rel="stylesheet" href="/assets/css/action-system.css?v=086" />
+  <link rel="stylesheet" href="/assets/css/cookie-consent-overrides.css?v=086" />
+  <link rel="stylesheet" href="/assets/css/trust-center.css?v=086" />
+  <link rel="stylesheet" href="/assets/css/viewport-contract.css?v=086" />
 </head>
 <body class="trust-page">
 <div class="page-shell">
@@ -31,14 +37,17 @@
   <div class="container">
     <a class="brand" href="/#home">ET AL SOLUTIONS LLC</a>
     <nav class="nav" aria-label="Primary">
-      <a href="/#home">Home</a>
-      <a href="/trust/#trust-top">|&nbsp;&nbsp;&nbsp;Trust</a>
-      <a href="/trust/#trust-responsibility">Responsibility</a>
-      <a href="/trust/#trust-controls">Controls</a>
-      <a href="/trust/#trust-reviewnudge">ReviewNudge</a>
-      <a href="/trust/#trust-operations">Operations</a>
-      <a href="/trust/#trust-documents">Documents</a>
-      <a href="/trust/#trust-contact">Contact</a>
+
+      <a class="trust-corp-only" href="/#home">Home&nbsp;&nbsp;&nbsp;|</a>
+      <a href="#trust-top">Trust</a>
+<!--      <a href="/#home">Home</a>
+      <a href="/trust/#trust-top">|&nbsp;&nbsp;&nbsp;Trust</a>-->
+      <a href="#trust-responsibility">Responsibility</a>
+      <a href="#trust-controls">Controls</a>
+      <a href="#trust-reviewnudge">ReviewNudge</a>
+      <a href="#trust-operations">Operations</a>
+      <a href="#trust-documents">Documents</a>
+      <a href="#trust-contact">Contact</a>
     </nav>
   </div>
 </header>
@@ -290,7 +299,7 @@
       >© 2026 Et al Solutions LLC.</button>
       <span class="footer-separator" aria-hidden="true">·</span>
 
-      <a href="/trust/">Trust Center</a>
+      <a href="/trust/?nav=corp#trust-top">Trust Center</a>
 
       <span class="footer-separator" aria-hidden="true">·</span>
       <a
@@ -363,17 +372,17 @@
 </dialog>
 
 <link rel="stylesheet" href="https://public.etal.solutions/assets/css/policy-modal.css">
-<link rel="stylesheet" href="/assets/css/policy-modal-overrides.css?v=076">
-<link rel="stylesheet" href="/assets/css/modal-close-system.css?v=076">
-<link rel="stylesheet" href="/assets/css/home-quick-summary.css?v=076">
-<link rel="stylesheet" href="/assets/css/site-build-info.css?v=076">
+<link rel="stylesheet" href="/assets/css/policy-modal-overrides.css?v=086">
+<link rel="stylesheet" href="/assets/css/modal-close-system.css?v=086">
+<link rel="stylesheet" href="/assets/css/home-quick-summary.css?v=086">
+<link rel="stylesheet" href="/assets/css/site-build-info.css?v=086">
 <script src="https://public.etal.solutions/assets/js/policy-modal.js" defer></script>
-<script src="/assets/js/policy-modal-close.js?v=076" defer></script>
-<script src="/assets/js/home-quick-summary.js?v=076" defer></script>
-<script src="/assets/js/site-build-info.js?v=076" defer></script>
+<script src="/assets/js/policy-modal-close.js?v=086" defer></script>
+<script src="/assets/js/home-quick-summary.js?v=086" defer></script>
+<script src="/assets/js/site-build-info.js?v=086" defer></script>
 <!-- /PM:FOOTER -->
 </div>
-<script src="/assets/js/viewport-targets.js?v=076" defer></script>
+<script src="/assets/js/viewport-targets.js?v=086" defer></script>
 <!-- PM:ZZ-SITE-BUILD-FINALIZE -->
 <!-- /PM:ZZ-SITE-BUILD-FINALIZE -->
 </body>
