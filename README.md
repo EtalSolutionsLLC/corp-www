@@ -76,32 +76,34 @@ RUNTIME_ADAPTER_CODE
 APP_HOST
 SITE_URL
 SITE_CONTACT_EMAIL
+PM_WEB_ANALYTICS_PROVIDER
 GTM_CONTAINER_ID
-GA4_MEASUREMENT_ID
 ```
 
-Tracking markup is structural HTML and is rendered through tracking partials. The GTM container ID is data supplied from `.env`.
+Consent and GTM markup is structural HTML rendered through one consolidated
+partial. The GTM container ID is data supplied from `.env`.
 
-GA4 should be configured inside the GTM container unless there is a deliberate reason to load it separately. This avoids duplicate page-view events.
+GA4 is configured entirely inside the GTM container.
 
 ## Tracking and consent partials
 
 Tracking and consent markup is rendered into pages through PM regions.
 
-Current tracking partials:
+Current consent and GTM partial:
 
 ```text
-partials/tracking-consent-part1.html
-partials/tracking-consent-part2.html
+partials/tracking-consent.html
 ```
 
-The cookie banner behavior lives in:
+Portmason installs the consent behavior in:
 
 ```text
-assets/js/cookie-consent.js
+assets/pm-web-analytics.js
+assets/pm-web-analytics.css
 ```
 
-Do not duplicate GTM loading in browser-side runtime scripts.
+The local script defaults consent to denied and does not load GTM until the
+visitor allows analytics. GA4 and analytics events remain GTM-owned.
 
 ## Shared partials
 
