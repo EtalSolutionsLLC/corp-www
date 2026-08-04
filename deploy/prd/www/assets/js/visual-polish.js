@@ -136,6 +136,63 @@
     });
   }
 
+  function renderLaunchCountdown(root) {
+    var label = root.querySelector("[data-launch-countdown-label]");
+    var value = root.querySelector("[data-launch-countdown-value]");
+    var target = Date.parse(root.getAttribute("data-target") || "");
+    if (!label || !value || !Number.isFinite(target)) return;
+
+    var remaining = target - Date.now();
+    if (remaining <= 0) {
+      label.textContent = root.getAttribute("data-complete") || label.textContent;
+      value.textContent = "00:00:00:00";
+      root.setAttribute("data-complete-state", "true");
+      return;
+    }
+
+    root.removeAttribute("data-complete-state");
+    var seconds = Math.floor(remaining / 1000);
+    var parts = [
+      Math.floor(seconds / 86400),
+      Math.floor((seconds % 86400) / 3600),
+      Math.floor((seconds % 3600) / 60),
+      seconds % 60
+    ];
+    value.textContent = parts.map(function (part) { return String(part).padStart(2, "0"); }).join(":");
+  }
+
+  function enableIosLaunchCampaign() {
+    var countdowns = Array.prototype.slice.call(document.querySelectorAll("[data-launch-countdown]"));
+    countdowns.forEach(renderLaunchCountdown);
+    if (countdowns.length) {
+      window.setInterval(function () { countdowns.forEach(renderLaunchCountdown); }, 1000);
+    }
+
+    var link = document.querySelector("[data-app-store-placeholder]");
+    var label = link && link.querySelector("[data-app-store-placeholder-label]");
+    if (!link || !label) return;
+
+    var preview = new URLSearchParams(window.location.search).get("app_store_preview") === "powering-up";
+    var revealAt = Date.parse("2026-08-10T00:00:00-07:00");
+    if (!preview && Date.now() < revealAt) return;
+
+    var storageKey = "corp-www-ios-app-store-reveal-2026-08-10";
+    try {
+      if (!preview && window.localStorage.getItem(storageKey)) return;
+      if (!preview) window.localStorage.setItem(storageKey, "shown");
+    } catch (_error) {
+      // The reveal still runs when storage is unavailable.
+    }
+
+    var settledCopy = label.textContent;
+    label.textContent = link.getAttribute("data-powering-copy") || settledCopy;
+    link.setAttribute("data-powering-up", "true");
+    window.setTimeout(function () {
+      label.textContent = settledCopy;
+      link.removeAttribute("data-powering-up");
+    }, 2400);
+  }
+
   window.addEventListener("scroll", updateHeader, { passive: true });
   window.addEventListener("load", function () {
     updateHeader();
@@ -145,6 +202,7 @@
 
   document.addEventListener("DOMContentLoaded", function () {
     enableCarouselKeyboardRefinement();
+    enableIosLaunchCampaign();
   });
 
   updateHeader();

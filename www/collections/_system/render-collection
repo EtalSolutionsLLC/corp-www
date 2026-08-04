@@ -513,19 +513,33 @@ def render_catalog_section(manifest: dict[str, Any], items: list[dict[str, Any]]
 def render_catalog_hero(manifest: dict[str, Any], items: list[dict[str, Any]]) -> str:
     item = next((candidate for candidate in items if candidate.get("status") == "featured"), items[0])
     labels = manifest.get("labels") or {}
-    href = manifest.get("sectionHref") or "/#promotions"
+    hero = item.get("hero") or {}
+    action = hero.get("action") or {}
+    href = action.get("href") or manifest.get("sectionHref") or "/#promotions"
     detail_id = f"{item.get('slug') or item.get('id')}-details"
-    price = item.get("price")
+    action_label = action.get("label") or labels.get("heroCta", "View Details")
+    detail_attribute = "" if action else f' data-collection-detail-open="{esc(detail_id)}"'
+    meta = hero.get("meta") or item.get("audience")
+    price = None if hero else item.get("price")
     price_row = f'              <span>Price: <strong>{esc(price)}</strong></span>' if price else ""
+    countdown = hero.get("countdown") or {}
+    countdown_html = f'''            <div class="catalog-hero-countdown" data-launch-countdown data-target="{esc(countdown.get('target'))}" data-complete="{esc(countdown.get('complete'))}" aria-live="polite">
+              <span data-launch-countdown-label>{esc(countdown.get('label'))}</span>
+              <strong data-launch-countdown-value>00:00:00:00</strong>
+              <small>{esc(countdown.get('units'))}</small>
+            </div>''' if countdown else ""
+    app_store_html = f'''            <a class="catalog-app-store-placeholder" role="link" aria-disabled="true" data-app-store-placeholder data-powering-copy="{esc(hero.get('appStorePoweringUp'))}"><span aria-hidden="true">↗</span><span data-app-store-placeholder-label>{esc(hero.get('appStorePlaceholder'))}</span></a>''' if hero.get("appStorePlaceholder") else ""
     return f'''          <aside class="catalog-hero-card collection collection--catalog" aria-label="Featured {esc(manifest.get('id'))} item" data-collection data-collection-id="{esc(manifest.get('id'))}" data-collection-mode="catalog" data-collection-config="/collections/{esc(manifest.get('id'))}/collection.json">
-            <span class="catalog-hero-kicker">{esc(item.get('label') or 'Featured')}</span>
-            <h2>{esc(item.get('title'))}</h2>
+            <span class="catalog-hero-kicker">{esc(hero.get('label') or item.get('label') or 'Featured')}</span>
+            <h2>{esc(hero.get('title') or item.get('title'))}</h2>
             <div class="catalog-hero-meta" aria-label="Collection item details">
-              <span>{esc(item.get('audience'))}</span>
+              <span>{esc(meta)}</span>
 {price_row}
             </div>
-            <p>{esc(item.get('summary'))}</p>
-            <a class="catalog-hero-cta action action-primary" href="{esc(href)}" data-collection-detail-open="{esc(detail_id)}">{esc(labels.get('heroCta', 'View Details'))}</a>
+            <p>{esc(hero.get('summary') or item.get('summary'))}</p>
+{countdown_html}
+{app_store_html}
+            <a class="catalog-hero-cta action action-primary" href="{esc(href)}"{detail_attribute}>{esc(action_label)}</a>
           </aside>
 '''
 

@@ -11,6 +11,24 @@
     "summary": "ReviewNudge gives you one focused workspace to add customers and send a thoughtful review request, then we'll manage the follow-up and give you complete visibility along the way.",
     "price": "$9.95",
     "priceNote": "Founding 200 monthly rate",
+    "hero": {
+      "label": "ReviewNudge for iPhone",
+      "title": "Your review workflow is coming with you.",
+      "meta": "Expected in the App Store by August 10",
+      "summary": "Add customers, send thoughtful review requests, and keep up with follow-ups from iPhone—wherever the work happens.",
+      "countdown": {
+        "target": "2026-08-10T23:59:59-07:00",
+        "label": "Until the August 10 target",
+        "units": "Days · hours · minutes · seconds",
+        "complete": "Target date reached — availability update coming soon"
+      },
+      "appStorePlaceholder": "App Store link will appear here as soon as it’s live.",
+      "appStorePoweringUp": "App Store link powering up…",
+      "action": {
+        "label": "Read the announcement",
+        "href": "/?release=nr-002#newsroom"
+      }
+    },
     "primaryAction": {
       "label": "Start the Free Trial",
       "href": "https://reviewnudge.etal.solutions/setup",

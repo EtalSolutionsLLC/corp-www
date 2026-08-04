@@ -43,6 +43,77 @@
         "priceNote": {
           "type": "string"
         },
+        "hero": {
+          "type": "object",
+          "required": [
+            "label",
+            "title",
+            "meta",
+            "summary",
+            "action"
+          ],
+          "properties": {
+            "label": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "meta": {
+              "type": "string"
+            },
+            "summary": {
+              "type": "string"
+            },
+            "countdown": {
+              "type": "object",
+              "required": [
+                "target",
+                "label",
+                "units",
+                "complete"
+              ],
+              "properties": {
+                "target": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                },
+                "units": {
+                  "type": "string"
+                },
+                "complete": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            },
+            "appStorePlaceholder": {
+              "type": "string"
+            },
+            "appStorePoweringUp": {
+              "type": "string"
+            },
+            "action": {
+              "type": "object",
+              "required": [
+                "label",
+                "href"
+              ],
+              "properties": {
+                "label": {
+                  "type": "string"
+                },
+                "href": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
         "tags": {
           "type": "array",
           "items": {

@@ -50,6 +50,15 @@
       if (!modal) return;
       if (typeof modal.close === "function") modal.close();
       else modal.removeAttribute("open");
+      try {
+        var url = new URL(window.location.href);
+        if (url.searchParams.has("release")) {
+          url.searchParams.delete("release");
+          window.history.replaceState(window.history.state, "", url.pathname + url.search + url.hash);
+        }
+      } catch (error) {
+        // Closing the release remains functional when URL parsing is unavailable.
+      }
     }
 
     root.addEventListener("click", function (event) {
@@ -63,6 +72,16 @@
     });
 
     if (closeButton) closeButton.addEventListener("click", closeItem);
+
+    try {
+      var requestedRelease = new URL(window.location.href).searchParams.get("release") || "";
+      var match = requestedRelease.match(/^nr-(\d+)$/i);
+      if (root.getAttribute("data-collection-id") === "newsroom" && match) {
+        openItem(Number(match[1]));
+      }
+    } catch (error) {
+      // The newsroom still works through its ordinary in-page controls.
+    }
   }
 
   api.registerProfile("publication", { initialize: initPublication });

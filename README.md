@@ -132,16 +132,15 @@ The site exposes its served identity in three ways:
 
 ```text
 Footer copyright → About this build dialog
-View Source      → ETAL_SITE_RELEASE comment and meta tags
 Automation       → /build-info.json, /deploy-info.json, /artifact-manifest.json
 ```
 
 Versioning has three distinct layers:
 
 ```text
-RELEASE_VERSION  Product/marketing feature collection, for example 1.0.0
+RELEASE_VERSION  Optional product/marketing feature collection, for example 1.0.0
 BUILD_NUMBER     Sequential immutable deployable build, for example 035
-VERSION          Temporary compatibility alias maintained from BUILD_NUMBER
+VERSION          Retired compatibility debris ignored by Portmason
 ```
 
 `pm-version` is the only writer for release, build, and deployment metadata.

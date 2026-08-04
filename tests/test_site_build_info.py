@@ -1,10 +1,6 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
-import json
-import os
-import subprocess
-import tempfile
 import unittest
 from pathlib import Path
 
@@ -19,30 +15,29 @@ class SiteBuildInfoTests(unittest.TestCase):
         cls.footer = (SITE / "partials/footer.html").read_text(encoding="utf-8")
         cls.script = (SITE / "assets/js/site-build-info.js").read_text(encoding="utf-8")
         cls.styles = (SITE / "assets/css/site-build-info.css").read_text(encoding="utf-8")
-        cls.meta_hook_path = SITE / "partials/hooks/site-build-meta"
-        cls.finalize_hook_path = SITE / "partials/hooks/zz-site-build-finalize"
-        cls.version_tool = ROOT / "bin/pm-version"
         cls.gitignore = (ROOT / ".gitignore").read_text(encoding="utf-8")
         cls.workflow = (ROOT / ".github/workflows/portmason-setup-and-deploy.yml").read_text(encoding="utf-8")
         cls.release = (ROOT / "RELEASE_VERSION").read_text(encoding="utf-8").strip()
         cls.build = (ROOT / "BUILD_NUMBER").read_text(encoding="utf-8").strip()
 
-    def test_authoritative_version_files_are_explicit_and_compatible(self):
+    def test_authoritative_version_files_are_valid(self):
         self.assertRegex(self.release, r"^\d+\.\d+\.\d+$")
         self.assertRegex(self.build, r"^\d{3,}$")
-        self.assertEqual(self.build, (ROOT / "VERSION").read_text(encoding="utf-8").strip())
-        self.assertEqual(self.build, (ROOT / "deploy/prd/BUILD_NUMBER").read_text(encoding="utf-8").strip())
-        self.assertEqual(self.release, (ROOT / "deploy/prd/RELEASE_VERSION").read_text(encoding="utf-8").strip())
 
-    def test_html_contains_release_build_and_finalize_regions(self):
-        self.assertIn("<!-- PM:SITE-BUILD-META -->", self.index)
-        self.assertIn("<!-- /PM:SITE-BUILD-META -->", self.index)
-        self.assertIn("<!-- PM:ZZ-SITE-BUILD-FINALIZE -->", self.index)
-        self.assertIn("<!-- /PM:ZZ-SITE-BUILD-FINALIZE -->", self.index)
-        self.assertIn(f'meta name="etal-site-release" content="{self.release}"', self.index)
-        self.assertIn(f'meta name="etal-site-build" content="{self.build}"', self.index)
-        self.assertIn('meta name="etal-site-deploy-info" content="/deploy-info.json"', self.index)
-        self.assertIn(f'ETAL_SITE_RELEASE version="{self.release}" build="{self.build}"', self.index)
+    def test_versioning_has_no_site_specific_customization(self):
+        custom_paths = [
+            ROOT / "bin/pm-version",
+            SITE / "partials/hooks/site-build-meta",
+            SITE / "partials/hooks/zz-site-build-finalize",
+        ]
+        for path in custom_paths:
+            self.assertFalse(path.exists(), path)
+
+        for page in SITE.rglob("*.html"):
+            html = page.read_text(encoding="utf-8")
+            self.assertNotIn("PM:SITE-BUILD-META", html, page)
+            self.assertNotIn("PM:ZZ-SITE-BUILD-FINALIZE", html, page)
+            self.assertNotIn("ETAL_SITE_RELEASE", html, page)
 
     def test_footer_copyright_opens_accessible_identity_dialog(self):
         for token in [
@@ -103,140 +98,20 @@ class SiteBuildInfoTests(unittest.TestCase):
         ]:
             self.assertIn(path, self.gitignore)
 
-    def test_version_tool_and_hooks_are_executable_and_valid_bash(self):
-        for path in [self.version_tool, self.meta_hook_path, self.finalize_hook_path]:
-            self.assertTrue(os.access(path, os.X_OK), path)
-            subprocess.run(["bash", "-n", str(path)], check=True)
-
-    def _create_version_root(self, root: Path) -> None:
-        (root / "RELEASE_VERSION").write_text("1.0.0\n", encoding="utf-8")
-        (root / "BUILD_NUMBER").write_text("034\n", encoding="utf-8")
-        (root / "VERSION").write_text("034\n", encoding="utf-8")
-        snapshot = root / "deploy/prd"
-        snapshot.mkdir(parents=True)
-        (snapshot / "RELEASE_VERSION").write_text("1.0.0\n", encoding="utf-8")
-        (snapshot / "BUILD_NUMBER").write_text("034\n", encoding="utf-8")
-        (snapshot / "VERSION").write_text("034\n", encoding="utf-8")
-
-    def test_pm_version_owns_release_and_build_transitions(self):
-        with tempfile.TemporaryDirectory() as temporary:
-            root = Path(temporary)
-            self._create_version_root(root)
-            environment = os.environ.copy()
-            environment["PM_VERSION_ROOT"] = str(root)
-
-            result = subprocess.run(
-                [str(self.version_tool), "build", "allocate", "--allow-local"],
-                env=environment,
-                text=True,
-                capture_output=True,
-                check=True,
-            )
-            self.assertEqual("035", result.stdout.strip())
-            for path in [root / "BUILD_NUMBER", root / "VERSION", root / "deploy/prd/BUILD_NUMBER", root / "deploy/prd/VERSION"]:
-                self.assertEqual("035", path.read_text(encoding="utf-8").strip())
-
-            result = subprocess.run(
-                [str(self.version_tool), "release", "bump", "minor"],
-                env=environment,
-                text=True,
-                capture_output=True,
-                check=True,
-            )
-            self.assertEqual("1.1.0", result.stdout.strip())
-            self.assertEqual("1.1.0", (root / "RELEASE_VERSION").read_text(encoding="utf-8").strip())
-            self.assertEqual("1.1.0", (root / "deploy/prd/RELEASE_VERSION").read_text(encoding="utf-8").strip())
-
-    def test_pm_version_finalizes_and_verifies_exact_artifact_identity(self):
-        with tempfile.TemporaryDirectory() as temporary:
-            root = Path(temporary)
-            self._create_version_root(root)
-            site = root / "www"
-            site.mkdir()
-            (site / "index.html").write_text("<!doctype html><title>test</title>\n", encoding="utf-8")
-            (site / "asset.txt").write_text("exact bytes\n", encoding="utf-8")
-
-            environment = os.environ.copy()
-            environment.update(
-                {
-                    "PM_VERSION_ROOT": str(root),
-                    "PM_SOURCE_COMMIT": "0123456789abcdef0123456789abcdef01234567",
-                    "PM_OFFICIAL_BUILD": "true",
-                    "PM_BUILT_AT": "2026-06-27T20:00:00Z",
-                    "PM_DEPLOYED_AT": "2026-06-27T20:05:00Z",
-                }
-            )
-            subprocess.run(
-                [
-                    str(self.version_tool),
-                    "build",
-                    "finalize",
-                    "--site-dir",
-                    str(site),
-                    "--environment",
-                    "prd",
-                    "--deployment-id",
-                    "prd-035-test",
-                ],
-                env=environment,
-                check=True,
-            )
-
-            build = json.loads((site / "build-info.json").read_text(encoding="utf-8"))
-            deployment = json.loads((site / "deploy-info.json").read_text(encoding="utf-8"))
-            manifest = json.loads((site / "artifact-manifest.json").read_text(encoding="utf-8"))
-
-            self.assertEqual("1.0.0", build["releaseVersion"])
-            self.assertEqual("034", build["buildNumber"])
-            self.assertEqual("034", build["buildId"])
-            self.assertTrue(build["officialBuild"])
-            self.assertEqual(64, len(build["artifactSha256"]))
-            self.assertEqual(build["artifactSha256"], deployment["artifactSha256"])
-            self.assertEqual(build["artifactSha256"], manifest["artifactSha256"])
-            self.assertEqual("prd", deployment["environment"])
-            self.assertEqual("verified", deployment["verification"])
-            for path in [site / "build-info.json", site / "deploy-info.json", site / "artifact-manifest.json"]:
-                self.assertEqual(0o644, path.stat().st_mode & 0o777)
-
-            result = subprocess.run(
-                [str(self.version_tool), "deployment", "verify", "--site-dir", str(site)],
-                env=environment,
-                text=True,
-                capture_output=True,
-                check=True,
-            )
-            self.assertEqual("verified", result.stdout.strip())
-
-    def test_meta_hook_emits_deterministic_release_and_build_html(self):
-        environment = os.environ.copy()
-        environment["SITE_DIR"] = str(SITE)
-        result = subprocess.run(
-            [str(self.meta_hook_path)],
-            cwd=SITE,
-            env=environment,
-            text=True,
-            capture_output=True,
-            check=True,
-        )
-        self.assertIn(f'ETAL_SITE_RELEASE version="{self.release}" build="{self.build}"', result.stdout)
-        self.assertIn(f'meta name="etal-site-release" content="{self.release}"', result.stdout)
-        self.assertIn(f'meta name="etal-site-build" content="{self.build}"', result.stdout)
-        self.assertIn('meta name="etal-site-deploy-info" content="/deploy-info.json"', result.stdout)
-
     def test_pages_workflow_delegates_build_lifecycle_to_pm_setup(self):
         checkout = self.workflow.index("- name: Check out project")
-        register = self.workflow.index("- name: Register Portmason")
+        install = self.workflow.index("- name: Install Portmason tooling")
         setup = self.workflow.index("- name: Run Portmason setup")
         upload = self.workflow.index("- name: Upload GitHub Pages artifact")
         deploy = self.workflow.index("- name: Deploy GitHub Pages")
-        self.assertLess(checkout, register)
-        self.assertLess(register, setup)
+        self.assertLess(checkout, install)
+        self.assertLess(install, setup)
         self.assertLess(setup, upload)
         self.assertLess(upload, deploy)
         self.assertIn("DEPLOY_DIR: site/deploy/prd", self.workflow)
         self.assertIn("PAGES_SITE_DIR: site/deploy/prd/www", self.workflow)
         self.assertIn('working-directory: ${{ env.DEPLOY_DIR }}', self.workflow)
-        self.assertIn('"${PORTMASON_SHARE}/pm-setup"', self.workflow)
+        self.assertIn("\n          pm-setup\n", self.workflow)
         self.assertIn("PM_OFFICIAL_BUILD: \"true\"", self.workflow)
         self.assertIn("PM_SOURCE_COMMIT: ${{ github.sha }}", self.workflow)
         self.assertIn("PM_SOURCE_DIRTY: \"false\"", self.workflow)
