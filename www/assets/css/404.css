@@ -1,0 +1,199 @@
+.error-page .error-page-shell {
+  background: var(--navy);
+}
+
+.error-page .error-main {
+  position: relative;
+  min-height: calc(100svh - var(--header-h) - var(--footer-h));
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+  overflow: hidden;
+  border-left: 5px solid var(--blue-2);
+  border-image: linear-gradient(180deg, var(--blue-2), var(--emerald)) 1;
+  background:
+    radial-gradient(circle at 82% 22%, rgba(31, 99, 255, 0.28), transparent 0 18%),
+    radial-gradient(circle at 72% 58%, rgba(143, 178, 255, 0.18), transparent 0 20%),
+    linear-gradient(115deg, transparent 58%, rgba(95, 153, 255, 0.1) 60%, transparent 62%),
+    linear-gradient(160deg, transparent 70%, rgba(95, 153, 255, 0.08) 72%, transparent 74%),
+    linear-gradient(90deg, rgba(3, 8, 22, 0.98) 0%, rgba(4, 10, 28, 0.9) 42%, rgba(6, 18, 48, 0.72) 100%);
+}
+
+.error-page .error-main::before {
+  position: absolute;
+  inset: 0;
+  content: "";
+  pointer-events: none;
+  opacity: 0.14;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.96), rgba(0, 0, 0, 0.78) 58%, rgba(0, 0, 0, 0.18));
+}
+
+.error-page .error-layout {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(330px, 0.9fr) 1px minmax(390px, 1.1fr);
+  align-items: center;
+  gap: clamp(48px, 7vw, 92px);
+  padding-block: clamp(72px, 11vh, 132px);
+}
+
+.error-page .error-code-group,
+.error-page .error-copy {
+  min-width: 0;
+}
+
+.error-page .error-eyebrow {
+  margin: 0 0 22px;
+  color: var(--emerald);
+  font-size: 0.9rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.error-page .error-code {
+  margin: 0;
+  color: var(--white);
+  font-size: clamp(8rem, 18vw, 15rem);
+  font-weight: 800;
+  letter-spacing: -0.08em;
+  line-height: 0.78;
+}
+
+.error-page .error-rule {
+  width: 1px;
+  height: min(320px, 34vh);
+  background: rgba(255, 255, 255, 0.34);
+}
+
+.error-page .error-copy h1 {
+  max-width: 700px;
+  margin: 0;
+  color: var(--white);
+  font-size: clamp(2.4rem, 3.2vw, 3.4rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  text-wrap: balance;
+}
+
+.error-page .error-copy h1 span {
+  color: var(--emerald);
+}
+
+.error-page .error-copy > p {
+  max-width: 650px;
+  margin: 24px 0 0;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: clamp(1rem, 1.45vw, 1.3rem);
+}
+
+.error-page .error-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 32px;
+}
+
+.error-page .error-button {
+  min-height: 56px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 28px;
+  border: 1px solid transparent;
+  border-radius: 0;
+  color: var(--white);
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
+}
+
+.error-page .error-button:hover {
+  transform: translateY(-1px);
+}
+
+.error-page .error-button-primary {
+  background: linear-gradient(135deg, var(--blue), var(--blue-2));
+  box-shadow: 0 14px 34px rgba(18, 59, 255, 0.32);
+}
+
+.error-page .error-button-secondary {
+  border-color: rgba(143, 178, 255, 0.72);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.error-page .error-button:focus-visible {
+  outline: 3px solid var(--emerald);
+  outline-offset: 4px;
+}
+
+@media (max-width: 1080px) {
+  .error-page .site-header .nav a:nth-child(n + 6) {
+    display: none;
+  }
+}
+
+@media (max-width: 820px) {
+  .error-page .site-header .nav {
+    display: none;
+  }
+
+  .error-page .site-header .container {
+    justify-content: center;
+  }
+
+  .error-page .error-layout {
+    grid-template-columns: 1fr;
+    gap: 38px;
+    text-align: center;
+  }
+
+  .error-page .error-rule {
+    width: min(320px, 70vw);
+    height: 1px;
+    margin-inline: auto;
+  }
+
+  .error-page .error-copy > p {
+    margin-inline: auto;
+  }
+
+  .error-page .error-actions {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 520px) {
+  .error-page .site-header .brand {
+    font-size: 1.45rem;
+  }
+
+  .error-page .error-copy h1,
+  .error-page .error-copy > p {
+    max-width: 100%;
+    text-wrap: wrap;
+  }
+
+  .error-page .error-actions {
+    flex-direction: column;
+  }
+
+  .error-page .error-button {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .error-page .error-button {
+    transition: none;
+  }
+}
