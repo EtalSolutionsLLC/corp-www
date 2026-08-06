@@ -4,9 +4,9 @@
   "DEPLOYMENT_ID": "www-1778610786",
   "APP_SLUG": "www",
   "DEPLOY_ENV": "prd",
-  "APP_HOST": "www.etal.solutions",
-  "APP_URL": "https://www.etal.solutions",
-  "SITE_URL": "https://www.etal.solutions",
+  "APP_HOST": "www.solutionsetal.com",
+  "APP_URL": "https://www.solutionsetal.com",
+  "SITE_URL": "https://www.solutionsetal.com",
   "URI_SCHEME": "https:",
   "LOG_FORMAT": "text"
 }
