@@ -89,6 +89,12 @@
       return target;
     }
 
+    // The lab proof anchor is intentionally tiny. Align the visible lab header,
+    // not the anchor box itself, so the button lands on meaningful content.
+    if (target.id === "lab-proof") {
+      return target.nextElementSibling || target;
+    }
+
     return target.querySelector(":scope > .pm-viewport-target__inner") || target;
   }
 
@@ -113,6 +119,10 @@
   }
 
   function alignmentMode(target) {
+    if (target && (target.id === "brands" || target.id === "lab-proof")) {
+      return "start";
+    }
+
     return target && target.getAttribute
       ? (target.getAttribute("data-pm-viewport-align") || "auto")
       : "auto";
@@ -131,7 +141,9 @@
     const mustStartAlign = alignmentMode(target) === "start";
     let delta = targetRect.top - slot.top;
 
-    if (!mustStartAlign && slot.height > 0 && subjectRect.height > 0 && subjectRect.height <= slot.height) {
+    if (mustStartAlign && subject !== target) {
+      delta = subjectRect.top - slot.top;
+    } else if (!mustStartAlign && slot.height > 0 && subjectRect.height > 0 && subjectRect.height <= slot.height) {
       const subjectCenter = subjectRect.top + (subjectRect.height / 2);
       delta = subjectCenter - slot.center;
     }
