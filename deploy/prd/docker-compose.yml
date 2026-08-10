@@ -1,13 +1,51 @@
 name: ${STACK}
 services:
+  web:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: ./www
+        target: /usr/share/nginx/html
+        read_only: true
+      - type: bind
+        source: ./.containers/site-web/nginx.conf
+        target: /etc/nginx/conf.d/default.conf
+        read_only: true
+    expose:
+      - "80"
+    networks:
+      - proxy
+    env_file:
+      - ./.env.generated
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.${STACK}-http.rule=Host(`${APP_HOST}`)"
+      - "traefik.http.routers.${STACK}-http.entrypoints=web"
+      - "traefik.http.routers.${STACK}-http.service=${STACK}"
+      - "traefik.http.routers.${STACK}-https.rule=Host(`${APP_HOST}`)"
+      - "traefik.http.routers.${STACK}-https.entrypoints=websecure"
+      - "traefik.http.routers.${STACK}-https.tls=true"
+      - "traefik.http.routers.${STACK}-https.service=${STACK}"
+      - "traefik.http.services.${STACK}.loadbalancer.server.port=80"
+      - "solutions.etal.service=${STACK:-}-web"
+      - "solutions.etal.service_tier=frontend"
+      - "solutions.etal.managed_by=${MANAGED_BY}"
+      - "solutions.etal.service_lifecycle=${LIFECYCLE}"
+      - "solutions.etal.project_id=${PROJECT_ID}"
+      - "solutions.etal.deployment_id=${DEPLOYMENT_ID}"
+      - "solutions.etal.stack=${STACK}"
+      - "solutions.etal.client=${CLIENT}"
+      - "solutions.etal.owner=${OWNER_ALIAS}"
+      - "solutions.etal.data_class=${DATA_CLASS}"
+      - "solutions.etal.data_lifecycle=${DATA_LIFECYCLE}"
+
   toolbox:
     profiles:
       - tools
     build:
       context: .
       dockerfile: .containers/site-toolbox/Dockerfile
-    env_file:
-      - .env.generated
     working_dir: ${CONTAINER_ROOT}
     volumes:
       - type: bind

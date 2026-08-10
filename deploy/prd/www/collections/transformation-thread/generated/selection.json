@@ -1,28 +1,10 @@
 {
   "generated_by": "pm-materialize-publication-collections",
   "collection": "transformation-thread",
-  "selection_date": "2026-08-09",
+  "selection_date": "2026-08-10",
   "rotation_timezone": "America/New_York",
   "source_sha256": "dbe9f751298102bb6c44464463c67e06481c9b55a0b501151333500a6d8914ab",
   "visibleItems": [
-    {
-      "id": 7,
-      "slug": "tt-007",
-      "slot": 7,
-      "category": "A.I. Governance",
-      "status": "Draft",
-      "publishDate": null,
-      "dateFirstDisplayed": "2026-07-19",
-      "displayAfter": [],
-      "title_md": "items/007/title.md",
-      "excerpt_md": "items/007/excerpt.md",
-      "full_article_md": "items/007/full-article.md",
-      "title": "Automation needs accountability before scale",
-      "title_html": "Automation needs accountability before scale",
-      "excerpt": "A reminder that the safest transformation plans do not begin with speed; they begin with ownership, review paths, exception handling, and clear decisions about where human judgment must remain in the loop.",
-      "excerpt_html": "A reminder that the safest transformation plans do not begin with speed; they begin with ownership, review paths, exception handling, and clear decisions about where human judgment must remain in the loop.",
-      "url": "/#blog"
-    },
     {
       "id": 1,
       "slug": "tt-001",
@@ -58,8 +40,26 @@
       "excerpt": "A fast website is not merely an engineering achievement. It is part of the experience, and often the first thing a visitor notices.",
       "excerpt_html": "A fast website is not merely an engineering achievement. It is part of the experience, and often the first thing a visitor notices.",
       "url": "/#blog"
+    },
+    {
+      "id": 2,
+      "slug": "tt-002",
+      "slot": 2,
+      "category": "A.I. Adoption",
+      "status": "Draft",
+      "publishDate": null,
+      "dateFirstDisplayed": "2026-07-27",
+      "displayAfter": [],
+      "title_md": "items/002/title.md",
+      "excerpt_md": "items/002/excerpt.md",
+      "full_article_md": "items/002/full-article.md",
+      "title": "Start with the work, not the tool",
+      "title_html": "Start with the work, not the tool",
+      "excerpt": "Durable A.I. adoption begins with workflows, decisions, and pain points before selecting platforms.",
+      "excerpt_html": "Durable A.I. adoption begins with workflows, decisions, and pain points before selecting platforms.",
+      "url": "/#blog"
     }
   ],
-  "active_slot": 7,
+  "active_slot": 1,
   "week_of_month": 2
 }
