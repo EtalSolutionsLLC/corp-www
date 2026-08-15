@@ -27,7 +27,8 @@ class CollectionSystemTests(unittest.TestCase):
                 self.assertEqual(manifest["id"], collection_id)
                 self.assertIn(manifest["mode"], {"catalog", "publication", "workspace"})
                 if manifest["mode"] == "publication":
-                    self.assertNotIn("dataFile", manifest)
+                    self.assertEqual(manifest["dataFile"], "items/index.json")
+                    self.assertTrue((directory / manifest["dataFile"]).is_file())
                     self.assertTrue((directory / "items").is_dir())
                     self.assertTrue(list((directory / "items").glob("[0-9][0-9][0-9]/meta.json")))
                 else:
@@ -87,6 +88,7 @@ class CollectionSystemTests(unittest.TestCase):
     def test_shared_system_contracts_and_assets_are_loaded(self):
         for relative_path in [
             "_system/collection.js",
+            "_system/pm-collections.js",
             "_system/collection.css",
             "_system/collection.schema.json",
             "_system/item-base.schema.json",
@@ -105,6 +107,7 @@ class CollectionSystemTests(unittest.TestCase):
             "collections/systems-lab/styles.css",
             "collections/transformation-thread/styles.css",
             "collections/_system/collection.js",
+            "collections/_system/pm-collections.js",
             "collections/_system/profiles/catalog.js",
             "collections/_system/profiles/publication.js",
             "collections/_system/profiles/workspace.js",
@@ -133,7 +136,7 @@ class CollectionSystemTests(unittest.TestCase):
             for branch in schema["allOf"]
         }
         self.assertIn("dataFile", requirements["catalog"])
-        self.assertNotIn("dataFile", requirements["publication"])
+        self.assertIn("dataFile", requirements["publication"])
         self.assertIn("dataFile", requirements["workspace"])
         presentation = schema["properties"]["presentation"]["properties"]
         self.assertIn("platformModel", presentation)

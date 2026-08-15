@@ -2,6 +2,7 @@
   "id": "newsroom",
   "mode": "publication",
   "layout": "featured-grid",
+  "dataFile": "items/index.json",
   "styleFile": "styles.css",
   "sectionHref": "/#newsroom",
   "labels": {
@@ -32,8 +33,7 @@
   "selection": {
     "strategy": "latest",
     "visibleItems": 1,
-    "timezone": "America/Los_Angeles",
-    "outputFile": "generated/selection.json"
+    "timezone": "America/Los_Angeles"
   },
   "regions": {
     "section": "COLLECTION-NEWSROOM"

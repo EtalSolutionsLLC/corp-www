@@ -28,10 +28,11 @@ class TransformationThreadDeliveryTests(unittest.TestCase):
                 "excerpt_md": f"items/{item_dir.name}/excerpt.md",
                 "full_article_md": f"items/{item_dir.name}/full-article.md",
             })
-        cls.selection = json.loads((COLLECTION / "generated/selection.json").read_text(encoding="utf-8"))
+        cls.index_items = json.loads((COLLECTION / "items/index.json").read_text(encoding="utf-8"))
         cls.index = (SITE / "index.html").read_text(encoding="utf-8")
         cls.index_text = re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", " ", cls.index)))
         cls.js = (SITE / "collections/_system/profiles/publication.js").read_text(encoding="utf-8")
+        cls.runtime = (SITE / "collections/_system/pm-collections.js").read_text(encoding="utf-8")
         cls.css = (COLLECTION / "styles.css").read_text(encoding="utf-8")
         cls.modal = (SITE / "assets/css/modal-close-system.css").read_text(encoding="utf-8")
 
@@ -41,8 +42,8 @@ class TransformationThreadDeliveryTests(unittest.TestCase):
     def test_collection_manifest_owns_publication_and_rotation_policy(self):
         self.assertEqual(self.manifest["id"], "transformation-thread")
         self.assertEqual(self.manifest["mode"], "publication")
-        self.assertNotIn("dataFile", self.manifest)
-        self.assertEqual(self.manifest["selection"]["outputFile"], "generated/selection.json")
+        self.assertEqual(self.manifest["dataFile"], "items/index.json")
+        self.assertNotIn("outputFile", self.manifest["selection"])
         self.assertEqual(self.manifest["selection"]["timezone"], "America/New_York")
         self.assertEqual(self.manifest["selection"]["visibleItems"], 3)
 
@@ -77,26 +78,16 @@ class TransformationThreadDeliveryTests(unittest.TestCase):
             article = self.resolve(post["full_article_md"]).read_text(encoding="utf-8").strip()
             self.assertGreaterEqual(len(article), 500, f"Post {post['id']} full article is too short")
 
-    def test_generated_selection_is_collection_owned_and_build_time_materialized(self):
-        self.assertEqual(self.selection["collection"], "transformation-thread")
-        self.assertEqual(len(self.selection["visibleItems"]), 3)
-        posts_by_id = {post["id"]: post for post in self.posts}
-        for item in self.selection["visibleItems"]:
-            item_id = item["id"]
-            self.assertIn(f'data-collection-item-id="{item_id}"', self.index)
+    def test_filesystem_index_exposes_every_item_without_a_date_specific_snapshot(self):
+        self.assertEqual([item["id"] for item in self.index_items], [post["id"] for post in self.posts])
+        self.assertFalse((COLLECTION / "generated/selection.json").exists())
+        for item in self.index_items:
             self.assertIn(
-                f'<template data-collection-article-template data-collection-item-id="{item_id}">',
+                f'<template data-collection-article-template data-collection-item-id="{item["id"]}">',
                 self.index,
             )
-            article = self.resolve(posts_by_id[item_id]["full_article_md"]).read_text(encoding="utf-8")
-            candidate = next(
-                line.strip(" >#*-\t")
-                for line in article.splitlines()
-                if line.strip() and not re.match(r"^\s*(#|>|[-*]\s|\d+\.\s)", line)
-            )
-            self.assertIn(candidate[:50], self.index_text)
 
-    def test_browser_profile_only_opens_build_rendered_templates(self):
+    def test_browser_profile_selects_and_renders_from_the_filesystem_index(self):
         for token in [
             'data-collection-mode="publication"',
             "data-collection-open-item",
@@ -108,16 +99,21 @@ class TransformationThreadDeliveryTests(unittest.TestCase):
         ]:
             self.assertIn(token, self.index)
         for token in [
-            "initPublication",
+            "initializePublication",
             "findTemplate",
             "copyChildren",
             "template.content",
             "cloneNode(true)",
             "openItem",
+            "runtimeContext.load()",
+            "context.selectedItems",
+            "renderSelection",
         ]:
             self.assertIn(token, self.js)
-        for token in ["window.fetch", "loadCollection", "loadText", "renderMarkdown", "item.full_article_md"]:
-            self.assertNotIn(token, self.js)
+        for token in ["currentSlot", "weekOfMonth", "selectPublicationItems", 'cache: "no-store"']:
+            self.assertIn(token, self.runtime)
+        self.assertIn('searchParams.get("test_date")', self.runtime)
+        self.assertIn('.localtest.me', self.runtime)
 
     def test_template_copy_avoids_runtime_html_parsing(self):
         self.assertIn("replaceChildren", self.js)
@@ -128,6 +124,7 @@ class TransformationThreadDeliveryTests(unittest.TestCase):
         self.assertIn("collections/transformation-thread/styles.css", self.index)
         self.assertIn("collections/_system/collection.css", self.index)
         self.assertIn("collections/_system/collection.js", self.index)
+        self.assertIn("collections/_system/pm-collections.js", self.index)
 
     def test_collection_styles_do_not_leak_markdown_rules_into_the_site(self):
         self.assertNotIn("/* Start markdown styles */", self.css)

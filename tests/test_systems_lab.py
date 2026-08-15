@@ -118,24 +118,26 @@ class SystemsLabTests(unittest.TestCase):
         ]:
             self.assertIn(token, PROFILE_JS)
 
-    def test_page_weight_tool_reports_pagespeed_visual_load_duration(self):
+    def test_page_weight_tool_reports_pagespeed_load_event(self):
         panel = (COLLECTION / "tools/page-weight-evidence.html").read_text(encoding="utf-8")
         page_weight = next(item for item in ITEMS if item["slug"] == "page-weight-evidence")
 
-        self.assertIn("page-weight and visual-load", panel)
-        self.assertIn("Visual load", panel)
-        self.assertIn("Lighthouse Speed Index", panel)
+        self.assertIn("page-weight and load-event", panel)
+        self.assertIn("Load event", panel)
+        self.assertIn("Lighthouse’s observed browser load event", panel)
         for token in [
             "data-site-speed-theirs",
             "data-site-speed-ours",
             "data-site-speed-summary",
         ]:
             self.assertIn(token, panel)
-        self.assertIn("PageSpeed visual-load duration", page_weight["outputs"])
-        self.assertIn('extractAuditValue(payload, "speed-index"', INSTANCE_JS)
-        self.assertIn("speedIndexMilliseconds", INSTANCE_JS)
+        self.assertIn("PageSpeed browser load-event timing", page_weight["outputs"])
+        self.assertIn("metrics.observedLoad", INSTANCE_JS)
+        self.assertIn('if (apiKey) query.set("key", apiKey)', INSTANCE_JS)
+        self.assertNotIn("PageSpeed comparison is not configured yet", INSTANCE_JS)
+        self.assertIn("loadEventMilliseconds", INSTANCE_JS)
         self.assertIn("formatSeconds", INSTANCE_JS)
-        self.assertIn("describeVisualLoad", INSTANCE_JS)
+        self.assertIn("describeLoadEvent", INSTANCE_JS)
         self.assertNotIn("data-performance-duration", panel)
 
     def test_platform_explanation_follows_the_approved_vertical_mockup(self):

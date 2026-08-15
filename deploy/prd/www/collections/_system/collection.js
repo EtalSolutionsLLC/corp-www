@@ -40,18 +40,6 @@
     return instances[String(collectionId || "")] || null;
   }
 
-  function fetchJson(url, label) {
-    if (typeof global.fetch !== "function") {
-      return Promise.reject(new Error("Portmason Collections: fetch is unavailable"));
-    }
-    return global.fetch(url, { cache: "no-store" }).then(function (response) {
-      if (!response.ok) {
-        throw new Error("Portmason Collections: " + label + " returned HTTP " + response.status);
-      }
-      return response.json();
-    });
-  }
-
   function loadCollectionContext(root) {
     var configSource = root.getAttribute("data-collection-config");
     if (!configSource) {
@@ -62,27 +50,23 @@
     var cacheKey = manifestUrl.href;
     if (contextPromises.has(cacheKey)) return contextPromises.get(cacheKey);
 
-    var promise = fetchJson(manifestUrl, "manifest")
-      .then(function (manifest) {
-        if (!manifest || typeof manifest !== "object" || Array.isArray(manifest)) {
-          throw new Error("Portmason Collections: manifest must be an object");
-        }
-        var itemsUrl = new URL(requireName(manifest.dataFile, "manifest dataFile"), manifestUrl);
-        return fetchJson(itemsUrl, "items").then(function (items) {
-          if (!Array.isArray(items)) {
-            throw new Error("Portmason Collections: items must be an array");
-          }
-          return {
-            root: root,
-            id: String(manifest.id || root.getAttribute("data-collection-id") || ""),
-            mode: String(manifest.mode || root.getAttribute("data-collection-mode") || ""),
-            manifest: manifest,
-            items: items,
-            manifestUrl: manifestUrl,
-            baseUrl: new URL(".", manifestUrl)
-          };
-        });
-      });
+    var runtime = global.PortmasonCollectionRuntime;
+    if (!runtime || typeof runtime.loadCollection !== "function") {
+      return Promise.reject(new Error("Portmason Collections: filesystem runtime is unavailable"));
+    }
+    var promise = runtime.loadCollection(manifestUrl).then(function (loaded) {
+      return {
+        root: root,
+        id: String(loaded.manifest.id || root.getAttribute("data-collection-id") || ""),
+        mode: String(loaded.manifest.mode || root.getAttribute("data-collection-mode") || ""),
+        manifest: loaded.manifest,
+        items: loaded.items,
+        selectedItems: loaded.selectedItems,
+        selectionDate: loaded.selectionDate,
+        manifestUrl: loaded.manifestUrl,
+        baseUrl: new URL(".", loaded.manifestUrl)
+      };
+    });
 
     contextPromises.set(cacheKey, promise);
     return promise;

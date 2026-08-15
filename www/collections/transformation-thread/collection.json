@@ -2,6 +2,7 @@
   "id": "transformation-thread",
   "mode": "publication",
   "layout": "featured-grid",
+  "dataFile": "items/index.json",
   "styleFile": "styles.css",
   "sectionHref": "/#blog",
   "labels": {
@@ -31,8 +32,7 @@
   "selection": {
     "strategy": "weekday-week-of-month",
     "visibleItems": 3,
-    "timezone": "America/New_York",
-    "outputFile": "generated/selection.json"
+    "timezone": "America/New_York"
   },
   "regions": {
     "section": "COLLECTION-TRANSFORMATION-THREAD"

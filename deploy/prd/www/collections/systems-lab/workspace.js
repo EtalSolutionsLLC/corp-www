@@ -290,7 +290,6 @@
 
     var endpoint = "https://pagespeedonline.googleapis.com/pagespeedonline/v5/runPagespeed";
     var medianDesktopBytes = 2.86 * 1024 * 1024;
-    var standardBytesPerSecond = 125000000;
     var selfUrl = root.getAttribute("data-site-size-self-url") || "https://www.etal.solutions/";
     var configUrl = root.getAttribute("data-site-size-config-url") || "config.public.json";
     var form = qs("[data-site-size-form]", root);
@@ -348,23 +347,18 @@
       if (theirBytes > ourBytes) return "Your homepage downloaded about " + formatMultiplier(theirBytes / ourBytes) + " more data than this homepage in the same PageSpeed desktop test.";
       return "Your homepage downloaded about " + formatMultiplier(ourBytes / theirBytes) + " less data than this homepage in the same PageSpeed desktop test.";
     }
-    function describeVisualLoad(theirMeasurement, ourMeasurement) {
-      var theirSeconds = theirMeasurement.bytes / standardBytesPerSecond;
-      var ourSeconds = ourMeasurement.bytes / standardBytesPerSecond;
-
-      var difference = Math.abs(theirSeconds - ourSeconds);
-
-      var comparison = difference < 0.01
+    function describeLoadEvent(theirMeasurement, ourMeasurement) {
+      var difference = Math.abs(theirMeasurement.loadEventMilliseconds - ourMeasurement.loadEventMilliseconds);
+      var comparison = difference < 100
         ? "The two results were effectively the same."
-        : (theirSeconds > ourSeconds
-          ? "Your homepage would take about " + Math.round(difference*1000) + " milliseconds longer."
-          : "Your homepage would be about " + Math.round(difference*1000) + " milliseconds faster.");
-
-      return "Estimated download time: your homepage "
-        + Math.round(theirSeconds*1000)
-        + " ms; this homepage "
-        + Math.round(ourSeconds*1000)
-        + " ms.\n"
+        : (theirMeasurement.loadEventMilliseconds > ourMeasurement.loadEventMilliseconds
+          ? "Your homepage reached its load event about " + formatSeconds(difference) + " later."
+          : "Your homepage reached its load event about " + formatSeconds(difference) + " sooner.");
+      return "Browser load event: your homepage "
+        + formatSeconds(theirMeasurement.loadEventMilliseconds)
+        + "; this homepage "
+        + formatSeconds(ourMeasurement.loadEventMilliseconds)
+        + ". "
         + comparison;
     }
     function describeComparedToMedian(theirBytes) {
@@ -385,15 +379,14 @@
           if (!response.ok) throw new Error("The PageSpeed comparison configuration could not be loaded.");
           return response.json();
         }).then(function (config) {
-          var apiKey = extractApiKey(config);
-          if (!apiKey) throw new Error("The PageSpeed comparison is not configured yet. pm-setup after adding PAGESPEED_APIKEY.");
-          return apiKey;
+          return extractApiKey(config);
         });
       });
       return apiKeyPromise;
     }
     function buildRequest(url, apiKey) {
-      var query = new URLSearchParams({ url: url, strategy: "desktop", category: "performance", key: apiKey });
+      var query = new URLSearchParams({ url: url, strategy: "desktop", category: "performance" });
+      if (apiKey) query.set("key", apiKey);
       return endpoint + "?" + query.toString();
     }
     function readApiMessage(payload) {
@@ -408,10 +401,14 @@
     }
     function extractPageSpeedMeasurement(payload, label) {
       var bytes = extractAuditValue(payload, "total-byte-weight", label, "page-size");
+      var audits = payload && payload.lighthouseResult && payload.lighthouseResult.audits;
+      var metrics = audits && audits.metrics && audits.metrics.details && audits.metrics.details.items && audits.metrics.details.items[0];
+      var observedLoad = metrics && Number(metrics.observedLoad);
       if (bytes <= 0) throw new Error(label + " did not return a page-size measurement.");
+      if (!Number.isFinite(observedLoad) || observedLoad < 0) throw new Error(label + " did not return a load-event measurement.");
       return {
         bytes: bytes,
-        speedIndexMilliseconds: extractAuditValue(payload, "speed-index", label, "visual-load")
+        loadEventMilliseconds: observedLoad
       };
     }
     function runPageSpeed(url, label, apiKey) {
@@ -433,20 +430,12 @@
       text(ours, formatBytes(ourMeasurement.bytes));
 
 
-      if (theirSpeed && theirSpeed.closest("small")) {
-        theirSpeed.closest("small").style.display = "none";
-      }
-
-      if (ourSpeed && ourSpeed.closest("small")) {
-        ourSpeed.closest("small").style.display = "none";
-      }
-
-/*      text(theirSpeed, formatSeconds(theirMeasurement.speedIndexMilliseconds));
-      text(ourSpeed, formatSeconds(ourMeasurement.speedIndexMilliseconds)); */
+      text(theirSpeed, formatSeconds(theirMeasurement.loadEventMilliseconds));
+      text(ourSpeed, formatSeconds(ourMeasurement.loadEventMilliseconds));
 
       text(summary, describeComparedToOurs(theirMeasurement.bytes, ourMeasurement.bytes));
       text(context, describeComparedToMedian(theirMeasurement.bytes));
-      text(speedSummary, describeVisualLoad(theirMeasurement, ourMeasurement));
+      text(speedSummary, describeLoadEvent(theirMeasurement, ourMeasurement));
       text(status, "Done. Both homepages were checked with the same desktop test.");
       if (result) result.hidden = false;
     }

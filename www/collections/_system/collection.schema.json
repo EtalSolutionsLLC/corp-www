@@ -253,13 +253,13 @@
       "required": [
         "strategy",
         "visibleItems",
-        "timezone",
-        "outputFile"
+        "timezone"
       ],
       "properties": {
         "strategy": {
           "enum": [
-            "weekday-week-of-month"
+            "weekday-week-of-month",
+            "latest"
           ]
         },
         "visibleItems": {
@@ -267,10 +267,6 @@
           "minimum": 1
         },
         "timezone": {
-          "type": "string",
-          "minLength": 1
-        },
-        "outputFile": {
           "type": "string",
           "minLength": 1
         }
@@ -362,6 +358,7 @@
       },
       "then": {
         "required": [
+          "dataFile",
           "selection"
         ],
         "properties": {

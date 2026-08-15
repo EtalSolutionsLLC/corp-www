@@ -203,7 +203,10 @@ def render_collection_scripts() -> str:
             raise ValueError(f"Collection id mismatch in {manifest_path}")
         manifests.append((collection_dir, manifest))
 
-    lines = ['<script src="collections/_system/collection.js" defer></script>']
+    lines = [
+        '<script src="collections/_system/pm-collections.js" defer></script>',
+        '<script src="collections/_system/collection.js" defer></script>',
+    ]
     profile_order = ["catalog", "publication", "workspace"]
     active_manifests = [(collection_dir, manifest) for collection_dir, manifest in manifests if manifest.get("interactive", True) is not False]
     if not active_manifests:
@@ -556,6 +559,11 @@ def publication_article_template(collection_dir: Path, item: dict[str, Any], ite
     item_id = int(item.get("id") or 0)
     meta = f"Article {item_prefix}-{item_id:03d} · {item.get('category') or 'Field note'}"
     return f'''        <template data-collection-article-template data-collection-item-id="{esc(item_id)}">
+          <span data-collection-card-category>{esc(item.get('category'))}</span>
+          <span data-collection-card-status>{esc(item.get('status'))}</span>
+          <span data-collection-card-title>{item.get('title_html') or esc(item.get('title'))}</span>
+          <span data-collection-card-excerpt>{item.get('excerpt_html') or esc(item.get('excerpt'))}</span>
+          <a data-collection-card-link href="{esc(item.get('url'))}">{esc(item.get('url'))}</a>
           <span data-collection-article-title>{title_html}</span>
           <span data-collection-article-meta>{esc(meta)}</span>
           <div data-collection-article-body>
@@ -565,16 +573,8 @@ def publication_article_template(collection_dir: Path, item: dict[str, Any], ite
 
 
 def render_publication(collection_dir: Path, manifest: dict[str, Any], items: list[dict[str, Any]]) -> str:
-    selection_cfg = manifest.get("selection") or {}
-    selection_path = resolve_within(
-        collection_dir,
-        str(selection_cfg.get("outputFile") or "generated/selection.json"),
-        "selection.outputFile",
-    )
-    selection = load_json(selection_path)
-    visible = selection.get("visibleItems") or []
-    if not visible:
-        raise ValueError(f"No visible items in {selection_path}")
+    if not items:
+        raise ValueError(f"No publication items in {collection_dir}")
     labels = manifest.get("labels") or {}
     presentation = manifest.get("presentation") or {}
     collection_id = str(manifest["id"])
@@ -583,26 +583,10 @@ def render_publication(collection_dir: Path, manifest: dict[str, Any], items: li
     section_class = str(presentation.get("sectionClass") or "thread-blog")
     title_id = str(presentation.get("titleId") or ("thread-blog-title" if collection_id == "transformation-thread" else f"{collection_id}-title"))
     modal_title_id = str(presentation.get("modalTitleId") or f"{collection_id}-article-modal-title")
-    featured, supporting = visible[0], visible[1:]
-
     title_lines = "\n".join(f"            <span>{esc(line)}</span>" for line in presentation.get("titleLines") or [])
     action = action_html(presentation.get("primaryAction"), "thread-topic-cta action action-primary")
-    supporting_html = []
-    for item in supporting:
-        supporting_html.append(
-            f'''            <article class="thread-post-card" data-post-category="{esc(item.get('category'))}" data-collection-item data-collection-item-id="{esc(item.get('id'))}" data-collection-slug="{esc(item.get('slug'))}" data-collection-slot="{esc(item.get('slot'))}">
-              <div class="thread-post-meta">
-                <span>{esc(item.get('category'))}</span>
-                <span>{esc(item.get('status'))}</span>
-              </div>
-              <h3>{item.get('title_html') or esc(item.get('title'))}</h3>
-              <p>{item.get('excerpt_html') or esc(item.get('excerpt'))}</p>
-              <a class="thread-post-link" href="{esc(item.get('url'))}" data-collection-open-item="{esc(item.get('id'))}">{esc(labels.get('openItem', 'Read article →'))}</a>
-            </article>'''
-        )
-
     item_prefix = str(labels.get("itemPrefix") or "Item")
-    templates = "\n".join(publication_article_template(collection_dir, item, item_prefix) for item in visible)
+    templates = "\n".join(publication_article_template(collection_dir, item, item_prefix) for item in items)
 
     logo = presentation.get("logo")
     logo_html = ""
@@ -611,7 +595,7 @@ def render_publication(collection_dir: Path, manifest: dict[str, Any], items: li
             <img class="thread-blog-logo" src="{esc(logo)}" alt="{esc(presentation.get('logoAlt'))}" />
           </div>'''
 
-    return f'''  <section class="{esc(section_class)} panel pm-viewport-target pm-scroll-target collection collection--publication" id="{esc(section_id)}" data-theme="{esc(theme)}" aria-labelledby="{esc(title_id)}" data-collection data-collection-id="{esc(collection_id)}" data-collection-mode="publication" data-collection-config="/collections/{esc(collection_id)}/collection.json">
+    return f'''  <section class="{esc(section_class)} panel pm-viewport-target pm-scroll-target collection collection--publication" id="{esc(section_id)}" data-theme="{esc(theme)}" aria-labelledby="{esc(title_id)}" data-collection data-collection-id="{esc(collection_id)}" data-collection-mode="publication" data-collection-config="/collections/{esc(collection_id)}/collection.json" data-collection-open-item-label="{esc(labels.get('openItem', 'Read article →'))}">
 
     <div class="container pm-viewport-target__inner">
       <div class="thread-blog-showcase">
@@ -628,19 +612,17 @@ def render_publication(collection_dir: Path, manifest: dict[str, Any], items: li
         </div>
 
         <div class="thread-post-layout" aria-label="{esc(presentation.get('brand'))} article list">
-          <article class="thread-featured-post" aria-label="Featured article" data-collection-item data-collection-item-id="{esc(featured.get('id'))}" data-collection-slug="{esc(featured.get('slug'))}" data-collection-slot="{esc(featured.get('slot'))}">
+          <article class="thread-featured-post" aria-label="Featured article" data-collection-featured hidden>
             <div class="thread-post-meta">
               <span>{esc(labels.get('featured', 'Featured'))}</span>
-              <span>{esc(featured.get('category'))}</span>
+              <span data-collection-featured-category></span>
             </div>
-            <h3>{featured.get('title_html') or esc(featured.get('title'))}</h3>
-            <p>{featured.get('excerpt_html') or esc(featured.get('excerpt'))}</p>
-            <a class="thread-post-link" href="{esc(featured.get('url'))}" data-collection-open-item="{esc(featured.get('id'))}">{esc(labels.get('openFeatured', 'Read this article →'))}</a>
+            <h3 data-collection-featured-title></h3>
+            <p data-collection-featured-excerpt></p>
+            <a class="thread-post-link" href="#" data-collection-featured-link>{esc(labels.get('openFeatured', 'Read this article →'))}</a>
           </article>
 
-          <div class="thread-post-grid">
-{chr(10).join(supporting_html)}
-          </div>
+          <div class="thread-post-grid" data-collection-supporting></div>
         </div>
 
         <dialog class="thread-article-modal" data-collection-modal aria-labelledby="{esc(modal_title_id)}">
