@@ -8,5 +8,6 @@
   "APP_URL": "https://www.solutionsetal.com",
   "SITE_URL": "https://www.solutionsetal.com",
   "URI_SCHEME": "https:",
-  "LOG_FORMAT": "text"
+  "LOG_FORMAT": "text",
+  "DB_NAME": ""
 }
