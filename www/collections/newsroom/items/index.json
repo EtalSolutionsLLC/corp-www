@@ -33,4 +33,21 @@
     "excerpt_html": "The upcoming iOS app puts customer outreach, follow-up status, and review progress where the work happens.",
     "url": "/#newsroom"
   }
+  {
+    "slot": 3,
+    "category": "iPhone Launch",
+    "status": "Press Release",
+    "dateFirstDisplayed": "",
+    "displayAfter": [],
+    "id": 3,
+    "slug": "nr-003",
+    "title_md": "items/003/title.md",
+    "excerpt_md": "items/003/excerpt.md",
+    "full_article_md": "items/003/full-article.md",
+    "title": "ReviewNudge Comes to iPhone, Bringing Customer Review Follow-Up Into the Field",
+    "title_html": "ReviewNudge Comes to iPhone, Bringing Customer Review Follow-Up Into the Field",
+    "excerpt": "Review requests are most effective when they happen close to the customer interaction. The new mobile experience helps businesses act while the work is still fresh in the customer's mind.",
+    "excerpt_html": "Review requests are most effective when they happen close to the customer interaction. The new mobile experience helps businesses act while the work is still fresh in the customer's mind.",
+    "url": "/#newsroom"
+  }
 ]
