@@ -50,9 +50,8 @@ jobs:
           }
 
           mkdir $OPS_DIR
-          export GITHUB_TOKEN="${OPS_AND_SOPS_READ_TOKEN_2}"
 
-          git clone --filter=blob:none --sparse https://x-access-token:${GITHUB_TOKEN}@github.com/domer6811/ops-and-sops.git $OPS_DIR
+          git clone --filter=blob:none --sparse https://x-access-token:${OPS_AND_SOPS_READ_TOKEN_2}@github.com/domer6811/ops-and-sops.git $OPS_DIR
           cd $OPS_DIR
           git sparse-checkout set ops/portmason
 
