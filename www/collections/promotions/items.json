@@ -9,18 +9,18 @@
     "subtitle": "A simple, organized way to request customer reviews.",
     "audience": "Small service businesses and owner-led teams",
     "summary": "ReviewNudge gives you one focused workspace to add customers and send a thoughtful review request, then we'll manage the follow-up and give you complete visibility along the way.",
-    "price": "$14.95",
+    "price": "24.95",
     "priceNote": "Monthly rate",
     "hero": {
       "label": "ReviewNudge for iPhone",
       "title": "Your review workflow is coming with you.",
-      "meta": "Coming to iOS August 2026",
+      "meta": "Coming to iPhone August 24 2026",
       "summary": "Add customers, send thoughtful review requests, and keep up with follow-ups from iPhone—wherever the work happens.",
-      "appStorePlaceholder": "App Store link will appear here as soon as it’s live.",
-      "appStorePoweringUp": "App Store link powering up…",
+      "appStorePlaceholder": "",
+      "appStorePoweringUp": "",
       "action": {
         "label": "Read the announcement",
-        "href": "/?release=nr-002#newsroom"
+        "href": "/?release=nr-003#newsroom"
       }
     },
     "primaryAction": {
@@ -29,7 +29,7 @@
       "openInNewTab": true
     },
     "tags": [
-      "7-day free trial",
+      "14-day free trial",
       "No card required",
       "One follow-up",
       "Built on Portmason™"
