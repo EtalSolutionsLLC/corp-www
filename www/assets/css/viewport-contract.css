@@ -845,3 +845,54 @@ body.has-js-active-nav .site-header .nav a:not([aria-current="page"]):not(:hover
     text-shadow: none !important;
   }
 }
+
+/* 025: scale the desktop featured promotion as a single, proportional unit. */
+@media (min-width: 1121px) {
+  #home.pm-viewport-target > .pm-viewport-target__inner {
+    grid-template-columns: minmax(0, 1.08fr) minmax(375px, 437.5px) !important;
+  }
+
+  #home .catalog-hero-card {
+    width: min(100%, 437.5px) !important;
+    min-height: 570px !important;
+    padding: 32.5px !important;
+  }
+
+  #home .catalog-hero-kicker {
+    gap: 12.5px !important;
+    margin-bottom: 22.5px !important;
+    font-size: 0.975rem !important;
+  }
+
+  #home .catalog-hero-kicker::before {
+    font-size: 1.0625rem !important;
+  }
+
+  #home .catalog-hero-card h2 {
+    font-size: clamp(2.0625rem, 2.5vw, 2.6875rem) !important;
+  }
+
+  #home .catalog-hero-meta {
+    gap: 17.5px !important;
+    margin-top: 15px !important;
+    padding-block: 10px !important;
+    font-size: 1.225rem !important;
+  }
+
+  #home .catalog-hero-card p {
+    margin-top: 12.5px !important;
+    font-size: 1.25rem !important;
+  }
+
+  #home .catalog-hero-cta {
+    gap: 11.25px !important;
+    min-height: 57.5px !important;
+    margin-top: 17.5px !important;
+    padding-inline: 22.5px !important;
+    font-size: 1.25rem !important;
+  }
+
+  #home .catalog-hero-cta::after {
+    font-size: 1.5625rem !important;
+  }
+}

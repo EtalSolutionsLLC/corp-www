@@ -1,5 +1,54 @@
 [
-  {
+	{
+	"id": "portmason-product-ecosystem-001",
+	"slug": "products-built-on-portmason",
+	"status": "featured",
+	"label": "Et al Solutions Platform Ecosystem",
+	"title": "Products Built on Portmason™",
+	"shortTitle": "Built on Portmason™",
+	"subtitle": "Real software products developed, deployed, and operated by Et al Solutions LLC.",
+	"audience": "Business owners, entrepreneurs, software founders, consultants, and technology leaders",
+	"summary": "Portmason™ is the application platform behind the growing software portfolio of Et al Solutions LLC. By providing a shared operational foundation for deployment, monitoring, revision management, automation, and lifecycle operations, Portmason allows new products to reach production quickly while maintaining the reliability expected of business software.",
+	"hero": {
+		"label": "Powered by Portmason™",
+		"title": "From idea to production.",
+		"meta": "A growing ecosystem of software products",
+		"summary": "Et al Solutions develops and operates software products powered by Portmason™. Rather than building every application from scratch, Portmason provides a proven operational foundation that accelerates delivery while supporting real-world business requirements.",
+		"appStorePlaceholder": "",
+		"appStorePoweringUp": "",
+		"action": {
+		"label": "Learn About Portmason™",
+		"href": "/#lab"
+		}
+	},
+	"primaryAction": {
+		"label": "Explore Portmason™",
+		"href": "/#lab",
+		"openInNewTab": false
+	},
+	"tags": [
+		"Portmason™",
+		"Production SaaS",
+		"Software Portfolio",
+		"Et al Solutions LLC"
+	],
+	"attributes": [
+		{
+		"title": "ReviewNudge",
+		"body": "A customer review platform that helps service businesses request reviews, manage follow-up communication, and track customer engagement through a simple and organized workflow."
+		},
+		{
+		"title": "Portmason™",
+		"body": "The platform powering deployment, operations, monitoring, revision management, automation, and product delivery across the Et al Solutions software ecosystem."
+		},
+		{
+		"title": "Built for Growth",
+		"body": "Each new application benefits from a shared operational foundation, allowing products to launch faster, remain easier to maintain, and operate consistently at scale."
+		}
+	],
+	"sortOrder": 1
+	},
+	{
     "id": "reviewnudge-founding-200",
     "slug": "reviewnudge-founding-200",
     "status": "featured",
@@ -48,7 +97,7 @@
         "body": "$14.95 per month."
       }
     ],
-    "sortOrder": 1
+    "sortOrder": 2
   },
   {
     "id": "workflow-friction-review",
