@@ -46,6 +46,22 @@
   cursor: pointer;
 }
 
+.pm-analytics-preferences-trigger--icon {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  min-height: 32px;
+  padding: 2px;
+}
+
+.pm-analytics-preferences-trigger--icon img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
 .pm-analytics-preferences-trigger[hidden] {
   display: none;
 }

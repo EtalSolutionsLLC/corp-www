@@ -5,6 +5,7 @@ const CONSENT_COOKIE_NAME = 'pm_cookie_consent';
 const CONSENT_COOKIE_MAX_AGE = 60 * 60 * 24 * 180;
 const ANALYTICS_GRANTED = 'granted';
 const ANALYTICS_DENIED = 'denied';
+const DEFAULT_PREFERENCES_ICON = '/assets/icons/cookie-preferences.png';
 
 const DEFAULT_COPY = Object.freeze({
   title: 'Cookie preferences',
@@ -175,6 +176,23 @@ function createButton(label, action, className = '') {
   return button;
 }
 
+function createPersistentPreferencesTrigger(label, iconSource) {
+  const button = createButton(label, 'manage', 'pm-analytics-preferences-trigger');
+  if (!iconSource) return button;
+
+  button.classList.add('pm-analytics-preferences-trigger--icon');
+  button.textContent = '';
+  button.setAttribute('aria-label', label);
+  button.title = label;
+
+  const icon = document.createElement('img');
+  icon.src = iconSource;
+  icon.alt = '';
+  icon.setAttribute('aria-hidden', 'true');
+  button.append(icon);
+  return button;
+}
+
 function createConsentInterface(script, initialConsent, onConsent) {
   const copy = copyFromScript(script);
 
@@ -201,7 +219,9 @@ function createConsentInterface(script, initialConsent, onConsent) {
   );
   banner.append(bannerActions);
 
-  const persistentTrigger = createButton(copy.manage, 'manage', 'pm-analytics-preferences-trigger');
+  const preferencesIcon = String(script.dataset.consentPreferencesIcon || DEFAULT_PREFERENCES_ICON).trim();
+
+  const persistentTrigger = createPersistentPreferencesTrigger(copy.manage, preferencesIcon);
   persistentTrigger.hidden = !initialConsent || Boolean(document.querySelector('[data-cookie-preferences]'));
 
   const dialog = document.createElement('dialog');
