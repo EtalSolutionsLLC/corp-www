@@ -30,7 +30,7 @@ jobs:
       DEPLOY_DIR: site/deploy/prd
       PAGES_SITE_DIR: site/deploy/prd/www
       OPS_DIR: ops-and-sops
-      OPS_AND_SOPS_READ_TOKEN_2: ${{ secrets.OPS_AND_SOPS_READ_TOKEN_2 }}
+      ETALSOLUTIONSLLC_OPS_AND_SOPS_READ_TOKEN: ${{ secrets.ETALSOLUTIONSLLC_OPS_AND_SOPS_READ_TOKEN }}
 
     steps:
       - name: Check out project
@@ -44,14 +44,15 @@ jobs:
         run: |
           set -euo pipefail
 
-          [[ -n "${OPS_AND_SOPS_READ_TOKEN_2}" ]] || {
-            echo "::error::OPS_AND_SOPS_READ_TOKEN_2 is required to read private domer6811/ops-and-sops"
+          [[ -n "${ETALSOLUTIONSLLC_OPS_AND_SOPS_READ_TOKEN}" ]] || {
+            echo "::error::ETALSOLUTIONSLLC_OPS_AND_SOPS_READ_TOKEN is required to read private domer6811/ops-and-sops"
             exit 1
           }
 
           mkdir $OPS_DIR
+          export GITHUB_TOKEN="${ETALSOLUTIONSLLC_OPS_AND_SOPS_READ_TOKEN}"
 
-          git clone --filter=blob:none --sparse https://x-access-token:${OPS_AND_SOPS_READ_TOKEN_2}@github.com/domer6811/ops-and-sops.git $OPS_DIR
+          git clone --filter=blob:none --sparse https://x-access-token:${GITHUB_TOKEN}@github.com/EtalSolutionsLLC/ops-and-sops.git $OPS_DIR
           cd $OPS_DIR
           git sparse-checkout set ops/portmason
 
