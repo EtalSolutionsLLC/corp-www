@@ -62,6 +62,15 @@ class SiteBuildInfoTests(unittest.TestCase):
         self.assertIn("Deployment", self.footer)
         self.assertIn('/assets/css/site-build-info.css', self.footer)
         self.assertIn('/assets/js/site-build-info.js', self.footer)
+        self.assertIn('/assets/css/pm-build-info.css', self.footer)
+        self.assertIn('/assets/js/pm-build-info.js', self.footer)
+
+    def test_portmason_build_console_shortcut_is_loaded(self):
+        controller = (SITE / "assets/js/pm-build-info.js").read_text(encoding="utf-8")
+        self.assertIn("isBuildInfoShortcut", controller)
+        self.assertIn("key === 'm'", controller)
+        self.assertIn("event.altKey", controller)
+        self.assertIn("event.ctrlKey || event.metaKey", controller)
 
     def test_build_dialog_identifies_registered_and_claimed_marks(self):
         self.assertIn("A.I. Fusion℠ and SIMPLIFAI℠", self.footer)
@@ -109,7 +118,7 @@ class SiteBuildInfoTests(unittest.TestCase):
         self.assertLess(setup, upload)
         self.assertLess(upload, deploy)
         self.assertIn("DEPLOY_DIR: site/deploy/prd", self.workflow)
-        self.assertIn("PAGES_SITE_DIR: site/deploy/prd/www", self.workflow)
+        self.assertIn("PAGES_SITE_DIR: site/www", self.workflow)
         self.assertIn('working-directory: ${{ env.DEPLOY_DIR }}', self.workflow)
         self.assertIn("\n          pm-setup\n", self.workflow)
         self.assertIn("PM_OFFICIAL_BUILD: \"true\"", self.workflow)
@@ -117,6 +126,10 @@ class SiteBuildInfoTests(unittest.TestCase):
         self.assertIn("PM_SOURCE_DIRTY: \"false\"", self.workflow)
         self.assertIn("uses: actions/upload-pages-artifact@v3", self.workflow)
         self.assertIn("path: ${{ env.PAGES_SITE_DIR }}", self.workflow)
+        self.assertIn("Verify GitHub Pages artifact contract", self.workflow)
+        self.assertIn('test -s "${PAGES_SITE_DIR}/build-info.json"', self.workflow)
+        self.assertIn('test -s "${PAGES_SITE_DIR}/deploy-info.json"', self.workflow)
+        self.assertIn('test -s "${PAGES_SITE_DIR}/artifact-manifest.json"', self.workflow)
         self.assertIn("uses: actions/deploy-pages@v4", self.workflow)
         self.assertNotIn("- name: Resolve runtime outputs", self.workflow)
         self.assertNotIn("- name: Persist static-site container image", self.workflow)
