@@ -33,6 +33,49 @@
     <link rel="stylesheet" href="/assets/css/theme-rhythm.css?v=123" />
     <link rel="stylesheet" href="/assets/css/cookie-consent-overrides.css?v=123" />
     <link rel="stylesheet" href="/assets/css/viewport-contract.css?v=123" />
+
+	<style>
+		.page-shell {
+			min-height: 100vh;
+			display: flex;
+			flex-direction: column;
+		}
+
+		main {
+			flex: 1;
+			display: flex;
+		}
+
+		.unsubscribe-panel {
+			flex: 1;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		.unsubscribe-panel .container {
+			width: 100%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		.unsubscribe-card {
+			max-width: 700px;
+			width: 100%;
+			text-align: center;
+		}
+
+		.unsubscribe-email {
+			color: #00ffb2;
+			font-size: 1.2rem;
+			font-weight: 600;
+			margin: 1rem 0;
+			display: flex;
+			justify-content: center;
+			width: 100%;		
+		}
+ </style>
 </head>
 <body>
 <!-- PM:TRACKING-CONSENT-PART2 -->
@@ -62,22 +105,36 @@
   </div>
 </header>
 <!-- /PM:HEADER -->
- <main>
-      <section class="hero panel pm-viewport-target pm-scroll-target" id="home" data-theme="dark">	
-        <div class="container pm-viewport-target__inner">
-
-<!--    <aside class="catalog-hero-card collection collection--catalog" aria-label="Featured promotions item" data-collection data-collection-id="promotions" data-collection-mode="catalog" data-collection-config="/collections/promotions/collection.json"> -->
-
-          <div class="catalog-hero-card" aria-label="Featured promotions item">
-            <h1><div style="text-align: left;">You've been unsubscribed.</div></h1><br />
-            <div class="catalog-hero-meta" aria-label="Collection item details" style="text-align:center;color:#00ffb2;">
-              youremail@address.com
-            </div>
-            <h3><div style="text-align: center;">We've processed your request and removed you from our mailing list. If your needs change in the future, we'd be happy to help</div></h3>
+<main>
+	<section class="hero panel unsubscribe-panel" data-theme="dark">
+		<div class="container">
+			<div class="catalog-hero-card unsubscribe-card" aria-label="Unsubscribe confirmation">
+				<h1 id="return-msg" style="text-align:center;">Working on it...</h1>
+					<div id="unsubscribed-email" class="unsubscribe-email catalog-hero-meta" aria-label="Email address">
+						&nbsp;
+					</div>
+				<h3 id="return-instr" style="text-align:center;">&nbsp;</h3>
+			</div>
 		</div>
-		  </div>
-		</section>
-		</main>
+	</section>
+</main>
+<script>
+	(function () {
+		const params = new URLSearchParams(window.location.search);
+		const email = params.get("email");
+		const msg = params.get("msg");
+		const instr = params.get("instr");
+		const target = document.getElementById("unsubscribed-email");
+		const msg_target = document.getElementById("return-msg");
+		const instr_target = document.getElementById("return-instr");
+		
+		target.textContent = email || "&nbsp;";
+		msg_target.textContent = msg || "Failed to unsubscribe.";
+		instr_target.textContent = instr || "We weren't able to unsubscribe your email address. Please try again later.";
+
+})();
+</script>
+
 <!-- PM:FOOTER -->
 <footer class="site-footer">
   <div class="container">
