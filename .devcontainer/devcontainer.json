@@ -1,0 +1,15 @@
+{
+  "name": "Corp WWW",
+  "customizations": {
+    "codespaces": {
+      "repositories": {
+        "EtalSolutionsLLC/ops-and-sop": {
+          "permissions": {
+            "contents": "read",
+            "packages": "read"
+          }
+        }
+      }
+    }
+  }
+}
