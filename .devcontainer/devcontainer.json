@@ -1,5 +1,7 @@
 {
   "name": "Corp WWW",
+  "postCreateCommand": "bash .devcontainer/install-portmason.sh",
+  "waitFor": "postCreateCommand",
   "customizations": {
     "codespaces": {
       "repositories": {
