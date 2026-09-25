@@ -3,7 +3,7 @@
   "customizations": {
     "codespaces": {
       "repositories": {
-        "EtalSolutionsLLC/ops-and-sop": {
+        "EtalSolutionsLLC/ops-and-sops": {
           "permissions": {
             "contents": "read",
             "packages": "read"
