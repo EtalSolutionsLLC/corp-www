@@ -146,7 +146,8 @@
     }
 
     const top = alignmentTopForTarget(target);
-    window.scrollTo({ top: Math.max(0, Math.round(top)), left: window.pageXOffset, behavior: "auto" });
+    const behavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth";
+    window.scrollTo({ top: Math.max(0, Math.round(top)), left: window.pageXOffset, behavior });
   }
 
   function runAlignmentPasses() {
