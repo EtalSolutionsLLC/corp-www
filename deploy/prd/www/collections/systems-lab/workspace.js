@@ -8,7 +8,7 @@
   var transformersUrl = "https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1/+esm";
   var state = {
     root: null,
-    configUrl: "config.public.json",
+    configUrl: "config.json",
     endpointConfigUrl: "api/endpoints.json",
     modelId: "Xenova/all-MiniLM-L6-v2",
     apiBasePromise: null,
@@ -291,7 +291,7 @@
     var endpoint = "https://pagespeedonline.googleapis.com/pagespeedonline/v5/runPagespeed";
     var medianDesktopBytes = 2.86 * 1024 * 1024;
     var selfUrl = root.getAttribute("data-site-size-self-url") || "https://www.etal.solutions/";
-    var configUrl = root.getAttribute("data-site-size-config-url") || "config.public.json";
+    var configUrl = root.getAttribute("data-site-size-config-url") || "config.json";
     var form = qs("[data-site-size-form]", root);
     var input = qs("[data-site-size-url]", root);
     var submit = qs("[data-site-size-submit]", root);
@@ -488,7 +488,7 @@
   api.registerInstance("systems-lab", {
     initialize: function (root) {
       state.root = root;
-      state.configUrl = root.getAttribute("data-api-config-url") || "config.public.json";
+      state.configUrl = root.getAttribute("data-api-config-url") || "config.json";
       state.endpointConfigUrl = root.getAttribute("data-api-endpoints-url") || "api/endpoints.json";
       state.modelId = root.getAttribute("data-model-id") || "Xenova/all-MiniLM-L6-v2";
     },
