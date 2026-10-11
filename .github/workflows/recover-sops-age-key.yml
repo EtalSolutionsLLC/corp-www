@@ -1,0 +1,58 @@
+name: Recover SOPS age key (encrypted)
+
+on:
+  push:
+    branches: [codex/recover-sops-age-key]
+    paths: [.github/workflows/recover-sops-age-key.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  recover:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Install age
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends age
+
+      - name: Verify identity and encrypt recovery file
+        shell: bash
+        env:
+          SOPS_AGE_KEY: ${{ secrets.SOPS_AGE_KEY }}
+          RECOVERY_RECIPIENT: age1zxddpnaexu6uu7tcj9k7rtwkvhfx7en8vsnyax4udmw0v8gxzypqxy309e
+          EXPECTED_OLD_RECIPIENT: age1ddvumycgvlx3zknx54helghqs89kexyh7kgv2e9j48f3039hc4fscxngn3
+        run: |
+          set -euo pipefail
+          set +x
+          umask 077
+          [[ -n "$SOPS_AGE_KEY" ]] || { echo '::error::SOPS_AGE_KEY is missing'; exit 1; }
+          actual_recipient="$(printf '%s\n' "$SOPS_AGE_KEY" | age-keygen -y 2>/dev/null)" || {
+            echo '::error::SOPS_AGE_KEY is not a valid age identity'
+            exit 1
+          }
+          [[ "$actual_recipient" == "$EXPECTED_OLD_RECIPIENT" ]] || {
+            echo '::error::Stored key does not match the missing production recipient'
+            exit 1
+          }
+          printf '%s\n' "$SOPS_AGE_KEY" | age --encrypt --recipient "$RECOVERY_RECIPIENT" \
+            --output "$RUNNER_TEMP/recovered-sops-key.age"
+          unset SOPS_AGE_KEY
+          test -s "$RUNNER_TEMP/recovered-sops-key.age"
+          echo 'Confirmed the missing production identity; encrypted recovery file created.'
+
+      - name: Upload encrypted recovery file
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: recovered-sops-key-encrypted
+          path: ${{ runner.temp }}/recovered-sops-key.age
+          if-no-files-found: error
+          retention-days: 1
+
+      - name: Remove runner copy
+        if: always()
+        shell: bash
+        run: rm -f -- "$RUNNER_TEMP/recovered-sops-key.age"
