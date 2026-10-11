@@ -1,0 +1,42 @@
+APP_SLUG=www
+# <blank> means this public site is not using change-management environment suffixing.
+DEPLOY_ENV=dev
+RUNTIME_ADAPTER_CODE=static-local
+CONTAINER_ROOT=/workspace
+STACK=${APP_SLUG}${DEPLOY_ENV:+-${DEPLOY_ENV}}
+LOCAL_DOMAIN=localtest.me
+# ------------------------------
+# anything below this line probably should not be edited manually
+# ------------------------------
+ENV_ROOT=${REPO_ROOT}
+SITE_ROOT=${ENV_ROOT}/www
+SITE_DIR=${SITE_ROOT}
+LOG_DIR=${REPO_ROOT}/logs
+TRAEFIK_DIR=${REPO_ROOT}/../traefik 
+APP_HOST=${STACK}.${LOCAL_DOMAIN}
+URI_SCHEME=https:
+SITE_URL=${URI_SCHEME}//${APP_HOST}
+PUBLIC_BROWSER_CONFIG_KEYS=SITE_URL,PAGESPEED_APIKEY
+PUBLIC_BROWSER_CONFIG_PATH=${SITE_DIR}/config.public.json
+SITE_BRAND_NAME="Et al Solutions LLC"
+SITE_CONTACT_EMAIL=info@solutionsetal.com
+PM_WEB_ANALYTICS_PROVIDER=google-tag-manager
+GTM_CONTAINER_ID=GTM-59XLJP3Q
+ANALYTICS_NOTES="Local code manages consent and loads GTM after opt-in. Configure GA4 entirely inside the GTM container."
+PAGESPEED_APIKEY=AIzaSyCiz7ukeHKQyMmf5vQnRaBdFgS2cc1oeEE
+PM_STATIC_EXCLUDE_DIRS=capture,deploy
+DEPLOYMENT_ID=www-1778610786
+PROJECT_ID=www-1778610786
+# ------------------------------
+# Et al Solutions – EPC Tag Contract
+# ------------------------------
+CLIENT="Et al Solutions LLC"
+# Ownership (logical, not personal)
+OWNER_ALIAS=etalsolutions             # Allowed: etalsolutions | client-it | client-dev | vendor | other
+# Control plane
+MANAGED_BY=compose              # Allowed: compose | k8s | terraform | manual | other
+# Container lifecycle
+LIFECYCLE=long-lived                  # Allowed: ephemeral | long-lived | job
+# Data governance
+DATA_CLASS=public               # Allowed: public | internal | confidential | regulated
+DATA_LIFECYCLE=persistent             # Allowed: transient | persistent | archival
