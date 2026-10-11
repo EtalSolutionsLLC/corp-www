@@ -24,7 +24,8 @@ concurrency:
 jobs:
   setup:
     runs-on: ubuntu-latest
-
+    environment:
+      name: github-pages
     env:
       PROJECT_DIR: site
       DEPLOY_DIR: site/deploy/prd
