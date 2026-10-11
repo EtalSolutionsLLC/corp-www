@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://www.etal.solutions/collections/_system/item-base.schema.json",
+  "$id": "https://www.solutionsetal.com/collections/_system/item-base.schema.json",
   "title": "Portmason Collections Base Item",
   "type": "object",
   "required": ["id", "slug", "status"],

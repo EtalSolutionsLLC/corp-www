@@ -61,7 +61,7 @@ export default {
         "/v1/site-deployment": "deploy-info.json",
         "/v1/site-artifact": "artifact-manifest.json"
       };
-      const response = await fetch(`https://www.etal.solutions/${sourceByPath[url.pathname]}`, { headers: { accept: "application/json" } });
+      const response = await fetch(`https://www.solutionsetal.com/${sourceByPath[url.pathname]}`, { headers: { accept: "application/json" } });
       if (!response.ok) return json({ status: "unavailable", upstreamStatus: response.status }, 502);
       return json(await response.json());
     }

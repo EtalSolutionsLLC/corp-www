@@ -10,7 +10,7 @@ The workflow now:
 4. Finalizes the artifact with source, build, deployment, timestamp, and SHA metadata.
 5. Verifies the finalized deployment contract.
 6. Publishes only that verified artifact to the public mirror.
-7. Writes the deterministic custom domain `www-test.etal.solutions`.
+7. Writes the deterministic custom domain `www-test.solutionsetal.com`.
 
 Automatic test publication remains tied to `main`; manual dispatch remains
 available for recovery. Production remains separate and manual.

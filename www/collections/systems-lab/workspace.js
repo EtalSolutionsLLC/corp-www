@@ -290,7 +290,7 @@
 
     var endpoint = "https://pagespeedonline.googleapis.com/pagespeedonline/v5/runPagespeed";
     var medianDesktopBytes = 2.86 * 1024 * 1024;
-    var selfUrl = root.getAttribute("data-site-size-self-url") || "https://www.etal.solutions/";
+    var selfUrl = root.getAttribute("data-site-size-self-url") || "https://www.solutionsetal.com/";
     var configUrl = root.getAttribute("data-site-size-config-url") || "config.json";
     var form = qs("[data-site-size-form]", root);
     var input = qs("[data-site-size-url]", root);

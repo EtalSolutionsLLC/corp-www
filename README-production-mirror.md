@@ -3,13 +3,13 @@
 This build adds a manual-only production promotion workflow targeting:
 
 ```text
-EtalSolutionsLLC/www.etal.solutions
+EtalSolutionsLLC/www.solutionsetal.com
 ```
 
 The published custom domain is:
 
 ```text
-www.etal.solutions
+www.solutionsetal.com
 ```
 
 ## Promotion contract
@@ -28,7 +28,7 @@ The workflow requires a dedicated fine-grained token named:
 PRODUCTION_PAGES_MIRROR_TOKEN
 ```
 
-Scope that token only to `EtalSolutionsLLC/www.etal.solutions` with:
+Scope that token only to `EtalSolutionsLLC/www.solutionsetal.com` with:
 
 - Contents: Read and write
 - Metadata: Read

@@ -10,7 +10,7 @@ The mobile experience is designed for real working days: fewer steps, clear stat
 
 The ReviewNudge iOS app remains subject to Apple's review process. Et al Solutions is targeting App Store availability in August 2026 and will publish confirmed availability as soon as the listing is live.
 
-Learn more at [ReviewNudge](https://reviewnudge.etal.solutions/) or follow company announcements at [Et al Solutions](https://www.etal.solutions/).
+Learn more at [ReviewNudge](https://reviewnudge.solutionsetal.com/) or follow company announcements at [Et al Solutions](https://www.solutionsetal.com/).
 
 **About ReviewNudge**
 
@@ -19,4 +19,4 @@ ReviewNudge is a customer-review workspace from Et al Solutions LLC. It helps se
 **Media Contact**
 
 Et al Solutions LLC  
-[media@etal.solutions](mailto:media@etal.solutions)
+[media@solutionsetal.com](mailto:media@solutionsetal.com)

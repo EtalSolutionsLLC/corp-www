@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://www.etal.solutions/collections/_system/collection.schema.json",
+  "$id": "https://www.solutionsetal.com/collections/_system/collection.schema.json",
   "title": "Portmason Collections Manifest",
   "type": "object",
   "required": [

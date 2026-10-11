@@ -48,7 +48,7 @@ class IosLaunchCampaignTests(unittest.TestCase):
 
     def test_release_has_no_draft_placeholders(self) -> None:
         release = (SITE / "collections/newsroom/items/002/full-article.md").read_text(encoding="utf-8")
-        self.assertIn("media@etal.solutions", release)
+        self.assertIn("media@solutionsetal.com", release)
         self.assertNotIn("[your preferred contact email]", release)
         self.assertNotIn("said a spokesperson", release)
 

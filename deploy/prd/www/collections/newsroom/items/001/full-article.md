@@ -22,7 +22,7 @@ The rollout moves westward through the United Kingdom, South America and the Uni
 
 *"People using ReviewNudge should be able to focus on the business they know, rather than becoming technical support for another piece of software," Omer said. "It should simply work."*
 
-ReviewNudge will be available beginning July 20 at [reviewnudge.etal.solutions](https://reviewnudge.etal.solutions/).
+ReviewNudge will be available beginning July 20 at [reviewnudge.solutionsetal.com](https://reviewnudge.solutionsetal.com/).
 
 ## About ReviewNudge
 
@@ -31,4 +31,4 @@ ReviewNudge is a customer-review workspace from Et al Solutions LLC. It helps bu
 ## Contact
 
 Et al Solutions LLC  
-media@etal.solutions
+media@solutionsetal.com

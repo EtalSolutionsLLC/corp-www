@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://www.etal.solutions/collections/_system/publication-item.schema.json",
+  "$id": "https://www.solutionsetal.com/collections/_system/publication-item.schema.json",
   "title": "Portmason Collections Publication Item",
   "allOf": [
     { "$ref": "item-base.schema.json" },
