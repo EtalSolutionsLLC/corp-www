@@ -90,6 +90,8 @@ jobs:
         shell: bash
         env:
           SOPS_AGE_KEY: ${{ secrets.SOPS_AGE_KEY }}
+          # Public age key that generated files are encrypted for (not a secret).
+          SOPS_AGE_RECIPIENTS: ${{ vars.SOPS_AGE_RECIPIENTS || 'age1pk5upajx0svq3xx95s7kztvhe060tkezse4862e9yaxn4u72g90sjlnend' }}
           GITHUB_ACTIONS: "true"
           PM_NO_REDIRECT: "1"
           PM_OFFICIAL_BUILD: "true"
