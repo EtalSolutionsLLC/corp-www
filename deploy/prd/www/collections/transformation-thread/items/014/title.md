@@ -1,0 +1,1 @@
+The Second Chair: Building a Durable Partnership as a Minority Owner
