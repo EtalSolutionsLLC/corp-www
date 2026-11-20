@@ -1,1 +1,1 @@
-(Part 3 of 3) The New Divide in A.I.: Why Trust Becomes the Ultimate Competitive Advantage
+The Second Chair: Building a Durable Partnership as a Minority Owner

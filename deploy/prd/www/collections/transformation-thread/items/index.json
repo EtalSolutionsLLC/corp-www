@@ -2,7 +2,7 @@
   {
     "slot": 1,
     "category": "Website Modernization",
-    "status": "Draft",
+    "status": "Final",
     "dateFirstDisplayed": "2026-07-19",
     "displayAfter": [],
     "id": 1,
@@ -19,7 +19,7 @@
   {
     "slot": 2,
     "category": "A.I. Adoption",
-    "status": "Draft",
+    "status": "Final",
     "dateFirstDisplayed": "2026-07-27",
     "displayAfter": [],
     "id": 2,
@@ -36,7 +36,7 @@
   {
     "slot": 3,
     "category": "Operating Model",
-    "status": "Draft",
+    "status": "Final",
     "dateFirstDisplayed": "2026-07-22",
     "displayAfter": [],
     "id": 3,
@@ -53,7 +53,7 @@
   {
     "slot": 4,
     "category": "Systems Thinking",
-    "status": "Draft",
+    "status": "Final",
     "dateFirstDisplayed": "2026-06-25",
     "displayAfter": [],
     "id": 4,
@@ -70,7 +70,7 @@
   {
     "slot": 5,
     "category": "Workforce Transformation",
-    "status": "Draft",
+    "status": "Final",
     "dateFirstDisplayed": "2026-06-25",
     "displayAfter": [],
     "id": 5,
@@ -87,7 +87,7 @@
   {
     "slot": 6,
     "category": "A.I. Risk",
-    "status": "Draft",
+    "status": "Final",
     "dateFirstDisplayed": "2026-06-25",
     "displayAfter": [],
     "id": 6,
@@ -104,7 +104,7 @@
   {
     "slot": 7,
     "category": "A.I. Governance",
-    "status": "Draft",
+    "status": "Final",
     "dateFirstDisplayed": "2026-07-19",
     "displayAfter": [],
     "id": 7,
@@ -121,7 +121,7 @@
   {
     "slot": 1,
     "category": "Website Modernization",
-    "status": "Draft",
+    "status": "Final",
     "dateFirstDisplayed": "2026-07-19",
     "displayAfter": [],
     "id": 8,
@@ -138,7 +138,7 @@
   {
     "slot": 2,
     "category": "Systems Thinking",
-    "status": "Draft",
+    "status": "Final",
     "dateFirstDisplayed": "2026-07-28",
     "displayAfter": [],
     "id": 9,
@@ -155,7 +155,7 @@
   {
     "slot": 3,
     "category": "A.I. Adoption",
-    "status": "Draft",
+    "status": "Final",
     "dateFirstDisplayed": "2026-07-22",
     "displayAfter": [],
     "id": 10,
@@ -172,7 +172,7 @@
   {
     "slot": 4,
     "category": "A.I. Adoption",
-    "status": "Draft",
+    "status": "Final",
     "dateFirstDisplayed": "2026-08-06",
     "displayAfter": [
       "010"
@@ -191,7 +191,7 @@
   {
     "slot": 5,
     "category": "A.I. Adoption",
-    "status": "Draft",
+    "status": "Final",
     "dateFirstDisplayed": null,
     "displayAfter": [
       "011"
@@ -208,22 +208,20 @@
     "url": "/#blog"
   },
   {
-    "slot": 5,
-    "category": "A.I. Adoption",
-    "status": "Draft",
+    "slot": 6,
+    "category": "Leadership & Governance",
+    "status": "Final",
     "dateFirstDisplayed": null,
-    "displayAfter": [
-      "011"
-    ],
+    "displayAfter": [],
     "id": 13,
     "slug": "tt-013",
     "title_md": "items/013/title.md",
     "excerpt_md": "items/013/excerpt.md",
     "full_article_md": "items/013/full-article.md",
-    "title": "(Part 3 of 3) The New Divide in A.I.: Why Trust Becomes the Ultimate Competitive Advantage",
-    "title_html": "(Part 3 of 3) The New Divide in A.I.: Why Trust Becomes the Ultimate Competitive Advantage",
-    "excerpt": "The advantage will come from how thoughtfully it's integrated into everyday decision-making.",
-    "excerpt_html": "The advantage will come from how thoughtfully it&#x27;s integrated into everyday decision-making.",
+    "title": "The Second Chair: Building a Durable Partnership as a Minority Owner",
+    "title_html": "The Second Chair: Building a Durable Partnership as a Minority Owner",
+    "excerpt": "When equity is unequal, assumptions about authority, workload, and accountability can drift out of alignment without anyone noticing. A healthy partnership does not leave those boundaries to intuition—it defines them early, turning an unequal stake from a quiet hierarchy into a clear division of labor.",
+    "excerpt_html": "When equity is unequal, assumptions about authority, workload, and accountability can drift out of alignment without anyone noticing. A healthy partnership does not leave those boundaries to intuition—it defines them early, turning an unequal stake from a quiet hierarchy into a clear division of labor.",
     "url": "/#blog"
   }
 ]

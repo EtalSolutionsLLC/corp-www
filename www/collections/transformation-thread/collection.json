@@ -31,7 +31,7 @@
   },
   "selection": {
     "strategy": "weekday-week-of-month",
-    "visibleItems": 3,
+    "visibleItems": 5,
     "timezone": "America/New_York"
   },
   "regions": {

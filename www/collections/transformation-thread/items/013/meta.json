@@ -1,9 +1,7 @@
 {
-  "slot": 5,
-  "category": "A.I. Adoption",
-  "status": "Draft",
+  "slot": 6,
+  "category": "Leadership & Governance",
+  "status": "Final",
   "dateFirstDisplayed": null,
-  "displayAfter": [
-    "011"
-  ]
+  "displayAfter": []
 }
