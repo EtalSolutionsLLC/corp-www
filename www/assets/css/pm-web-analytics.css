@@ -1,14 +1,21 @@
 .pm-analytics-consent,
 .pm-analytics-preferences-trigger,
 .pm-analytics-preferences {
-  --pm-analytics-ink: #153039;
-  --pm-analytics-muted: #49636b;
-  --pm-analytics-border: rgba(43, 78, 88, 0.2);
-  --pm-analytics-surface: #fff;
-  --pm-analytics-accent: #604a69;
-  --pm-analytics-focus: #176fda;
+  /* Site theme: set --pm-theme-* on :root (see web/README.md); these are the fallbacks. */
+  --pm-analytics-ink: var(--pm-theme-ink, #153039);
+  --pm-analytics-muted: var(--pm-theme-muted, #49636b);
+  --pm-analytics-border: var(--pm-theme-border, rgba(43, 78, 88, 0.2));
+  --pm-analytics-surface: var(--pm-theme-surface, #fff);
+  --pm-analytics-button: var(--pm-theme-surface-muted, #f7faf9);
+  --pm-analytics-button-hover: var(--pm-theme-surface-hover, #edf5f3);
+  --pm-analytics-accent: var(--pm-theme-accent, #604a69);
+  --pm-analytics-accent-hover: var(--pm-theme-accent-hover, #493850);
+  --pm-analytics-accent-ink: var(--pm-theme-accent-ink, #fff);
+  --pm-analytics-focus: var(--pm-theme-focus, #176fda);
+  --pm-analytics-radius: var(--pm-theme-radius, 1rem);
+  --pm-analytics-control-radius: var(--pm-theme-control-radius, 0.65rem);
   color: var(--pm-analytics-ink);
-  font: 400 1rem/1.45 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font: 400 1rem/1.45 var(--pm-theme-font, Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
 }
 
 .pm-analytics-consent {
@@ -19,9 +26,9 @@
   width: min(30rem, calc(100vw - 2rem));
   padding: 1.15rem;
   border: 1px solid var(--pm-analytics-border);
-  border-radius: 1rem;
+  border-radius: var(--pm-analytics-radius);
   background: var(--pm-analytics-surface);
-  box-shadow: 0 22px 60px rgba(15, 44, 52, 0.2);
+  box-shadow: var(--pm-theme-shadow, 0 22px 60px rgba(15, 44, 52, 0.2));
 }
 
 .pm-analytics-consent[hidden] {
@@ -37,7 +44,7 @@
   padding: 0.45rem 0.7rem;
   border: 1px solid var(--pm-analytics-border);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.96);
+  background: var(--pm-theme-surface, rgba(255, 255, 255, 0.96));
   box-shadow: 0 8px 24px rgba(15, 44, 52, 0.14);
   color: var(--pm-analytics-ink);
   font: inherit;
@@ -103,8 +110,8 @@
   min-height: 2.6rem;
   padding: 0.55rem 0.85rem;
   border: 1px solid var(--pm-analytics-border);
-  border-radius: 0.65rem;
-  background: #f7faf9;
+  border-radius: var(--pm-analytics-control-radius);
+  background: var(--pm-analytics-button);
   color: var(--pm-analytics-ink);
   font: inherit;
   font-weight: 700;
@@ -113,7 +120,7 @@
 
 .pm-analytics-consent button:hover,
 .pm-analytics-preferences button:hover {
-  background: #edf5f3;
+  background: var(--pm-analytics-button-hover);
 }
 
 .pm-analytics-consent button:focus-visible,
@@ -128,12 +135,12 @@
 .pm-analytics-preferences .pm-analytics-consent__primary {
   border-color: transparent;
   background: var(--pm-analytics-accent);
-  color: #fff;
+  color: var(--pm-analytics-accent-ink);
 }
 
 .pm-analytics-consent .pm-analytics-consent__primary:hover,
 .pm-analytics-preferences .pm-analytics-consent__primary:hover {
-  background: #493850;
+  background: var(--pm-analytics-accent-hover);
 }
 
 .pm-analytics-preferences {
@@ -141,12 +148,12 @@
   max-height: calc(100vh - 2rem);
   padding: 0;
   border: 0;
-  border-radius: 1rem;
+  border-radius: var(--pm-analytics-radius);
   background: transparent;
 }
 
 .pm-analytics-preferences::backdrop {
-  background: rgba(9, 26, 31, 0.58);
+  background: var(--pm-theme-backdrop, rgba(9, 26, 31, 0.58));
   backdrop-filter: blur(3px);
 }
 
@@ -157,9 +164,9 @@
   overflow: auto;
   padding: 1.25rem;
   border: 1px solid var(--pm-analytics-border);
-  border-radius: 1rem;
+  border-radius: var(--pm-analytics-radius);
   background: var(--pm-analytics-surface);
-  box-shadow: 0 24px 70px rgba(9, 26, 31, 0.28);
+  box-shadow: var(--pm-theme-shadow, 0 24px 70px rgba(9, 26, 31, 0.28));
 }
 
 .pm-analytics-preferences__panel > header {
@@ -180,7 +187,7 @@
   gap: 0.25rem;
   padding: 0.9rem;
   border: 1px solid var(--pm-analytics-border);
-  border-radius: 0.75rem;
+  border-radius: var(--pm-theme-control-radius, 0.75rem);
 }
 
 .pm-analytics-preferences__category h3,

@@ -1,1 +1,0 @@
-When equity is unequal, assumptions about authority, workload, and accountability can drift out of alignment without anyone noticing. A healthy partnership does not leave those boundaries to intuition—it defines them early, turning an unequal stake from a quiet hierarchy into a clear division of labor.

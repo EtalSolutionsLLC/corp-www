@@ -208,20 +208,22 @@
     "url": "/#blog"
   },
   {
-    "slot": 6,
-    "category": "Leadership & Governance",
-    "status": "Final",
+    "slot": 5,
+    "category": "A.I. Adoption",
+    "status": "Draft",
     "dateFirstDisplayed": null,
-    "displayAfter": [],
-    "id": 14,
-    "slug": "tt-014",
-    "title_md": "items/014/title.md",
-    "excerpt_md": "items/014/excerpt.md",
-    "full_article_md": "items/014/full-article.md",
-    "title": "The Second Chair: Building a Durable Partnership as a Minority Owner",
-    "title_html": "The Second Chair: Building a Durable Partnership as a Minority Owner",
-    "excerpt": "When equity is unequal, assumptions about authority, workload, and accountability can drift out of alignment without anyone noticing. A healthy partnership does not leave those boundaries to intuition—it defines them early, turning an unequal stake from a quiet hierarchy into a clear division of labor.",
-    "excerpt_html": "When equity is unequal, assumptions about authority, workload, and accountability can drift out of alignment without anyone noticing. A healthy partnership does not leave those boundaries to intuition—it defines them early, turning an unequal stake from a quiet hierarchy into a clear division of labor.",
+    "displayAfter": [
+      "011"
+    ],
+    "id": 13,
+    "slug": "tt-013",
+    "title_md": "items/013/title.md",
+    "excerpt_md": "items/013/excerpt.md",
+    "full_article_md": "items/013/full-article.md",
+    "title": "(Part 3 of 3) The New Divide in A.I.: Why Trust Becomes the Ultimate Competitive Advantage",
+    "title_html": "(Part 3 of 3) The New Divide in A.I.: Why Trust Becomes the Ultimate Competitive Advantage",
+    "excerpt": "The advantage will come from how thoughtfully it's integrated into everyday decision-making.",
+    "excerpt_html": "The advantage will come from how thoughtfully it&#x27;s integrated into everyday decision-making.",
     "url": "/#blog"
   }
 ]
